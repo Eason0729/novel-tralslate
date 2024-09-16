@@ -1,6 +1,6 @@
-import { Database, SQLite3Connector } from "denodb";
-import { DataTypes, Model } from "denodb";
-import { Relationships } from "denodb";
+import { Database, SQLite3Connector } from "@denodb";
+import { DataTypes, Model } from "@denodb";
+import { Relationships } from "@denodb";
 import { Novel } from "./novel.ts";
 import { Article } from "./article.ts";
 
@@ -21,12 +21,12 @@ export class Note extends Model {
 }
 
 const connector = new SQLite3Connector({
-  filepath: "./database.sqlite",
+  filepath: Deno.env.get("SQLITE_PATH") || "./database.sqlite",
 });
 
 export const db = new Database(connector);
 
-Relationships.belongsTo(Article.entity, Novel.entity);
+Relationships.belongsTo(Article, Novel);
 
 db.link([Note]);
 await db.sync({ drop: true });

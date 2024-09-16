@@ -24,7 +24,8 @@
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
     "ollama": "https://raw.githubusercontent.com/Eason0729/ollama-jsr/main/mod.ts",
     "semaphore": "https://deno.land/x/semaphore@v1.1.2/mod.ts",
-    "denodb": "https://raw.githubusercontent.com/Eason0729/denodb/master/mod.ts"
+    "@denodb": "https://raw.githubusercontent.com/Eason0729/denodb/master/mod.ts",
+    "@denodb/types": "https://raw.githubusercontent.com/Eason0729/denodb/master/lib/data-types.ts"
   },
   "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
   "nodeModulesDir": true
