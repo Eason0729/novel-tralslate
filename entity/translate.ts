@@ -1,8 +1,11 @@
 import { Chat } from "ollama";
 import { Semaphore } from "semaphore";
+import * as OpenCC from "opencc";
+
+const openccConverter = OpenCC.Converter({ from: "cn", to: "twp" });
 
 const parallel = new Semaphore(1);
-const chunk_size = 800;
+const chunk_size = 1024;
 export default async function translate(text: string): Promise<string> {
   const release = await parallel.acquire();
 
@@ -42,12 +45,15 @@ export default async function translate(text: string): Promise<string> {
         num_predict: chunk_size * 1.5,
       },
     });
+    console.debug("finished 1 chunks with ",chunkedRes.length);
     res += chunkedRes + "\n";
   }
 
   console.debug(`translation done in ${performance.now() - startTime}ms`);
 
   release();
+
+  res = openccConverter(res);
 
   return res;
 }

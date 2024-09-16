@@ -1,0 +1,69 @@
+name: Release multiarch OCI image
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  Publish-Arm64:
+    runs-on: [ci-base, arm64]
+    steps:
+      - uses: https://github.com/actions/checkout@v3
+      - name: Login to Registry
+        uses: https://github.com/docker/login-action@v3
+        with:
+          registry: gitea.easonabc.eu.org
+          username: ${{ gitea.actor }}
+          password: ${{ secrets.CI_GITEA_TOKEN }}
+      - name: build
+        uses: https://github.com/docker/build-push-action@v5
+        env:
+          ACTIONS_RUNTIME_TOKEN: ""
+        with:
+          context: .
+          file: "./docker/Dockerfile"
+          push: true
+          tags: "gitea.easonabc.eu.org/eason/novel-translate:arm64"
+  Publish-Amd64:
+    runs-on: [ci-base, amd64]
+    steps:
+      - uses: https://github.com/actions/checkout@v3
+      - name: Login to Registry
+        uses: https://github.com/docker/login-action@v3
+        with:
+          registry: gitea.easonabc.eu.org
+          username: ${{ gitea.actor }}
+          password: ${{ secrets.CI_GITEA_TOKEN }}
+      - name: build
+        uses: https://github.com/docker/build-push-action@v5
+        env:
+          ACTIONS_RUNTIME_TOKEN: ""
+        with:
+          context: .
+          file: "./docker/Dockerfile"
+          push: true
+          tags: "gitea.easonabc.eu.org/eason/novel-translate:amd64"
+  Manifest:
+    runs-on: ci-base
+    needs:
+      - Publish-Arm64
+      - Publish-Amd64
+    steps:
+      - name: Login to GitLab
+        uses: https://github.com/docker/login-action@v3
+        with:
+          registry: gitea.easonabc.eu.org
+          username: eason
+          password: ${{ secrets.CI_GITEA_TOKEN }}
+      - name: Merge
+        run: >
+          docker manifest create gitea.easonabc.eu.org/eason/novel-translate:latest
+          --amend gitea.easonabc.eu.org/eason/novel-translate:amd64
+          --amend gitea.easonabc.eu.org/eason/novel-translate:arm64                    
+      - name: push
+        run: docker manifest push gitea.easonabc.eu.org/eason/novel-translate:latest
+      - name: retag
+        run: |
+          docker pull gitea.easonabc.eu.org/eason/novel-translate:latest
+          docker tag gitea.easonabc.eu.org/eason/novel-translate:latest gitea.easonabc.eu.org/eason/novel-translate:${{gitea.ref_name}}
+          docker push gitea.easonabc.eu.org/eason/novel-translate:${{gitea.ref_name}}

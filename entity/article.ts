@@ -3,8 +3,9 @@ import { FieldValue, Values } from "@denodb/types";
 import translate from "./translate.ts";
 
 import { ArticleMetaData, getArticle } from "./crawler/mod.ts";
+import { Novel } from "./novel.ts";
 
-type state =
+export type State =
   | "unfetch"
   | "fetching"
   | "fetched"
@@ -20,12 +21,18 @@ export class Article extends Model {
       type: DataTypes.INTEGER,
       primaryKey: true,
     },
-    title: DataTypes.string(64),
-    url: DataTypes.STRING,
+    title: DataTypes.string(128),
+    url: DataTypes.string(256),
     state: DataTypes.STRING,
-    untranslatedContent: DataTypes.STRING,
-    content: DataTypes.STRING,
+    untranslatedContent: DataTypes.string(64 * 1024),
+    content: DataTypes.string(64 * 1024),
     index: DataTypes.INTEGER,
+  };
+  static defaults = {
+    url: "",
+    state: "unfetch",
+    untranslatedContent: "",
+    content: "",
   };
   private metadata(): ArticleMetaData {
     return {
@@ -34,15 +41,18 @@ export class Article extends Model {
       index: this.index as number,
     };
   }
-  static getById(id: number) {
-    return this.where("id", id).get() as Promise<Article>;
+  static async getById(id: number) {
+    return (await this.where("id", id).get() as Article[])[0];
   }
-  static async fromMetadata(metadata: ArticleMetaData): Promise<Article> {
+  static async fromMetadata(
+    metadata: ArticleMetaData,
+    novelId: number,
+  ): Promise<Article> {
     return await Article.create({
       url: metadata.url,
-      state: "unfetch",
       title: metadata.title,
       index: metadata.index,
+      novelId,
     }) as Article;
   }
   async fetch(): Promise<Article | undefined> {
@@ -61,8 +71,24 @@ export class Article extends Model {
       content: translated,
     });
   }
-  private async changeState(oldState: state, newState: state, values?: Values) {
-    if (oldState !== this.state) throw new Error("Invalid state transition");
+  static novel() {
+    return this.hasOne(Novel);
+  }
+  public async reset(){
+    if(this.state == "fetched" || this.state == "translated"){
+      await this.changeState(this.state, "unfetch");
+    }
+  }
+  public async oneShot() {
+    if (this.state == "unfetch") {
+      await this.fetch().catch(() => this.changeState("fetching", "error"));
+    }
+    if (this.state == "fetched") {
+      await this.translate().catch(() => this.changeState("fetching", "error"));
+    }
+  }
+  private async changeState(oldState: State, newState: State, values?: Values) {
+    if (oldState !== this.state) throw new Error("state mismatch");
     for (const key in values) this[key] = values[key];
 
     await Article.where("id", this.id as FieldValue).where("state", oldState)
@@ -70,12 +96,3 @@ export class Article extends Model {
     this.state = newState;
   }
 }
-
-await Promise.all([
-  Article.where("state", "fetching").update({
-    state: "unfetch",
-  }),
-  Article.where("state", "translating").update({
-    state: "fetched",
-  }),
-]);

@@ -4,10 +4,11 @@
 
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
-import * as $article_uuid_ from "./routes/article/[uuid].tsx";
+import * as $_middleware from "./routes/_middleware.ts";
+import * as $api_retry_id_ from "./routes/api/retry/[id].ts";
+import * as $article_id_ from "./routes/article/[id].tsx";
 import * as $index from "./routes/index.tsx";
-import * as $mod from "./routes/mod.ts";
-import * as $novel_uuid_ from "./routes/novel/[uuid].tsx";
+import * as $novel_id_ from "./routes/novel/[id].tsx";
 import * as $StartButton from "./islands/StartButton.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
@@ -15,10 +16,11 @@ const manifest = {
   routes: {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
-    "./routes/article/[uuid].tsx": $article_uuid_,
+    "./routes/_middleware.ts": $_middleware,
+    "./routes/api/retry/[id].ts": $api_retry_id_,
+    "./routes/article/[id].tsx": $article_id_,
     "./routes/index.tsx": $index,
-    "./routes/mod.ts": $mod,
-    "./routes/novel/[uuid].tsx": $novel_uuid_,
+    "./routes/novel/[id].tsx": $novel_id_,
   },
   islands: {
     "./islands/StartButton.tsx": $StartButton,

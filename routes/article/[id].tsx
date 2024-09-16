@@ -1,25 +1,26 @@
 import { RouteContext } from "$fresh/server.ts";
-import { Novel } from "../../novel/mod.ts";
-import { UuidMap } from "../mod.ts";
-import { uuidMap as novelMap } from "../novel/[uuid].tsx";
-
-/**
- * Map uuid to url of article
- */
-export const uuidMap: UuidMap<[Novel, number]> = new UuidMap();
+import { Article } from "../../entity/article.ts";
+import { Novel } from "../../entity/novel.ts";
 
 export default async function ArticlePage(_: Request, ctx: RouteContext) {
-  const { uuid } = ctx.params as { uuid: string };
-  const [novel, index] = uuidMap.get(uuid) as [Novel, number];
+  const { id } = ctx.params as { id: string };
+  const article = await Article.getById(parseInt(id));
 
-  const novelUuid = novelMap.add(novel);
+  article.oneShot();
 
-  const previousUuid = index >= 1 ? uuidMap.add([novel, index - 1]) : undefined;
-  const nextUuid = index < novel.articles.length - 1
-    ? uuidMap.add([novel, index + 1])
-    : undefined;
+  const index = article.index as number;
+  const novelId = article.novelId as number;
+  const novel = await Novel.getById(novelId);
+  const previousArticle = await Article.where("novelId", novelId).where(
+    "index",
+    index - 1,
+  ).all();
+  const nextArticle = await Article.where("novelId", novelId).where(
+    "index",
+    index + 1,
+  ).all();
 
-  const content = await novel.articles[index].getContent();
+  const content = article.content as string;
 
   return (
     <div
@@ -29,14 +30,14 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
     >
       <div class="flex flex-col h-screen max-w-3xl mx-auto">
         <header class="flex justify-between items-center p-4 border-b">
-          <h1 class="text-2xl font-bold">The Great Gatsby</h1>
+          <h1 class="text-2xl font-bold">{novel.name}</h1>
           <a
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border h-10 w-10"
             type="button"
             aria-haspopup="dialog"
             aria-expanded="false"
             aria-controls="radix-:r3:"
-            href={"/novel/" + novelUuid}
+            href={"/novel/" + article.novelId}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -58,16 +59,16 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
         </header>
         <main class="flex-grow overflow-auto p-6">
           <h2 class="text-xl font-semibold mb-4">
-            {novel.articles[index].title}
+            {article.title}
           </h2>
           <p class="text-lg leading-relaxed">
             {content.split("\n").map((x) => <p>{x}</p>)}
           </p>
         </main>
         <footer class="flex justify-between p-4 border-t">
-          {previousUuid
+          {previousArticle.length > 0
             ? (
-              <a href={"/article/" + previousUuid}>
+              <a href={"/article/" + previousArticle[0].id}>
                 <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -89,9 +90,9 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
             )
             : undefined}
 
-          {nextUuid
+          {nextArticle.length > 0
             ? (
-              <a href={"/article/" + nextUuid}>
+              <a href={"/article/" + nextArticle[0].id}>
                 <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2">
                   Next
                   <svg

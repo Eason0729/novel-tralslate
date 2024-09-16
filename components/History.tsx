@@ -1,4 +1,11 @@
-export default function History() {
+import { Novel } from "../entity/novel.ts";
+
+export interface HistoryProps {
+  novels?: Novel[];
+}
+export default function History(props: HistoryProps) {
+  const novels = props.novels || [];
+
   return (
     <>
       <div class="w-64 bg-white shadow-md">
@@ -14,11 +21,25 @@ export default function History() {
             class="h-full w-full rounded-[inherit]"
             style="overflow: hidden scroll;"
           >
-            <div style="min-width: 100%; display: table;">
-              <p class="p-4 text-sm text-gray-500">
-                No translated novels
-              </p>
-            </div>
+            {novels.map((novel) => (
+              <a href={"/novel/" + novel.id}>
+                <div class="p-4 border-b">
+                  <h3 class="text-lg font-semibold whitespace-nowrap overflow-x-hidden">
+                    {novel.state == "unfetch" ? "fetching" : novel.name}
+                  </h3>
+                  <p class="text-sm text-gray-500">{novel.url}</p>
+                </div>
+              </a>
+            ))}
+            {novels.length === 0
+              ? (
+                <div style="min-width: 100%; display: table;">
+                  <p class="p-4 text-sm text-gray-500">
+                    No translated novels
+                  </p>
+                </div>
+              )
+              : null}
           </div>
         </div>
       </div>
