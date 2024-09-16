@@ -31,7 +31,7 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
       id="v0-container"
       style="visibility:hidden;opacity:0"
     >
-      <div class="flex flex-col h-screen max-w-3xl mx-auto">
+      <div class="flex flex-col h-screen w-full sm:max-w-2xl mx-auto">
         <div class="flex justify-between items-center p-4 border-b">
           <h1 class="text-3xl font-bold overflow-hidden whitespace-nowrap mr-3">
             {novel.name}
@@ -65,34 +65,37 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
           <h2 class="text-2xl font-semibold mb-4">
             {article.title}
           </h2>
-          <div class="text-xl leading-relaxed">
+          <div class="text-xl leading-relaxed pb-10">
             {content.split("\n").map((x) => <p>{x}</p>)}
           </div>
         </div>
         <footer class="flex justify-between p-4 border-t">
-          {previousArticle.length > 0
-            ? (
-              <a href={"/article/" + previousArticle[0].id}>
-                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium h-10 px-4 py-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-chevron-left h-4 w-4 mr-2"
-                  >
-                    <path d="m15 18-6-6 6-6"></path>
-                  </svg>
-                  Previous
-                </button>
-              </a>
-            )
-            : undefined}
+          <a
+            href={previousArticle.length == 0
+              ? "#"
+              : ("/article/" + previousArticle[0].id)}
+          >
+            <button
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium disabled:text-slate-400 h-10 px-4 py-2"
+              disabled={previousArticle.length == 0}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-chevron-left h-4 w-4 mr-2"
+              >
+                <path d="m15 18-6-6 6-6"></path>
+              </svg>
+              Previous
+            </button>
+          </a>
 
           {nextArticle.length > 0
             ? (
@@ -101,8 +104,8 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
                   Next
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
+                    width="28"
+                    height="28"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"

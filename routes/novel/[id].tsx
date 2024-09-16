@@ -30,13 +30,18 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
       default:
         state = "retry";
     }
+    const title = article.title as string;
+    const index = article.index as number;
     list.push(
       <div class="flex justify-between items-center font-semibold tracking-tight text-2xl mb-2">
         <a
           href={"/article/" + article.id}
           class="whitespace-nowrap overflow-x-hidden mr-3"
         >
-          Web {article.index as number + 1} {article.title}
+          {title.includes((index + 1).toString())
+            ? undefined
+            : `第${index + 1}話 `}
+          {title}
         </a>
         <StartButton
           url={"/api/retry/" + article.id}

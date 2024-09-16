@@ -11,7 +11,7 @@ export default function App({ Component }: PageProps) {
       <body>
         <Component />
         <a
-          class="bg-black inline-flex items-center justify-center whitespace-nowrap text-sm font-medium h-10 w-10 fixed bottom-4 right-4 rounded-full shadow-lg"
+          class="bg-black inline-flex items-center justify-center whitespace-nowrap text-sm font-medium h-10 w-10 fixed bottom-20 md:bottom-4 right-4 rounded-full shadow-lg"
           href="/"
         >
           <svg

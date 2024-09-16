@@ -5,7 +5,7 @@ import * as OpenCC from "opencc";
 const openccConverter = OpenCC.Converter({ from: "cn", to: "twp" });
 
 const parallel = new Semaphore(1);
-const chunk_size = 400;
+const chunk_size = 430;
 export default async function translate(text: string): Promise<string> {
   const release = await parallel.acquire();
 
@@ -41,8 +41,8 @@ export default async function translate(text: string): Promise<string> {
       model: Deno.env.get("MODEL") || "GalTransl-7B-v2-IQ4_XS",
       API_URL: Deno.env.get("API_URL") || "http://192.168.1.248:11434",
       options: {
-        num_ctx: chunk_size * 1.2,
-        num_predict: chunk_size * 1.5,
+        num_ctx: chunk_size * 2,
+        num_predict: chunk_size * 2,
       },
     });
     console.debug("finished 1 chunks with ", chunkedRes.length);
