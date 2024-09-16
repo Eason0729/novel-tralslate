@@ -5,7 +5,7 @@ import * as OpenCC from "opencc";
 const openccConverter = OpenCC.Converter({ from: "cn", to: "twp" });
 
 const parallel = new Semaphore(1);
-const chunk_size = 430;
+const chunk_size = 768;
 export default async function translate(text: string): Promise<string> {
   const release = await parallel.acquire();
 

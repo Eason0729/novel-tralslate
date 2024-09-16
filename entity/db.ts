@@ -38,6 +38,12 @@ export default async function SetupDatabase() {
     0,
   );
 
+  Article.where("state", "fetched").orderBy("id").all().then(
+    async (articles) => {
+      for (const article of articles as Article[]) await article.oneShot();
+    },
+  );
+
   if (changes > 0) {
     console.info("Recovered from previous crash, reset", changes, "rows");
   }
