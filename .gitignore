@@ -5,6 +5,8 @@
 .env.production.local
 .env.local
 
+database.sqlite*
+
 # Fresh build directory
 _fresh/
 # npm dependencies

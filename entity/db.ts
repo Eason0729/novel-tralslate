@@ -37,7 +37,7 @@ export default async function SetupDatabase() {
     (a, b) => a + b,
     0,
   );
-  
+
   if (changes > 0) {
     console.info("Recovered from previous crash, reset", changes, "rows");
   }

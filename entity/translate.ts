@@ -45,7 +45,7 @@ export default async function translate(text: string): Promise<string> {
         num_predict: chunk_size * 1.5,
       },
     });
-    console.debug("finished 1 chunks with ",chunkedRes.length);
+    console.debug("finished 1 chunks with ", chunkedRes.length);
     res += chunkedRes + "\n";
   }
 

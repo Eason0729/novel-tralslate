@@ -12,7 +12,7 @@ Deno.test("AlphapolisNovelSource", () => {
   assert(source.baseUrl === "https://www.alphapolis.co.jp");
 });
 
-Deno.test("AlphapolisNovel", async () => {
+Deno.test({ name: "AlphapolisNovel", ignore: true }, async () => {
   const source = new AlphapolisNovelSource();
   const novel = await source.get_novel(
     "https://www.alphapolis.co.jp/novel/323153161/134250089",

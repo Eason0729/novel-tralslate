@@ -74,8 +74,8 @@ export class Article extends Model {
   static novel() {
     return this.hasOne(Novel);
   }
-  public async reset(){
-    if(this.state == "fetched" || this.state == "translated"){
+  public async reset() {
+    if (this.state == "fetched" || this.state == "translated") {
       await this.changeState(this.state, "unfetch");
     }
   }
