@@ -10,7 +10,14 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
 
   novel.oneShot();
 
-  for (const article of await Novel.where("id", id).articles() as Article[]) {
+  for (
+    const article of await Article.where("novelId", id).select(
+      "id",
+      "state",
+      "index",
+      "title",
+    ).orderBy("index").all() as Article[]
+  ) {
     let state;
     switch (article.state as ArticleState) {
       case "unfetch":
