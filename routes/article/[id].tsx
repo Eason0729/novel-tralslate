@@ -20,7 +20,10 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
     index + 1,
   ).all();
 
-  const content = article.content as string;
+  const content =
+    (article.content == ""
+      ? article.untranslatedContent
+      : article.content) as string;
 
   return (
     <div
@@ -29,10 +32,12 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
       style="visibility:hidden;opacity:0"
     >
       <div class="flex flex-col h-screen max-w-3xl mx-auto">
-        <header class="flex justify-between items-center p-4 border-b">
-          <h1 class="text-2xl font-bold">{novel.name}</h1>
+        <div class="flex justify-between items-center p-4 border-b">
+          <h1 class="text-3xl font-bold overflow-hidden whitespace-nowrap mr-3">
+            {novel.name}
+          </h1>
           <a
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border h-10 w-10"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border py-1 px-2 h-12 w-12"
             type="button"
             aria-haspopup="dialog"
             aria-expanded="false"
@@ -41,35 +46,34 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="26"
+              height="26"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="h-4 w-4"
             >
               <line x1="4" x2="20" y1="12" y2="12"></line>
               <line x1="4" x2="20" y1="6" y2="6"></line>
               <line x1="4" x2="20" y1="18" y2="18"></line>
             </svg>
           </a>
-        </header>
-        <main class="flex-grow overflow-auto p-6">
-          <h2 class="text-xl font-semibold mb-4">
+        </div>
+        <div class="flex-grow overflow-auto p-6">
+          <h2 class="text-2xl font-semibold mb-4">
             {article.title}
           </h2>
-          <p class="text-lg leading-relaxed">
+          <div class="text-xl leading-relaxed">
             {content.split("\n").map((x) => <p>{x}</p>)}
-          </p>
-        </main>
+          </div>
+        </div>
         <footer class="flex justify-between p-4 border-t">
           {previousArticle.length > 0
             ? (
               <a href={"/article/" + previousArticle[0].id}>
-                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2">
+                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium h-10 px-4 py-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -93,7 +97,7 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
           {nextArticle.length > 0
             ? (
               <a href={"/article/" + nextArticle[0].id}>
-                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2">
+                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium h-10 px-4 py-2">
                   Next
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

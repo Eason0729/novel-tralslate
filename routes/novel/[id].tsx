@@ -48,7 +48,7 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
             : novel.name}
         </h1>
       </div>
-      <p class="text-xl mb-6">
+      <p class="text-2xl mb-6">
         {((novel.state == "translated"
           ? novel.description
           : novel.untranslatedDescription) as string).split("\n").map((x) => (
