@@ -1,24 +1,30 @@
 import { RouteContext } from "$fresh/server.ts";
 import { Article } from "../../entity/article.ts";
 import { Novel } from "../../entity/novel.ts";
+import HomeButton from "../../components/HomeButton.tsx";
+import Error404 from "../_404.tsx";
 
 export default async function ArticlePage(_: Request, ctx: RouteContext) {
   const { id } = ctx.params as { id: string };
   const article = await Article.getById(parseInt(id));
+  if (!article) return <Error404 />;
 
   article.oneShot();
 
   const index = article.index as number;
   const novelId = article.novelId as number;
-  const novel = await Novel.getById(novelId);
-  const previousArticle = await Article.where("novelId", novelId).where(
-    "index",
-    index - 1,
-  ).all();
-  const nextArticle = await Article.where("novelId", novelId).where(
-    "index",
-    index + 1,
-  ).all();
+
+  const [novel, previousArticle, nextArticle] = await Promise.all([
+    Novel.select("name").getById(novelId) as Promise<Novel>,
+    Article.select("id").where("novelId", novelId).where(
+      "index",
+      index - 1,
+    ).all(),
+    Article.select("id").where("novelId", novelId).where(
+      "index",
+      index + 1,
+    ).all(),
+  ]);
 
   const content =
     (article.content == ""
@@ -63,6 +69,9 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
         </div>
         <div class="flex-grow overflow-auto p-6">
           <h2 class="text-2xl font-semibold mb-4">
+            {(article.title as string).includes((index + 1).toString())
+              ? undefined
+              : `第${index + 1}話 `}
             {article.title}
           </h2>
           <div class="text-xl leading-relaxed pb-10">
@@ -122,6 +131,7 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
             : undefined}
         </footer>
       </div>
+      <HomeButton />
     </div>
   );
 }

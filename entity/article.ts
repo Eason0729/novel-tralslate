@@ -41,8 +41,8 @@ export class Article extends Model {
       index: this.index as number,
     };
   }
-  static async getById(id: number) {
-    return (await this.where("id", id).get() as Article[])[0];
+  static async getById(id: number): Promise<Article | undefined> {
+    return (await this.where("id", id).get() as Article[])?.[0];
   }
   static async fromMetadata(
     metadata: ArticleMetaData,

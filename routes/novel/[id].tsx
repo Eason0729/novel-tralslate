@@ -2,10 +2,12 @@ import { RouteContext } from "$fresh/server.ts";
 import { StartButton } from "../../islands/StartButton.tsx";
 import { Novel } from "../../entity/novel.ts";
 import { Article, State as ArticleState } from "../../entity/article.ts";
+import Error404 from "../_404.tsx";
 
 export default async function NovelPage(_: Request, ctx: RouteContext) {
   const { id } = ctx.params as { id: string };
   const novel = await Novel.getById(parseInt(id));
+  if (!novel) return <Error404 />;
   const list = [];
 
   novel.oneShot();

@@ -34,8 +34,8 @@ export class Novel extends Model {
     untranslatedDescription: "",
     state: "unfetch",
   };
-  static async getById(id: number) {
-    return (await this.where("id", id).get() as Novel[])[0];
+  static async getById(id: number): Promise<Novel | undefined> {
+    return (await this.where("id", id).get() as Novel[])?.[0];
   }
   static async fromUrl(url: string): Promise<Novel | undefined> {
     return await Novel.create({
