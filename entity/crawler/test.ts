@@ -5,6 +5,12 @@ import {
   Novel as AlphapolisNovel,
   NovelSource as AlphapolisNovelSource,
 } from "./alphapolis.ts";
+import {
+  Article as KakyomuArticle,
+  ArticleSource as KakyomuArticleSource,
+  Novel as KakyomuNovel,
+  NovelSource as KakyomuNovelSource,
+} from "./kakuyomu.ts";
 
 Deno.test("AlphapolisNovelSource", () => {
   const source = new AlphapolisNovelSource();
@@ -44,3 +50,33 @@ Deno.test({ name: "AlphapolisNovel", ignore: true }, async () => {
 //   const content = await article.get_content();
 //   assert(content.trimStart().startsWith("少年はまるで胎児のように"));
 // });
+
+Deno.test("KakyomuNovelSource", () => {
+  const source = new AlphapolisNovelSource();
+  assert(source.name === "Alphapolis");
+  assert(source.baseUrl === "https://kakuyomu.jp/works");
+});
+
+Deno.test({ name: "KakyomuNovel", ignore: true }, async () => {
+  const source = new KakyomuNovelSource();
+  const novel = await source.get_novel(
+    "https://kakuyomu.jp/works/1177354054896166447",
+  );
+  assert(novel instanceof KakyomuNovel);
+  assertEquals(novel.name, "レヴィア・クエスト！　～美少女パパと最強娘～");
+  assert(novel.description.trimStart().startsWith("外道美少女の弱点は勇者？"));
+  assert(novel.author === "ハートフル外道メーカーちりひと");
+  assert(novel.chapters.length > 0);
+});
+
+Deno.test({ name: "KakyomuArticle", ignore: false }, async () => {
+  const source = new KakyomuArticleSource();
+  const article = await source.get_article({
+    title: "001. 美しき桃色の君",
+    url:
+      "https://kakuyomu.jp/works/1177354054896166447/episodes/1177354054896167527",
+    index: 0,
+  });
+  assert(article instanceof KakyomuArticle);
+  assert(article.content.trimStart().startsWith("――そこには、美があった。"));
+});

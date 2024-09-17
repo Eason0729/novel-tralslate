@@ -1,5 +1,5 @@
 import { assert } from "$std/assert/assert.ts";
-import { Semaphore } from "https://deno.land/x/semaphore@v1.1.2/semaphore.ts";
+import { Semaphore } from "semaphore";
 import * as def from "./mod.ts";
 import { DOMParser, Element, HTMLDocument } from "jsr:@b-fuze/deno-dom";
 
@@ -53,11 +53,6 @@ export class Article implements def.Article {
       ?.textContent as string;
     this.title = metadata.title;
     this.url = metadata.url;
-  }
-  async get_content() {
-    const rawHtml = await fetchWAF(this.url).then((res) => res.text());
-    const dom = new DOMParser().parseFromString(rawHtml, "text/html");
-    return dom.querySelector("div.text#novelBody")?.textContent as string;
   }
 }
 

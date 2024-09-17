@@ -5,6 +5,11 @@ export const handler: Handlers = {
   async POST(_, ctx: RouteContext) {
     const { id } = ctx.params as { id: string };
     const article = await Article.getById(parseInt(id));
+    if (!article) {
+      return new Response(null, {
+        status: 404,
+      });
+    }
     await article.reset();
     await article.oneShot();
     return new Response(null, {

@@ -2,6 +2,11 @@ import {
   ArticleSource as AlphapolisArticleSource,
   NovelSource as AlphapolisNovelSource,
 } from "./alphapolis.ts";
+import {
+  ArticleSource as KakyomuArticleSource,
+  NovelSource as KakyomuNovelSource,
+} from "./kakuyomu.ts";
+
 /**
  * Source website for novel
  */
@@ -48,7 +53,10 @@ export interface ArticleMetaData {
   index: number;
 }
 
-const sources: NovelSource[] = [new AlphapolisNovelSource()];
+const sources: NovelSource[] = [
+  new AlphapolisNovelSource(),
+  new KakyomuNovelSource(),
+];
 export function getNovel(url: string): Promise<Novel | undefined> {
   for (const source of sources) {
     if (url.startsWith(source.baseUrl)) {
@@ -58,7 +66,10 @@ export function getNovel(url: string): Promise<Novel | undefined> {
   return Promise.resolve(undefined);
 }
 
-const articleSources: ArticleSource[] = [new AlphapolisArticleSource()];
+const articleSources: ArticleSource[] = [
+  new AlphapolisArticleSource(),
+  new KakyomuArticleSource(),
+];
 
 export function getArticle(
   metadata: ArticleMetaData,

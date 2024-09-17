@@ -76,7 +76,7 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
             {article.title}
           </h2>
           <div class="text-xl leading-relaxed pb-10">
-            {content.split("\n").map((x) => <p>{x}</p>)}
+            {content.split("\n").map((x) => <p class="break-words">{x}</p>)}
           </div>
         </div>
         <footer class="flex justify-between p-4 border-t">
