@@ -6,9 +6,14 @@ interface State {
 }
 
 export async function handler(
-  _: Request,
+  req: Request,
   ctx: FreshContext<State>,
 ) {
   SetupDatabase();
-  return await ctx.next();
+
+  const resp = await ctx.next();
+  const url = req.url;
+  if (url.endsWith(".css")) resp.headers.set("Cache-Control", "max-age=3600");
+
+  return resp;
 }

@@ -49,6 +49,7 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
             aria-expanded="false"
             aria-controls="radix-:r3:"
             href={"/novel/" + article.novelId}
+            aria-label="Back to novel"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

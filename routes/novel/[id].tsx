@@ -62,13 +62,13 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
             : novel.name}
         </h1>
       </div>
-      <p class="text-2xl mb-6">
+      <div class="text-xl leading-relaxed mb-6">
         {((novel.state == "translated"
           ? novel.description
           : novel.untranslatedDescription) as string).split("\n").map((x) => (
             <p>{x}</p>
           ))}
-      </p>
+      </div>
       <div class="mt-9 rounded-lg border shadow-sm overflow-hidden p-6 space-y-8">
         {list}
       </div>
