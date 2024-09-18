@@ -9,9 +9,7 @@ export default function App({ Component }: PageProps) {
         <link rel="stylesheet" href="/styles.css" />
       </head>
       <body>
-        <div class="bg-white dark:bg-slate-900 text-black dark:text-white h-screen">
-          <Component />
-        </div>
+        <Component />
       </body>
     </html>
   );

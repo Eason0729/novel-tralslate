@@ -3,6 +3,7 @@ import { StartButton } from "../../islands/StartButton.tsx";
 import { Novel } from "../../entity/novel.ts";
 import { Article, State as ArticleState } from "../../entity/article.ts";
 import Error404 from "../_404.tsx";
+import Paragraph from "../../components/Paragraph.tsx";
 
 export default async function NovelPage(_: Request, ctx: RouteContext) {
   const { id } = ctx.params as { id: string };
@@ -53,21 +54,27 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
     );
   }
 
+  const description =
+    (novel.state == "translated"
+      ? novel.description
+      : novel.untranslatedDescription) as string;
+
   return (
     <div class="container mx-auto px-4 py-8 max-w-4xl">
       <div class="text-center">
-        <h1 class="text-4xl font-bold mb-4">
-          {novel.state == "unfetch" || novel.state == "fetching"
-            ? "Loading... " + novel.url
-            : novel.name}
-        </h1>
+        {novel.state == "unfetch" || novel.state == "fetching"
+          ? (
+            <div>
+              <div class="text-4xl font-semibold mb-4">Loading...</div>
+              <div class="text-2xl text-slate-500 dark:text-slate-200 mb-4">
+                {novel.url}
+              </div>
+            </div>
+          )
+          : <h1 class="text-4xl font-bold mb-4">{novel.name}</h1>}
       </div>
-      <div class="text-xl leading-relaxed mb-6">
-        {((novel.state == "translated"
-          ? novel.description
-          : novel.untranslatedDescription) as string).split("\n").map((x) => (
-            <p>{x}</p>
-          ))}
+      <div class="mb-6">
+        <Paragraph content={description} />
       </div>
       <div class="mt-9 rounded-lg border shadow-sm overflow-hidden p-6 space-y-8">
         {list}
