@@ -8,41 +8,57 @@ export default function History(props: HistoryProps) {
 
   return (
     <>
-      <div class="w-64 bg-white shadow-md">
-        <div class="p-4 border-b">
-          <h2 class="text-lg font-semibold">Novels</h2>
-        </div>
-        <div
-          dir="ltr"
-          class="relative overflow-hidden h-[calc(100vh-60px)]"
-          style="position: relative; --radix-scroll-area-corner-width: 0px; --radix-scroll-area-corner-height: 0px;"
-        >
-          <div
-            class="h-full w-full rounded-[inherit]"
-            style="overflow: hidden scroll;"
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="text-xl font-semibold">Recent Novels</h2>
+        <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium h-9 rounded-md px-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-trash2 h-4 w-4 mr-2"
           >
-            {novels.map((novel) => (
-              <a href={"/novel/" + novel.id}>
-                <div class="p-4 border-b">
-                  <h3 class="text-lg font-semibold whitespace-nowrap overflow-x-hidden">
-                    {novel.state == "unfetch" ? "fetching" : novel.name}
-                  </h3>
-                  <p class="text-sm text-gray-500">{novel.url}</p>
-                </div>
-              </a>
-            ))}
-            {novels.length === 0
-              ? (
-                <div style="min-width: 100%; display: table;">
-                  <p class="p-4 text-sm text-gray-500">
-                    No translated novels
-                  </p>
-                </div>
-              )
-              : null}
-          </div>
-        </div>
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+            <line x1="10" x2="10" y1="11" y2="17"></line>
+            <line x1="14" x2="14" y1="11" y2="17"></line>
+          </svg>
+          Clear All
+        </button>
       </div>
+      <ul class="space-y-2">
+        {novels.map((novel) => (
+          <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
+            <a href={"/novel/" + novel.id}>
+              <span>{novel.name}</span>
+            </a>
+            <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium h-10 w-10">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-x h-4 w-4"
+              >
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+              </svg>
+              <span class="sr-only">Remove</span>
+            </button>
+          </li>
+        ))}
+      </ul>
     </>
   );
 }

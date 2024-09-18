@@ -28,13 +28,9 @@ export const handler: Handlers = {
 export default async function Home() {
   const novels = await Novel.all();
   return (
-    <div class="flex h-screen bg-gray-100">
-      <div class="hidden md:block">
-        <History novels={novels as Novel[]} />
-      </div>
-      <div class="flex-1 flex flex-col">
-        <Search />
-      </div>
+    <div class="w-full max-w-lg mx-auto rounded-lg py-10 px-4">
+      <Search />
+      <History novels={novels as Novel[]} />
     </div>
   );
 }

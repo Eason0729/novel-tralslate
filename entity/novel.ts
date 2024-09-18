@@ -38,6 +38,8 @@ export class Novel extends Model {
     return (await this.where("id", id).get() as Novel[])?.[0];
   }
   static async fromUrl(url: string): Promise<Novel | undefined> {
+    const novels = await Novel.where("url", url).all() as Novel[];
+    if (novels.length > 0) return novels[0];
     return await Novel.create({
       url,
     }) as Novel;

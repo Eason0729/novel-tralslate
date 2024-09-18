@@ -13,7 +13,9 @@ export async function handler(
 
   const resp = await ctx.next();
   const url = req.url;
-  if (url.endsWith(".css")) resp.headers.set("Cache-Control", "max-age=3600");
+  if (url.endsWith(".css") || url.endsWith(".js") || url.endsWith(".svg")) {
+    resp.headers.set("Cache-Control", "max-age=3600");
+  }
 
   return resp;
 }
