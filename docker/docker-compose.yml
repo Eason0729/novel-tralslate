@@ -1,0 +1,11 @@
+services:
+  app:
+    image: gitea.easonabc.eu.org/eason/novel-translate:latest
+    restart: unless-stopped
+    network_mode: "host"
+    environment:
+      - SQLITE_PATH=/data/database.sqlite3
+      - "API_URL=http://ollama:11434"
+      - "WAF_COOKIES=aws-waf-token=get_one_if_you_want_alphapolis.co.jp;"
+    volumes:
+      - "./data:/data"
