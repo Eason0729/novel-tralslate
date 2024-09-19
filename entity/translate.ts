@@ -39,10 +39,11 @@ export default async function translate(text: string): Promise<string> {
         },
       ],
       model: Deno.env.get("MODEL") || "GalTransl-7B-v2-IQ4_XS",
-      API_URL: Deno.env.get("API_URL") || "http://192.168.1.248:11434",
+      API_URL: Deno.env.get("API_URL") || "http://localhost:11434",
       options: {
         num_ctx: chunk_size * 2,
         num_predict: chunk_size * 2,
+        temperature: 0.5,
       },
     });
     console.debug("finished 1 chunks with ", chunkedRes.length);

@@ -70,9 +70,7 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
           )
           : <h1 class="text-4xl font-bold mb-4">{novel.name}</h1>}
       </div>
-      <div class="mb-6">
-        <Paragraph content={description} />
-      </div>
+      <Paragraph content={description} />
       <div class="mt-9 rounded-lg border shadow-sm overflow-hidden p-6 space-y-8">
         {list}
       </div>

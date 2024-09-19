@@ -25,3 +25,12 @@ body {
         color: rgb(255 255 255 / var(--tw-text-opacity));
     }
 }
+
+.scrollbar-hidden{
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }

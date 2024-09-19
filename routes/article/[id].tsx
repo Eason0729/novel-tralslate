@@ -63,16 +63,14 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
             </svg>
           </a>
         </div>
-        <div class="flex-grow overflow-auto p-6">
+        <div class="flex-grow overflow-auto scrollbar-hidden p-6">
           <h2 class="text-2xl font-semibold mb-4">
             {(article.title as string).includes((index + 1).toString())
               ? undefined
               : `第${index + 1}話 `}
             {article.title}
           </h2>
-          <div class="pb-10">
-            <Paragraph content={content} />
-          </div>
+          <Paragraph content={content} endBar="true" />
         </div>
         <footer class="flex justify-between p-4 border-t">
           <a

@@ -4,7 +4,7 @@ import { Novel } from "./novel.ts";
 import { Article } from "./article.ts";
 
 const connector = new SQLite3Connector({
-  filepath: Deno.env.get("SQLITE_PATH") || "./database.sqlite",
+  filepath: Deno.env.get("SQLITE_PATH") || "./database.sqlite3",
 });
 
 export const db = new Database(connector);
