@@ -6,6 +6,10 @@ import {
   ArticleSource as KakyomuArticleSource,
   NovelSource as KakyomuNovelSource,
 } from "./kakuyomu.ts";
+import {
+  ArticleSource as SyosetuArticleSource,
+  NovelSource as SyosetuNovelSource,
+} from "./syosetu.ts";
 
 /**
  * Source website for novel
@@ -56,6 +60,7 @@ export interface ArticleMetaData {
 const sources: NovelSource[] = [
   new AlphapolisNovelSource(),
   new KakyomuNovelSource(),
+  new SyosetuNovelSource(),
 ];
 export function getNovel(url: string): Promise<Novel | undefined> {
   for (const source of sources) {
@@ -69,6 +74,7 @@ export function getNovel(url: string): Promise<Novel | undefined> {
 const articleSources: ArticleSource[] = [
   new AlphapolisArticleSource(),
   new KakyomuArticleSource(),
+  new SyosetuArticleSource(),
 ];
 
 export function getArticle(
