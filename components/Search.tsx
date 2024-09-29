@@ -2,7 +2,7 @@ export default function Search() {
   return (
     <form class="flex gap-2 mb-4 text-lg" method="POST">
       <input
-        class="flex w-full rounded-md border border-input bg-background px-5 py-2 flex-grow h-12"
+        class="flex w-full rounded-md border border-input bg-background px-5 py-2 flex-grow h-12 dark:text-black"
         placeholder="Enter novel url"
         type="text"
         name="url"

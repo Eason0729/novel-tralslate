@@ -36,7 +36,7 @@ export default function History(props: HistoryProps) {
         {novels.map((novel) => (
           <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
             <a href={"/novel/" + novel.id}>
-              <span>{novel.name}</span>
+              <span>{novel.name || novel.url}</span>
             </a>
             <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium h-10 w-10">
               <svg
