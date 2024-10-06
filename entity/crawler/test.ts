@@ -14,6 +14,11 @@ import {
   NovelSource as SyosetuNovelSource,
 } from "./syosetu.ts";
 
+import {
+  ArticleSource as Syosetu18ArticleSource,
+  NovelSource as Syosetu18NovelSource,
+} from "./syosetu18.ts";
+
 interface NovelTesterOption {
   name: string;
   novelUrl: string;
@@ -145,4 +150,21 @@ new ArticleTester({
   content:
     "7／12＆7／13に投稿した『はじめました』『昨夜未明、俺は♀エルフになりました。』",
   source: new SyosetuArticleSource(),
+}).test();
+
+new NovelTester({
+  name: "Syosetu18Novel",
+  novelUrl: "https://novel18.syosetu.com/n5657gv/",
+  title: "嫌われ勇者を演じた俺は、なぜかラスボスに好かれて一緒に生活してます！",
+  author: "らいと",
+  description: "※本作は連載を休止しております",
+  source: new Syosetu18NovelSource(),
+}).test();
+
+new ArticleTester({
+  name: "Syosetu18Article",
+  articleUrl: "https://novel18.syosetu.com/n5657gv/3/",
+  title: "元勇者パーティーに届く手紙◆",
+  content: "勇者アレスがデミウルゴスとの戦闘を開始した頃と、ほぼ同時刻。",
+  source: new Syosetu18ArticleSource(),
 }).test();
