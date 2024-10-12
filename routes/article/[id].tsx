@@ -8,7 +8,11 @@ import ArrowButton from "../../components/ArrowButton.tsx";
 
 export default async function ArticlePage(_: Request, ctx: RouteContext) {
   const { id } = ctx.params as { id: string };
-  const article = await Article.getById(parseInt(id));
+  const articleId = parseInt(id);
+
+  if (isNaN(articleId)) return <Error404 />;
+
+  const article = await Article.getById(articleId);
   if (!article) return <Error404 />;
 
   article.oneShot();

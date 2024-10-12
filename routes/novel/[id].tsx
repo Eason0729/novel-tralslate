@@ -7,7 +7,11 @@ import Paragraph from "../../components/Paragraph.tsx";
 
 export default async function NovelPage(_: Request, ctx: RouteContext) {
   const { id } = ctx.params as { id: string };
-  const novel = await Novel.getById(parseInt(id));
+  const novelId = parseInt(id);
+
+  if (isNaN(novelId)) return <Error404 />;
+
+  const novel = await Novel.getById(novelId);
   if (!novel) return <Error404 />;
   const list = [];
 

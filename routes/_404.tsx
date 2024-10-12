@@ -17,7 +17,7 @@ export default function Error404() {
         </p>
         <a
           data-id="6"
-          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-white text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-black text-cyan-600-foreground hover:bg-black/90 h-10 px-4 py-2"
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-white dark:text-black text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-black dark:bg-slate-100 text-cyan-600-foreground h-10 px-4 py-2"
           href="/"
           rel="ugc"
         >

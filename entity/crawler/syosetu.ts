@@ -2,6 +2,8 @@ import { assert } from "$std/assert/assert.ts";
 import * as def from "./mod.ts";
 import { DOMParser, Element, HTMLDocument } from "jsr:@b-fuze/deno-dom";
 
+const baseUrl = "https://ncode.syosetu.com";
+
 class ArticleMetaData implements def.ArticleMetaData {
   title: string;
   url: string;
@@ -9,13 +11,13 @@ class ArticleMetaData implements def.ArticleMetaData {
   constructor(element: Element, index: number) {
     this.index = index;
     this.title = element.textContent as string;
-    this.url = element.getAttribute("href") as string;
+    this.url = new URL(element.getAttribute("href") as string, baseUrl).href;
   }
 }
 
 export class ArticleSource implements def.ArticleSource {
   name = "Alphapolis";
-  baseUrl = "https://ncode.syosetu.com";
+  baseUrl = baseUrl;
   async get_article(
     metadata: def.ArticleMetaData,
   ): Promise<Article | undefined> {
@@ -41,7 +43,7 @@ export class Article implements def.Article {
 
 export class NovelSource implements def.NovelSource {
   name = "Alphapolis";
-  baseUrl = "https://ncode.syosetu.com";
+  baseUrl = baseUrl;
   async get_novel(url: string): Promise<Novel | undefined> {
     assert(url.startsWith(this.baseUrl), "Invalid url");
     const rawHtml = await fetch(url).then((

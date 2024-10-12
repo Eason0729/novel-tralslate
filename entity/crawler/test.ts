@@ -29,6 +29,7 @@ interface NovelTesterOption {
   source: NovelSource;
 }
 
+// FIXME: check url
 class NovelTester {
   option: NovelTesterOption;
   constructor(opt: NovelTesterOption) {
