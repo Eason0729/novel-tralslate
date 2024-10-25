@@ -5,7 +5,7 @@ import * as OpenCC from "opencc";
 const openccConverter = OpenCC.Converter({ from: "cn", to: "twp" });
 
 const parallel = new Semaphore(1);
-const chunk_size = 768;
+const chunk_size = 618;
 export default async function translate(text: string): Promise<string> {
   const release = await parallel.acquire();
 
@@ -22,7 +22,6 @@ export default async function translate(text: string): Promise<string> {
   if (text.length != 0) chunks.push(text);
 
   const startTime = performance.now();
-  console.debug("translate chunks:", chunks.length);
 
   let res = "";
   for (const chunk of chunks) {
@@ -38,19 +37,24 @@ export default async function translate(text: string): Promise<string> {
           content: "将下面的日文文本翻译成中文：" + chunk,
         },
       ],
-      model: Deno.env.get("MODEL") || "GalTransl-7B-v2-IQ4_XS",
+      model: Deno.env.get("MODEL") ||
+        "hf.co/SakuraLLM/Sakura-1.5B-Qwen2.5-v1.0-GGUF",
       API_URL: Deno.env.get("API_URL") || "http://localhost:11434",
       options: {
-        num_ctx: chunk_size * 2,
-        num_predict: chunk_size * 2,
-        temperature: 0.5,
+        num_ctx: chunk_size + 100,
+        num_predict: chunk.length + 150,
+        temperature: 0.1,
+        top_p: 0.3,
       },
     });
-    console.debug("finished 1 chunks with ", chunkedRes.length);
     res += chunkedRes + "\n";
   }
 
-  console.debug(`translation done in ${performance.now() - startTime}ms`);
+  console.debug(
+    `translation of ${chunks.length} chunks has been done in ${
+      performance.now() - startTime
+    }ms`,
+  );
 
   release();
 
