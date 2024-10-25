@@ -17,7 +17,7 @@
 ```yaml
 services:
   app:
-    image: gitea.easonabc.eu.org/eason/novel-translate:latest
+    image: ghcr.io/eason0729/novel-tralslate:latest
     restart: unless-stopped
     network_mode: "host"
     environment:
@@ -34,48 +34,16 @@ services:
 
 https://ollama.com/
 
-2. 下載模型的參數
-
-推薦使用`GalTransl-7B-v2`大語言模型翻譯，這裡用IQ4_XS量化
-
-先下載模型的參數:
-https://huggingface.co/SakuraLLM/GalTransl-7B-v2/blob/main/GalTransl-7B-v2-IQ4_XS.gguf
-
-3. 建立Modelfile
-
-創立一個Modelfile
-
-```Modelfile
-FROM C:/使用者/Eason/下載/GalTransl-7B-v2-IQ4_XS.gguf
-
-PARAMETER frequency_penalty 0.12
-PARAMETER repeat_penalty 1
-PARAMETER temperature 0.1
-PARAMETER top_p 0.3
-TEMPLATE """
-<|im_start|>system
-{{ .System }}<|im_end|>
-<|im_start|>user
-将下面的日文文本翻译成中文：
-{{ .Prompt }}<|im_end|>
-<|im_start|>assistant
-"""
-SYSTEM 你是一个轻小说翻译模型，可以流畅通顺地以日本轻小说的风格将日文翻译成简体中文，并联系上下文正确使用人称代词，不擅自添加原文中没有的代词。
-PARAMETER num_ctx 4096
-PARAMETER stop "</s>"
-PARAMETER stop "USER:"
-PARAMETER stop "ASSISTANT:"
-```
-
-4. 將Modelfile和參數匯入ollama
-
-使用以下指令將Modelfile和參數匯入ollama
+2. 下載模型
 
 ```shell
-ollama create -f Modelfile GalTransl-7B-v2-IQ4_XS
+ollama pull hf.co/SakuraLLM/Sakura-1.5B-Qwen2.5-v1.0-GGUF
 ```
+
+3. 啟動ollama
 
 ### 雜項
 
 1. 設置`WAF_COOKIES`來爬`https://www.alphapolis.co.jp`的輕小說
 2. 對你的database執行`index.sql`以提昇反應時間
+3. 使用更大的模型
