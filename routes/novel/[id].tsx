@@ -4,6 +4,15 @@ import { Novel } from "../../entity/novel.ts";
 import { Article, State as ArticleState } from "../../entity/article.ts";
 import Error404 from "../_404.tsx";
 import Paragraph from "../../components/Paragraph.tsx";
+/**
+ * Check if the title includes the index, such as "第1話" for index 0.
+ * @param title
+ * @param index
+ * @returns
+ */
+function checkTitleIndex(title: string, index: number): boolean {
+  return title.includes((index + 1).toString());
+}
 
 export default async function NovelPage(_: Request, ctx: RouteContext) {
   const { id } = ctx.params as { id: string };
@@ -45,10 +54,7 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
           href={"/article/" + article.id}
           class="whitespace-nowrap overflow-x-hidden mr-3"
         >
-          {title.includes((index + 1).toString())
-            ? undefined
-            : `第${index + 1}話 `}
-          {title}
+          {checkTitleIndex(title, index) ? title : `第${index + 1}話 ${title}`}
         </a>
         <StartButton
           url={"/api/retry/" + article.id}

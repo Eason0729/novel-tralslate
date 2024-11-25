@@ -59,7 +59,7 @@ jobs:
         run: >
           docker manifest create gitea.easonabc.eu.org/eason/novel-translate:latest
           --amend gitea.easonabc.eu.org/eason/novel-translate:amd64
-          --amend gitea.easonabc.eu.org/eason/novel-translate:arm64                    
+          --amend gitea.easonabc.eu.org/eason/novel-translate:arm64
       - name: push
         run: docker manifest push gitea.easonabc.eu.org/eason/novel-translate:latest
       - name: retag

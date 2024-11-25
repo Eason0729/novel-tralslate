@@ -2,13 +2,11 @@ image: gitea.easonabc.eu.org/eason/novel-translate:{{build.tag}}
 tags:
   - latest
 manifests:
-  -
-    image: gitea.easonabc.eu.org/eason/novel-translate:amd64
+  - image: gitea.easonabc.eu.org/eason/novel-translate:amd64
     platform:
       architecture: amd64
       os: linux
-  -
-    image: gitea.easonabc.eu.org/eason/novel-translate:arm64
+  - image: gitea.easonabc.eu.org/eason/novel-translate:arm64
     platform:
       variant: v8
       architecture: arm64

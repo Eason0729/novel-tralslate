@@ -2,35 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+body {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
 @media (prefers-color-scheme: dark) {
-    body {
-        --tw-bg-opacity: 1;
-        background-color: rgb(15 23 42 / var(--tw-bg-opacity));
-    }
+  body {
+    --tw-bg-opacity: 1;
+    background-color: rgb(15 23 42 / var(--tw-bg-opacity));
+  }
 }
 
 body {
-    --tw-text-opacity: 1;
-    color: rgb(0 0 0 / var(--tw-text-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 @media (prefers-color-scheme: dark) {
-    body {
-        --tw-text-opacity: 1;
-        color: rgb(255 255 255 / var(--tw-text-opacity));
-    }
+  body {
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+  }
 }
 
-.scrollbar-hidden{
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .scrollbar-hidden::-webkit-scrollbar {
-    display: none;
+  display: none;
+}
+
+@keyframes opacity-enter {
+  0% {
+      opacity: 0;
   }
+  1% {
+      opacity: 0;
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+      opacity: 0.8;
+  }
+  65% {
+    opacity: 0.88;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .opacity-enter-active {
+    animation-name: opacity-enter;
+    animation-duration: 300ms;
+  }
+}

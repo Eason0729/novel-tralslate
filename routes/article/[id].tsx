@@ -5,6 +5,7 @@ import HomeButton from "../../components/HomeButton.tsx";
 import Error404 from "../_404.tsx";
 import Paragraph from "../../components/Paragraph.tsx";
 import ArrowButton from "../../components/ArrowButton.tsx";
+import RandomBar from "../../components/RandomBar.tsx";
 
 export default async function ArticlePage(_: Request, ctx: RouteContext) {
   const { id } = ctx.params as { id: string };
@@ -67,14 +68,15 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
             </svg>
           </a>
         </div>
-        <div class="flex-grow overflow-auto scrollbar-hidden p-6">
+        <div class="flex-grow overflow-auto scrollbar-hidden p-6 snap-proximity">
           <h2 class="text-2xl font-semibold mb-4">
             {(article.title as string).includes((index + 1).toString())
               ? undefined
               : `第${index + 1}話 `}
             {article.title}
           </h2>
-          <Paragraph content={content} endBar="true" />
+          <Paragraph content={content} animation />
+          <RandomBar />
         </div>
         <footer class="flex justify-between p-4 border-t">
           <a

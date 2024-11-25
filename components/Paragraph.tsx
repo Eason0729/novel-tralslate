@@ -1,69 +1,50 @@
-function randomBar(appearances: number = 4) {
-  const list = [];
-  for (let i = 0; i < appearances; i++) {
-    switch (Math.floor(Math.random() * 5)) {
-      case 0:
-        list.push(
-          <div class="h-3 my-5 mx-2 w-3/4 bg-slate-200 dark:bg-slate-700 rounded" />,
-        );
+import { OpacityEnter } from "../islands/OpacityEnter.tsx";
+function isRepeation(line: string): boolean {
+  for (
+    let repeationLen = 1;
+    line.length != 0 && repeationLen <= 3;
+    repeationLen++
+  ) {
+    const repeation = line.substring(0, repeationLen);
+    let isRepeation = true;
+    for (let i = repeationLen; i < line.length; i++) {
+      if (line[i] != repeation[i % repeationLen]) {
+        isRepeation = false;
         break;
-      case 1:
-        list.push(
-          <div class="h-3 my-5 mx-2 bg-slate-200 dark:bg-slate-700 rounded" />,
-        );
-        break;
-      case 2:
-        list.push(
-          <div class="h-3 my-5 mx-2 w-1/2 bg-slate-200 dark:bg-slate-700 rounded" />,
-        );
-        break;
-      case 3:
-        list.push(
-          <div class="h-3 my-5 mx-2 w-1/4 bg-slate-200 dark:bg-slate-700 rounded" />,
-        );
-        break;
-      default:
-        list.push(
-          <div class="h-3 my-5 mx-2 bg-slate-200 dark:bg-slate-700 rounded" />,
-        );
+      }
     }
+    if (isRepeation) return true;
   }
-  return (
-    <div class="animate-pulse">
-      {list}
-    </div>
-  );
+  return false;
 }
 
 export default function Paragraph(
-  { content, endBar }: { content: string; endBar?: string },
+  props: { content: string; animation?: boolean },
 ) {
-  if (content == "") return randomBar(8);
-
   return (
-    <div
-      class={"text-xl leading-relaxed" + (endBar ? " min-h-full" : "")}
-    >
-      {content.split("\n").map((x) => {
-        const line = x.trimStart();
-        for (
-          let repeationLen = 1;
-          line.length != 0 && repeationLen <= 3;
-          repeationLen++
-        ) {
-          const repeation = line.substring(0, repeationLen);
-          let isRepeation = true;
-          for (let i = repeationLen; i < line.length; i++) {
-            if (line[i] != repeation[i % repeationLen]) {
-              isRepeation = false;
-              break;
-            }
-          }
-          if (isRepeation) return <hr class="mx-1 m-4" />;
-        }
-        return <p class="break-words">{x.trim()}</p>;
-      })}
-      {endBar ? randomBar() : undefined}
-    </div>
+    <>
+      <OpacityEnter />
+      <div class="timeline-view text-xl leading-relaxed">
+        {props.content.split("\n").map((x) =>
+          isRepeation(x.trim())
+            ? (
+              <hr
+                class={props.animation
+                  ? "mx-1 my-12 opacity-enter"
+                  : "mx-1 my-12"}
+              />
+            )
+            : (
+              <p
+                class={props.animation
+                  ? "break-words opacity-enter"
+                  : "break-words"}
+              >
+                {x.trim()}
+              </p>
+            )
+        )}
+      </div>
+    </>
   );
 }

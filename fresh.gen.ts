@@ -9,6 +9,7 @@ import * as $api_retry_id_ from "./routes/api/retry/[id].ts";
 import * as $article_id_ from "./routes/article/[id].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $novel_id_ from "./routes/novel/[id].tsx";
+import * as $OpacityEnter from "./islands/OpacityEnter.tsx";
 import * as $StartButton from "./islands/StartButton.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
@@ -23,6 +24,7 @@ const manifest = {
     "./routes/novel/[id].tsx": $novel_id_,
   },
   islands: {
+    "./islands/OpacityEnter.tsx": $OpacityEnter,
     "./islands/StartButton.tsx": $StartButton,
   },
   baseUrl: import.meta.url,
