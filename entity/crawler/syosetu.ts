@@ -16,7 +16,6 @@ class ArticleMetaData implements def.ArticleMetaData {
 }
 
 export class ArticleSource implements def.ArticleSource {
-  name = "Alphapolis";
   baseUrl = baseUrl;
   async get_article(
     metadata: def.ArticleMetaData,
@@ -42,7 +41,7 @@ export class Article implements def.Article {
 }
 
 export class NovelSource implements def.NovelSource {
-  name = "Alphapolis";
+  name = "小説家になろう";
   baseUrl = baseUrl;
   async get_novel(url: string): Promise<Novel | undefined> {
     assert(url.startsWith(this.baseUrl), "Invalid url");

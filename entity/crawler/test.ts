@@ -19,6 +19,11 @@ import {
   NovelSource as Syosetu18NovelSource,
 } from "./syosetu18.ts";
 
+import {
+  ArticleSource as hamelnArticleSource,
+  NovelSource as hamelnNovelSource,
+} from "./hameln.ts";
+
 interface NovelTesterOption {
   name: string;
   novelUrl: string;
@@ -168,4 +173,21 @@ new ArticleTester({
   title: "元勇者パーティーに届く手紙◆",
   content: "勇者アレスがデミウルゴスとの戦闘を開始した頃と、ほぼ同時刻。",
   source: new Syosetu18ArticleSource(),
+}).test();
+
+new NovelTester({
+  name: "hameln",
+  novelUrl: "https://syosetu.org/novel/358899/",
+  title: "境界剣士の最愛精霊《レスティアート》",
+  author: "時杜　境",
+  description: "かわいい最強精霊にハートキャッチ（物理）されて魂を焼",
+  source: new hamelnNovelSource(),
+}).test();
+
+new ArticleTester({
+  name: "hameln",
+  articleUrl: "https://syosetu.org/novel/358899/2.html",
+  title: "01　永遠契約 - 1",
+  content: "「つかれた……」",
+  source: new hamelnArticleSource(),
 }).test();

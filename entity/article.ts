@@ -81,10 +81,10 @@ export class Article extends Model {
   }
   public async oneShot() {
     if (this.state == "unfetch") {
-      await this.fetch().catch(() => this.changeState("fetching", "error"));
+      await this.fetch().catch((e) => this.setErrorState("fetching", e));
     }
     if (this.state == "fetched") {
-      await this.translate().catch(() => this.changeState("fetching", "error"));
+      await this.translate().catch((e) => this.setErrorState("fetching", e));
     }
   }
   private async changeState(oldState: State, newState: State, values?: Values) {
@@ -94,5 +94,13 @@ export class Article extends Model {
     await Article.where("id", this.id as FieldValue).where("state", oldState)
       .update({ state: newState, ...values });
     this.state = newState;
+  }
+  private async setErrorState(oldState: State, e: any) {
+    console.warn(e);
+    try {
+      await this.changeState(oldState, "error");
+    } catch (e) {
+      console.warn("error while setting error state", e);
+    }
   }
 }

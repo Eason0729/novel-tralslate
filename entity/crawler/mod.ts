@@ -14,6 +14,10 @@ import {
   ArticleSource as Syosetu18ArticleSource,
   NovelSource as Syosetu18NovelSource,
 } from "./syosetu18.ts";
+import {
+  ArticleSource as hamelnArticleSource,
+  NovelSource as hamelnNovelSource,
+} from "./hameln.ts";
 
 /**
  * Source website for novel
@@ -44,7 +48,6 @@ export interface Novel {
   chapters: ArticleMetaData[];
 }
 export interface ArticleSource {
-  name: string;
   baseUrl: string;
   get_article(url: ArticleMetaData): Promise<Article | undefined>;
 }
@@ -66,6 +69,7 @@ const sources: NovelSource[] = [
   new KakyomuNovelSource(),
   new SyosetuNovelSource(),
   new Syosetu18NovelSource(),
+  new hamelnNovelSource(),
 ];
 export function getNovel(url: string): Promise<Novel | undefined> {
   for (const source of sources) {
@@ -81,9 +85,8 @@ const articleSources: ArticleSource[] = [
   new KakyomuArticleSource(),
   new SyosetuArticleSource(),
   new Syosetu18ArticleSource(),
+  new hamelnArticleSource(),
 ];
-
-export const domainList: string[] = articleSources.map((x) => x.baseUrl);
 
 export function getArticle(
   metadata: ArticleMetaData,
@@ -94,4 +97,12 @@ export function getArticle(
     }
   }
   return Promise.resolve(undefined);
+}
+
+export function getSupportedSources(): string[] {
+  return sources.map((source) => source.name);
+}
+
+export function isUrlSupported(url: string): boolean {
+  return sources.some((source) => url.startsWith(source.baseUrl));
 }
