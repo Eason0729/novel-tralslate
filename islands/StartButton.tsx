@@ -1,7 +1,7 @@
 import { useSignal } from "@preact/signals";
 
 type buttonState = "start" | "running" | "retry";
-export function StartButton(
+export default function StartButton(
   { url, current }: { url: string; current: string },
 ) {
   const state = useSignal(current as buttonState);

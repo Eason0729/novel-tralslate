@@ -1,5 +1,5 @@
 import { RouteContext } from "$fresh/server.ts";
-import { StartButton } from "../../islands/StartButton.tsx";
+import StartButton from "../../islands/StartButton.tsx";
 import { Novel } from "../../entity/novel.ts";
 import { Article, State as ArticleState } from "../../entity/article.ts";
 import Error404 from "../_404.tsx";
@@ -27,12 +27,13 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
   novel.oneShot();
 
   for (
-    const article of await Article.where("novelId", id).select(
-      "id",
-      "state",
-      "index",
-      "title",
-    ).orderBy("index").all() as Article[]
+    const article of await Article.where("novelId", id)
+      .select(
+        "id",
+        "state",
+        "index",
+        "title",
+      ).orderBy("index").all() as Article[]
   ) {
     let state;
     switch (article.state as ArticleState) {

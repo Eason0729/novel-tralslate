@@ -5,11 +5,13 @@
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
+import * as $api_delete_id_ from "./routes/api/delete/[id].ts";
 import * as $api_retry_id_ from "./routes/api/retry/[id].ts";
 import * as $article_id_ from "./routes/article/[id].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $novel_id_ from "./routes/novel/[id].tsx";
-import * as $OpacityEnter from "./islands/OpacityEnter.tsx";
+import * as $unsupported from "./routes/unsupported.tsx";
+import * as $HistoryEntry from "./islands/HistoryEntry.tsx";
 import * as $StartButton from "./islands/StartButton.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
@@ -18,13 +20,15 @@ const manifest = {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
     "./routes/_middleware.ts": $_middleware,
+    "./routes/api/delete/[id].ts": $api_delete_id_,
     "./routes/api/retry/[id].ts": $api_retry_id_,
     "./routes/article/[id].tsx": $article_id_,
     "./routes/index.tsx": $index,
     "./routes/novel/[id].tsx": $novel_id_,
+    "./routes/unsupported.tsx": $unsupported,
   },
   islands: {
-    "./islands/OpacityEnter.tsx": $OpacityEnter,
+    "./islands/HistoryEntry.tsx": $HistoryEntry,
     "./islands/StartButton.tsx": $StartButton,
   },
   baseUrl: import.meta.url,

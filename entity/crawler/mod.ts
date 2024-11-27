@@ -10,6 +10,10 @@ import {
   ArticleSource as SyosetuArticleSource,
   NovelSource as SyosetuNovelSource,
 } from "./syosetu.ts";
+import {
+  ArticleSource as Syosetu18ArticleSource,
+  NovelSource as Syosetu18NovelSource,
+} from "./syosetu18.ts";
 
 /**
  * Source website for novel
@@ -61,6 +65,7 @@ const sources: NovelSource[] = [
   new AlphapolisNovelSource(),
   new KakyomuNovelSource(),
   new SyosetuNovelSource(),
+  new Syosetu18NovelSource(),
 ];
 export function getNovel(url: string): Promise<Novel | undefined> {
   for (const source of sources) {
@@ -75,7 +80,10 @@ const articleSources: ArticleSource[] = [
   new AlphapolisArticleSource(),
   new KakyomuArticleSource(),
   new SyosetuArticleSource(),
+  new Syosetu18ArticleSource(),
 ];
+
+export const domainList: string[] = articleSources.map((x) => x.baseUrl);
 
 export function getArticle(
   metadata: ArticleMetaData,

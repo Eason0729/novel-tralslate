@@ -13,11 +13,19 @@ export const handler: Handlers = {
     const form = await req.formData();
 
     const url = form.get("url") as string;
-    const novel = await Novel.fromUrl(url);
-    if (novel == undefined) return ctx.renderNotFound();
+    let novel, redirectUrl;
+    try {
+      novel = await Novel.fromUrl(url);
+    } catch (e) {
+      console.warn(e);
+      redirectUrl = "/unsupported";
+    }
+    if (!redirectUrl && novel) redirectUrl = "/novel/" + novel.id;
+
+    if (!redirectUrl) return ctx.renderNotFound();
 
     const headers = new Headers();
-    headers.set("location", "/novel/" + novel.id);
+    headers.set("location", redirectUrl);
     return new Response(null, {
       status: 303,
       headers,
@@ -26,7 +34,7 @@ export const handler: Handlers = {
 };
 
 export default async function Home() {
-  const novels = await Novel.all();
+  const novels = await Novel.where("hidden", false).all();
   return (
     <div class="w-full max-w-4xl mx-auto rounded-lg py-10 px-4">
       <Search />

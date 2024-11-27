@@ -1,4 +1,3 @@
-import { OpacityEnter } from "../islands/OpacityEnter.tsx";
 function isRepeation(line: string): boolean {
   for (
     let repeationLen = 1;
@@ -23,23 +22,12 @@ export default function Paragraph(
 ) {
   return (
     <>
-      <OpacityEnter />
       <div class="timeline-view text-xl leading-relaxed">
         {props.content.split("\n").map((x) =>
           isRepeation(x.trim())
-            ? (
-              <hr
-                class={props.animation
-                  ? "mx-1 my-12 opacity-enter"
-                  : "mx-1 my-12"}
-              />
-            )
+            ? <hr class="mx-1 my-12" />
             : (
-              <p
-                class={props.animation
-                  ? "break-words opacity-enter"
-                  : "break-words"}
-              >
+              <p class="break-words">
                 {x.trim()}
               </p>
             )

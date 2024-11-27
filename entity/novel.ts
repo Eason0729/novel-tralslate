@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "@denodb";
-import { getNovel } from "./crawler/mod.ts";
+import { domainList, getNovel } from "./crawler/mod.ts";
 import { FieldValue, Values } from "@denodb/types";
 import translate from "./translate.ts";
 import { Article } from "./article.ts";
@@ -26,6 +26,7 @@ export class Novel extends Model {
     description: DataTypes.string(4 * 1024),
     author: DataTypes.string(256),
     untranslatedDescription: DataTypes.string(4 * 1024),
+    hidden: DataTypes.BINARY,
   };
   static defaults = {
     name: "",
@@ -33,13 +34,21 @@ export class Novel extends Model {
     author: "",
     untranslatedDescription: "",
     state: "unfetch",
+    hidden: false,
   };
   static async getById(id: number): Promise<Novel | undefined> {
     return (await this.where("id", id).get() as Novel[])?.[0];
   }
   static async fromUrl(url: string): Promise<Novel | undefined> {
+    if (domainList.map((domain) => url.startsWith(domain)).every((x) => !x)) {
+      throw new Error(`invalid url: "${url}"`);
+    }
+
     const novels = await Novel.where("url", url).all() as Novel[];
-    if (novels.length > 0) return novels[0];
+    if (novels.length > 0) {
+      if (novels[0].hidden) novels[0].show();
+      return novels[0];
+    }
     return await Novel.create({
       url,
     }) as Novel;
@@ -74,6 +83,12 @@ export class Novel extends Model {
   }
   static articles() {
     return this.hasMany(Article);
+  }
+  public async show() {
+    await Novel.where("id", this.id as FieldValue).update({ hidden: false });
+  }
+  public async hide() {
+    await Novel.where("id", this.id as FieldValue).update({ hidden: true });
   }
   public async oneShot() {
     if (this.state == "unfetch") {

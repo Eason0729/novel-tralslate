@@ -34,31 +34,3 @@ body {
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
 }
-
-@keyframes opacity-enter {
-  0% {
-      opacity: 0;
-  }
-  1% {
-      opacity: 0;
-  }
-  25% {
-    opacity: 0.5;
-  }
-  50% {
-      opacity: 0.8;
-  }
-  65% {
-    opacity: 0.88;
-  }
-  100% {
-      opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .opacity-enter-active {
-    animation-name: opacity-enter;
-    animation-duration: 300ms;
-  }
-}
