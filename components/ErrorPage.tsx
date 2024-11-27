@@ -22,14 +22,14 @@ export default function ErrorPage(
     children?: ComponentChildren;
   },
 ) {
-  let code = +props.code;
+  const code = +props.code;
   return (
     <>
       <Head>
         <title>{`${code} - ${getErrorTitle(code)}`}</title>
       </Head>
       <div class="flex flex-col items-center justify-center min-h-screen">
-        <h1 class="text-6xl font-bold mb-4">404</h1>
+        <h1 class="text-6xl font-bold mb-4">{code}</h1>
         <h2 class="text-2xl mb-4" data-id="3">{getErrorTitle(code)}</h2>
 
         {props.children
@@ -42,7 +42,6 @@ export default function ErrorPage(
         <a
           class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-white dark:text-black text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-black dark:bg-slate-100 text-cyan-600-foreground h-10 px-4 py-2"
           href="/"
-          rel="ugc"
         >
           Go back home
         </a>

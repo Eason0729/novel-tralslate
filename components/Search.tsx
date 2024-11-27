@@ -3,7 +3,7 @@ export default function Search() {
     <form class="flex gap-2 mb-4 text-lg" method="POST">
       <input
         class="flex w-full rounded-md border border-input bg-background px-5 py-2 flex-grow h-12 dark:text-black"
-        placeholder="Enter novel url"
+        placeholder="https://syosetu.org/novel/320080/"
         type="text"
         name="url"
         value=""

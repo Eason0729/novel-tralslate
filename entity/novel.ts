@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "@denodb";
-import { domainList, getNovel } from "./crawler/mod.ts";
+import { getNovel, isUrlSupported } from "./crawler/mod.ts";
 import { FieldValue, Values } from "@denodb/types";
 import translate from "./translate.ts";
 import { Article } from "./article.ts";
@@ -40,7 +40,7 @@ export class Novel extends Model {
     return (await this.where("id", id).get() as Novel[])?.[0];
   }
   static async fromUrl(url: string): Promise<Novel | undefined> {
-    if (domainList.map((domain) => url.startsWith(domain)).every((x) => !x)) {
+    if (!isUrlSupported(url)) {
       throw new Error(`invalid url: "${url}"`);
     }
 
@@ -92,10 +92,10 @@ export class Novel extends Model {
   }
   public async oneShot() {
     if (this.state == "unfetch") {
-      await this.fetch().catch(() => this.changeState("fetching", "error"));
+      await this.fetch().catch((e) => this.setErrorState("fetching", e));
     }
     if (this.state == "fetched") {
-      await this.translate().catch(() => this.changeState("fetching", "error"));
+      await this.translate().catch((e) => this.setErrorState("fetching", e));
     }
   }
   private async changeState(oldState: state, newState: state, values?: Values) {
@@ -105,5 +105,13 @@ export class Novel extends Model {
     await Novel.where("id", this.id as FieldValue).where("state", oldState)
       .update({ state: newState, ...values });
     this.state = newState;
+  }
+  private async setErrorState(oldState: state, e: any) {
+    console.warn(e);
+    try {
+      await this.changeState(oldState, "error");
+    } catch (e) {
+      console.warn("error while setting error state", e);
+    }
   }
 }
