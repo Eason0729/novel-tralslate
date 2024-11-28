@@ -1,6 +1,6 @@
 import { Partial } from "$fresh/runtime.ts";
-import { Novel } from "../entity/novel.ts";
-import HistoryEntry from "../islands/HistoryEntry.tsx";
+import { Novel } from "../../entity/novel.ts";
+import HistoryEntry from "../../islands/HistoryEntry.tsx";
 
 export interface HistoryProps {
   novels?: Novel[];

@@ -2,8 +2,8 @@ import { Handlers } from "$fresh/server.ts";
 
 import { Novel } from "../entity/novel.ts";
 
-import History from "../components/History.tsx";
-import Search from "../components/Search.tsx";
+import History from "../components/novels/History.tsx";
+import Search from "../components/novels/Search.tsx";
 
 export const handler: Handlers = {
   GET(_, ctx) {
