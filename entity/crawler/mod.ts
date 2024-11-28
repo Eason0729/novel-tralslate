@@ -18,6 +18,7 @@ import {
   ArticleSource as hamelnArticleSource,
   NovelSource as hamelnNovelSource,
 } from "./hameln.ts";
+import { name } from "https://deno.land/std@0.117.0/_wasm_crypto/crypto.wasm.js";
 
 /**
  * Source website for novel
@@ -99,8 +100,11 @@ export function getArticle(
   return Promise.resolve(undefined);
 }
 
-export function getSupportedSources(): string[] {
-  return sources.map((source) => source.name);
+export function getSupportedSources(): { name: string; baseUrl: string }[] {
+  return sources.map((source) => ({
+    name: source.name,
+    baseUrl: source.baseUrl,
+  }));
 }
 
 export function isUrlSupported(url: string): boolean {

@@ -6,7 +6,6 @@ import Error404 from "../_404.tsx";
 import TitleBar from "../../components/reader/TitleBar.tsx";
 import TextView from "../../components/reader/TextView.tsx";
 import Footer from "../../components/reader/Footer.tsx";
-import ArticleTitle from "../../components/ArticleTitle.tsx";
 
 export default async function ArticlePage(_: Request, ctx: RouteContext) {
   const { id } = ctx.params as { id: string };
@@ -51,7 +50,7 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
       <div class="flex flex-col h-screen w-full sm:max-w-2xl mx-auto">
         <TitleBar title={novel.name as string} href={"/novel/" + novelId} />
         <TextView content={content}>
-          <ArticleTitle title={article.title as string} index={index} />
+          {(article.title as string).trim()}
         </TextView>
         <Footer nextUrl={nextUrl} previousUrl={previousUrl} />
       </div>
