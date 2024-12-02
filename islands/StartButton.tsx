@@ -2,7 +2,7 @@ import { useSignal } from "@preact/signals";
 
 type buttonState = "start" | "running" | "retry";
 export default function StartButton(
-  { url, current }: { url: string; current: string },
+  { articleId, current }: { articleId: number; current: string },
 ) {
   const state = useSignal(current as buttonState);
   let icon;
@@ -66,7 +66,7 @@ export default function StartButton(
     <button
       class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium disabled:opacity-50 h-10 w-10"
       onClick={() => {
-        fetch(url, { method: "POST" }).then(() => {
+        fetch(`/api/article/${articleId}`, { method: "POST" }).then(() => {
           state.value = "retry";
         });
         state.value = "running";

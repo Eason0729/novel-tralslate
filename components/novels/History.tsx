@@ -1,6 +1,6 @@
 import { Partial } from "$fresh/runtime.ts";
 import { Novel } from "../../entity/novel.ts";
-import HistoryEntry from "../../islands/HistoryEntry.tsx";
+import HistoryEntry from "./HistoryEntry.tsx";
 
 export interface HistoryProps {
   novels?: Novel[];
@@ -37,8 +37,12 @@ export default function History(props: HistoryProps) {
           Clear All
         </button>
       </div>
-      <ul class="space-y-2">
-        {novels.map((novel) => <HistoryEntry novel={novel} />)}
+      <ul class="space-y-2" f-client-nav>
+        <Partial name="novels-entry">
+          {novels.map((novel) => (
+            <HistoryEntry novel={novel} key={`novel-${novel.id}`} />
+          ))}
+        </Partial>
       </ul>
     </>
   );

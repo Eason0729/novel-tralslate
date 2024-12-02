@@ -2,6 +2,10 @@ import { Handlers, RouteContext } from "$fresh/server.ts";
 import { Article } from "../../../entity/article.ts";
 
 export const handler: Handlers = {
+  /**
+   * Rerun translation for an article.
+   * @returns
+   */
   async POST(_, ctx: RouteContext) {
     const { id } = ctx.params as { id: string };
     const article = await Article.getById(parseInt(id));
@@ -14,6 +18,14 @@ export const handler: Handlers = {
     await article.oneShot();
     return new Response(null, {
       status: 200,
+    });
+  },
+  GET() {
+    return new Response(null, {
+      status: 303,
+      headers: {
+        "location": "/",
+      },
     });
   },
 };

@@ -1,5 +1,8 @@
+import { Partial } from "$fresh/runtime.ts";
+import { Fragment } from "preact/jsx-runtime";
 import { Article, State as ArticleState } from "../../entity/article.ts";
 import StartButton from "../../islands/StartButton.tsx";
+import ScrollView from "../../islands/ScrollView.tsx";
 
 function extractNumber(str: string): number[] {
   const digitPattern = /[０-９0-9〇一二三四五六七八九]+/g;
@@ -75,7 +78,9 @@ function longestIncreasingSubsequence(sec: number[]): number[] {
   return lis;
 }
 
-export default function NovelList({ articles }: { articles: Article[] }) {
+export default function NovelList(
+  { articles, focus }: { articles: Article[]; focus?: boolean },
+) {
   articles.sort((a, b) => (a.index as number) - (b.index as number));
 
   const numberSeq = articles.flatMap((article) =>
@@ -84,7 +89,7 @@ export default function NovelList({ articles }: { articles: Article[] }) {
   const addIndex =
     longestIncreasingSubsequence(numberSeq).length * 1.5 < numberSeq.length;
 
-  const list = articles.map((article) => {
+  const list = articles.map((article, sec) => {
     let state;
     switch (article.state as ArticleState) {
       case "unfetch":
@@ -100,16 +105,21 @@ export default function NovelList({ articles }: { articles: Article[] }) {
     const title = article.title as string;
     const index = article.index as number;
     return (
-      <li class="block p-3 rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black shadow transition duration-300">
-        <div class="flex justify-between items-center tracking-tight text-2xl px-2">
+      <li
+        key={`frag-novel-list-${index}`}
+        class="block p-3 rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black shadow transition duration-300"
+      >
+        {(sec === 0 && focus) && <ScrollView />}
+        <div class="flex justify-between items-center tracking-tight text-2xl px-2 overflow-hidden">
           <a
             href={"/article/" + article.id}
             class="whitespace-nowrap overflow-x-hidden mr-3"
+            f-client-nav={false}
           >
             {addIndex ? `第${index + 1}話 ${title.trim()}` : title.trim()}
           </a>
           <StartButton
-            url={"/api/retry/" + article.id}
+            articleId={article.id as number}
             current={state}
           />
         </div>
@@ -119,7 +129,9 @@ export default function NovelList({ articles }: { articles: Article[] }) {
 
   return (
     <ul class="mt-4 space-y-3">
-      {list}
+      <Partial name="novel-list" mode="append">
+        {list}
+      </Partial>
     </ul>
   );
 }

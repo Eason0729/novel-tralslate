@@ -48,10 +48,7 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
 
   return (
     <div>
-      <div
-        class="flex flex-col h-screen w-full sm:max-w-2xl mx-auto"
-        f-client-nav
-      >
+      <div class="flex flex-col h-screen w-full sm:max-w-2xl mx-auto">
         <Partial name="article-reader">
           <TitleBar title={novel.name as string} href={"/novel/" + novelId} />
           <TextView content={content}>

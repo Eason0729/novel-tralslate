@@ -1,27 +1,22 @@
-import { useState } from "preact/hooks";
-import { Novel } from "../entity/novel.ts";
+import { Novel } from "../../entity/novel.ts";
 
 export default function HistoryEntry(props: { novel: Novel }) {
-  const [hidden, setHidden] = useState(false);
+  // const [hidden, setHidden] = useState(false);
   const novel = props.novel;
   const nameAvailable = novel.state == "translated" ||
     novel.name == "translating";
 
-  return hidden
-    ? null
-    : (
-      <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
-        <a href={"/novel/" + novel.id}>
-          <span>
-            {nameAvailable ? novel.name : `${novel.state}: ${novel.url}`}
-          </span>
-        </a>
+  return (
+    <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
+      <a href={"/novel/" + novel.id} f-client-nav={false}>
+        <span>
+          {nameAvailable ? novel.name : `${novel.state}: ${novel.url}`}
+        </span>
+      </a>
+      <form action={"/api/novel/" + novel.id} method="POST">
         <button
+          type="submit"
           class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium h-10 w-10"
-          onClick={() => {
-            setHidden(true);
-            fetch("/api/delete/" + novel.id, { method: "DELETE" });
-          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -40,6 +35,7 @@ export default function HistoryEntry(props: { novel: Novel }) {
           </svg>
           <span class="sr-only">Remove</span>
         </button>
-      </li>
-    );
+      </form>
+    </li>
+  );
 }
