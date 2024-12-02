@@ -95,7 +95,7 @@ export class Article extends Model {
       .update({ state: newState, ...values });
     this.state = newState;
   }
-  private async setErrorState(oldState: State, e: any) {
+  private async setErrorState(oldState: State, e: Error) {
     console.warn(e);
     try {
       await this.changeState(oldState, "error");

@@ -11,6 +11,7 @@ class ArticleMetaData implements def.ArticleMetaData {
     this.index = index;
     this.url = `${baseUrl}/episodes/${id}`;
   }
+  // deno-lint-ignore no-explicit-any
   static fromJSON(json: any, baseUrl: string): ArticleMetaData[] {
     const result: {
       id: string;

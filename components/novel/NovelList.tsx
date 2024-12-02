@@ -1,5 +1,4 @@
 import { Partial } from "$fresh/runtime.ts";
-import { Fragment } from "preact/jsx-runtime";
 import { Article, State as ArticleState } from "../../entity/article.ts";
 import StartButton from "../../islands/StartButton.tsx";
 import ScrollView from "../../islands/ScrollView.tsx";

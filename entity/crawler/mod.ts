@@ -18,7 +18,6 @@ import {
   ArticleSource as hamelnArticleSource,
   NovelSource as hamelnNovelSource,
 } from "./hameln.ts";
-import { name } from "https://deno.land/std@0.117.0/_wasm_crypto/crypto.wasm.js";
 
 /**
  * Source website for novel

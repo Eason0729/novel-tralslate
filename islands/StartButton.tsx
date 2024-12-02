@@ -1,5 +1,4 @@
 import { useSignal } from "@preact/signals";
-import { IS_BROWSER } from "$fresh/runtime.ts";
 
 type buttonState = "start" | "running" | "retry";
 export default function StartButton(

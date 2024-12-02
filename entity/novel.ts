@@ -106,7 +106,7 @@ export class Novel extends Model {
       .update({ state: newState, ...values });
     this.state = newState;
   }
-  private async setErrorState(oldState: state, e: any) {
+  private async setErrorState(oldState: state, e: Error) {
     console.warn(e);
     try {
       await this.changeState(oldState, "error");
