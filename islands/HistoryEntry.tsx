@@ -11,7 +11,7 @@ export default function HistoryEntry(props: { novel: Novel }) {
     ? null
     : (
       <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
-        <a href={"/novel/" + novel.id}>
+        <a href={"/novel/" + novel.id} f-client-nav={false}>
           <span>
             {nameAvailable ? novel.name : `${novel.state}: ${novel.url}`}
           </span>
