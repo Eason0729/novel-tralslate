@@ -1,4 +1,5 @@
 import { useSignal } from "@preact/signals";
+import { IS_BROWSER } from "$fresh/runtime.ts";
 
 type buttonState = "start" | "running" | "retry";
 export default function StartButton(
@@ -63,17 +64,24 @@ export default function StartButton(
       );
   }
   return (
-    <button
-      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium disabled:opacity-50 h-10 w-10"
-      onClick={() => {
-        fetch(`/api/article/${articleId}`, { method: "POST" }).then(() => {
-          state.value = "retry";
-        });
-        state.value = "running";
-      }}
-      disabled={state.value == "running"}
-    >
-      {icon}
-    </button>
+    <>
+      <noscript>
+        <form method="post" action={`/api/article/${articleId}`}>
+          <button type="submit">{icon}</button>
+        </form>
+      </noscript>
+      <button
+        class="jsonly inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium disabled:opacity-50 h-10 w-10"
+        onClick={() => {
+          fetch(`/api/article/${articleId}`, { method: "POST" }).then(() => {
+            state.value = "retry";
+          });
+          state.value = "running";
+        }}
+        disabled={state.value == "running"}
+      >
+        {icon}
+      </button>
+    </>
   );
 }

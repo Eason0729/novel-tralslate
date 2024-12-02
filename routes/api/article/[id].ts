@@ -16,15 +16,11 @@ export const handler: Handlers = {
     }
     await article.reset();
     await article.oneShot();
-    return new Response(null, {
-      status: 200,
-    });
-  },
-  GET() {
+
     return new Response(null, {
       status: 303,
       headers: {
-        "location": "/",
+        "location": `/novel/${article.novelId}`,
       },
     });
   },

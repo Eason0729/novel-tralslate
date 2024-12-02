@@ -7,8 +7,11 @@ export default function App({ Component }: PageProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>輕小說翻譯</title>
         <link rel="stylesheet" href="/styles.css" />
+        <noscript>
+          <style>{".jsonly{display:none}"}</style>
+        </noscript>
       </head>
-      <body>
+      <body f-client-nav>
         <Component />
       </body>
     </html>
