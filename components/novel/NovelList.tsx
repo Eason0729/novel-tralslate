@@ -85,8 +85,8 @@ export default function NovelList(
   const numberSeq = articles.flatMap((article) =>
     extractNumber(article.title as string)
   );
-  const addIndex =
-    longestIncreasingSubsequence(numberSeq).length * 1.5 < numberSeq.length;
+  const addIndex = longestIncreasingSubsequence(numberSeq).length * 1.5 <
+    Math.max(numberSeq.length, articles.length);
 
   const list = articles.map((article, sec) => {
     let state;
