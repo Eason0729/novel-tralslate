@@ -37,7 +37,10 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
       : novel.untranslatedDescription) as string;
 
   return (
-    <div class="container mx-auto m-2 p-6 max-w-4xl w-full dark:bg-slate-800 rounded-lg shadow-md">
+    <div
+      class="container mx-auto m-2 p-6 max-w-4xl w-full dark:bg-slate-800 rounded-lg shadow-md"
+      f-client-nav
+    >
       <NovelInfo novel={novel} />
       <Paragraph content={description} />
       <NovelList articles={articles} />

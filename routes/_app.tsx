@@ -11,7 +11,7 @@ export default function App({ Component }: PageProps) {
           <style>{".jsonly{display:none}"}</style>
         </noscript>
       </head>
-      <body f-client-nav>
+      <body>
         <Component />
       </body>
     </html>
