@@ -24,7 +24,7 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
 
   return (
     <>
-      <NovelList articles={articles} focus />
+      <NovelList articles={articles} />
       {(articles.length < pageSize)
         ? <Partial name="novel-load" />
         : <NovelLoad novelId={novelId} page={pageNumber} />}

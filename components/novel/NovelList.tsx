@@ -1,7 +1,6 @@
 import { Partial } from "$fresh/runtime.ts";
 import { Article, State as ArticleState } from "../../entity/article.ts";
 import StartButton from "../../islands/StartButton.tsx";
-import ScrollView from "../../islands/ScrollView.tsx";
 
 function extractNumber(str: string): number[] {
   const digitPattern = /[０-９0-9〇一二三四五六七八九]+/g;
@@ -78,7 +77,7 @@ function longestIncreasingSubsequence(sec: number[]): number[] {
 }
 
 export default function NovelList(
-  { articles, focus }: { articles: Article[]; focus?: boolean },
+  { articles }: { articles: Article[] },
 ) {
   articles.sort((a, b) => (a.index as number) - (b.index as number));
 
@@ -88,7 +87,7 @@ export default function NovelList(
   const addIndex = longestIncreasingSubsequence(numberSeq).length * 1.5 <
     Math.max(numberSeq.length, articles.length);
 
-  const list = articles.map((article, sec) => {
+  const list = articles.map((article) => {
     let state;
     switch (article.state as ArticleState) {
       case "unfetch":
@@ -108,7 +107,6 @@ export default function NovelList(
         key={`frag-novel-list-${index}`}
         class="block p-3 rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black shadow transition duration-300"
       >
-        {(sec === 0 && focus) && <ScrollView />}
         <div class="flex justify-between items-center tracking-tight text-2xl px-2 overflow-hidden">
           <a
             href={"/article/" + article.id}
@@ -134,4 +132,3 @@ export default function NovelList(
     </ul>
   );
 }
-// flex justify-between items-center font-semibold tracking-tight text-2xl mb-2

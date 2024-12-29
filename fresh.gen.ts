@@ -13,7 +13,6 @@ import * as $novel_id_page_ from "./routes/novel/[id]/[[page]].tsx";
 import * as $partial_novel_id_page_ from "./routes/partial/novel/[id]/[page].tsx";
 import * as $unsupported from "./routes/unsupported.tsx";
 import * as $HistoryEntry from "./islands/HistoryEntry.tsx";
-import * as $ScrollView from "./islands/ScrollView.tsx";
 import * as $StartButton from "./islands/StartButton.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
@@ -32,7 +31,6 @@ const manifest = {
   },
   islands: {
     "./islands/HistoryEntry.tsx": $HistoryEntry,
-    "./islands/ScrollView.tsx": $ScrollView,
     "./islands/StartButton.tsx": $StartButton,
   },
   baseUrl: import.meta.url,
