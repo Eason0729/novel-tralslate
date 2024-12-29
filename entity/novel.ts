@@ -36,6 +36,14 @@ export class Novel extends Model {
     state: "unfetch",
     hidden: false,
   };
+  // FIXME: migrate to repository pattern
+  private static async _createOverride(url: string): Promise<Novel> {
+    await Novel.create({
+      url,
+    });
+    const novels = await Novel.where("url", url).all() as Novel[];
+    return novels[0];
+  }
   static async getById(id: number): Promise<Novel | undefined> {
     return (await this.where("id", id).get() as Novel[])?.[0];
   }
@@ -49,9 +57,7 @@ export class Novel extends Model {
       if (novels[0].hidden) novels[0].show();
       return novels[0];
     }
-    return await Novel.create({
-      url,
-    }) as Novel;
+    return Novel._createOverride(url);
   }
   /**
    * advance state from unfetch to fetching

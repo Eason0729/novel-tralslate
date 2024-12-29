@@ -4,7 +4,7 @@
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
     "manifest": "deno task cli manifest $(pwd)",
-    "start": "deno run -A --watch=static/,routes/ dev.ts",
+    "start": "deno run -A --unstable-ffi --watch=static/,routes/ dev.ts",
     "build": "deno run -A dev.ts build",
     "preview": "deno run -A main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
@@ -27,7 +27,8 @@
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/": "npm:/tailwindcss@3.4.1/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
-    "opencc": "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/esm/cn2t.js"
+    "opencc": "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/esm/cn2t.js",
+    "sqlite": "jsr:@db/sqlite@^0.12.0"
   },
   "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
   "nodeModulesDir": true

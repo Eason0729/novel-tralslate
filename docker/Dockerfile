@@ -12,4 +12,4 @@ RUN deno task build
 
 RUN deno cache --reload main.ts
 
-CMD ["run", "-A", "main.ts"]
+CMD ["run", "-A", "--unstable-ffi", "main.ts"]

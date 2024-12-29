@@ -4,8 +4,13 @@ import * as OpenCC from "opencc";
 
 const openccConverter = OpenCC.Converter({ from: "cn", to: "twp" });
 
-const parallel = new Semaphore(1);
+const API_URL = Deno.env.get("API_URL") || "http://localhost:11434";
+const MODEL = Deno.env.get("MODEL") ||
+  "hf.co/SakuraLLM/Sakura-1.5B-Qwen2.5-v1.0-GGUF";
+const parallel = new Semaphore(parseInt(Deno.env.get("PARALLEL")!) || 1);
+
 const chunk_size = 618;
+
 export default async function translate(text: string): Promise<string> {
   const release = await parallel.acquire();
 
@@ -37,12 +42,11 @@ export default async function translate(text: string): Promise<string> {
           content: "将下面的日文文本翻译成中文：" + chunk,
         },
       ],
-      model: Deno.env.get("MODEL") ||
-        "hf.co/SakuraLLM/Sakura-1.5B-Qwen2.5-v1.0-GGUF",
-      API_URL: Deno.env.get("API_URL") || "http://localhost:11434",
+      model: MODEL,
+      API_URL,
       options: {
         num_ctx: chunk_size + 100,
-        num_predict: chunk.length + 150,
+        num_predict: Math.ceil(chunk.length * 1.25) + 100,
         temperature: 0.1,
         top_p: 0.3,
       },

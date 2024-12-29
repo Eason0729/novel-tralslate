@@ -2,9 +2,11 @@ import { Database, Model, SQLite3Connector } from "@denodb";
 import { Relationships } from "@denodb";
 import { Novel } from "./novel.ts";
 import { Article } from "./article.ts";
+import { Database as NativeDatabase } from "sqlite";
 
+const FILEPATH = Deno.env.get("SQLITE_PATH") || "./database.sqlite3";
 const connector = new SQLite3Connector({
-  filepath: Deno.env.get("SQLITE_PATH") || "./database.sqlite3",
+  filepath: FILEPATH,
 });
 
 export const db = new Database(connector);
@@ -15,10 +17,8 @@ db.link([Article, Novel]);
 await db.sync({});
 
 let isSetup = false;
-export default async function SetupDatabase() {
-  if (isSetup) return db;
-  isSetup = true;
 
+async function recoverTable() {
   const ops = await Promise.all([
     Article.where("state", "fetching").update({
       state: "unfetch",
@@ -47,6 +47,23 @@ export default async function SetupDatabase() {
   if (changes > 0) {
     console.info("Recovered from previous crash, reset", changes, "rows");
   }
+}
+
+// FIXME: this block thread
+function createIndex() {
+  const db = new NativeDatabase(FILEPATH);
+  db.run(
+    `CREATE INDEX IF NOT EXISTS article_index ON article("index", "novel_id");`,
+  );
+  db.run(`CREATE INDEX IF NOT EXISTS novel_index ON novel("url");`);
+}
+
+export default function SetupDatabase() {
+  if (isSetup) return db;
+  isSetup = true;
+
+  createIndex();
+  recoverTable();
 
   return db;
 }
