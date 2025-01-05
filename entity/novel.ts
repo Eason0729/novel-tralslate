@@ -28,7 +28,7 @@ export class Novel extends Model {
     untranslatedDescription: DataTypes.string(4 * 1024),
     hidden: DataTypes.BINARY,
   };
-  static overridedefaults = {
+  static override defaults = {
     name: "",
     description: "",
     author: "",

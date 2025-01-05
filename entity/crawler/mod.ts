@@ -32,6 +32,10 @@ export interface NovelSource {
    */
   baseUrl: string;
   /**
+   * Disable the source
+   */
+  disable?: boolean;
+  /**
    * Get novel info
    * @param url Novel url
    */
@@ -47,8 +51,20 @@ export interface Novel {
   author: string;
   chapters: ArticleMetaData[];
 }
+
 export interface ArticleSource {
+  /**
+   * base url of the source
+   */
   baseUrl: string;
+  /**
+   * Disable the source
+   */
+  disable?: boolean;
+  /*
+   * Get article content
+   * @param url Article url
+   */
   get_article(url: ArticleMetaData): Promise<Article | undefined>;
 }
 
@@ -64,13 +80,14 @@ export interface ArticleMetaData {
   index: number;
 }
 
-const sources: NovelSource[] = [
+const sources = ([
   new AlphapolisNovelSource(),
   new KakyomuNovelSource(),
   new SyosetuNovelSource(),
   new Syosetu18NovelSource(),
   new hamelnNovelSource(),
-];
+] as NovelSource[]).filter((source) => !source.disable);
+
 export function getNovel(url: string): Promise<Novel | undefined> {
   for (const source of sources) {
     if (url.startsWith(source.baseUrl)) {
@@ -80,13 +97,13 @@ export function getNovel(url: string): Promise<Novel | undefined> {
   return Promise.resolve(undefined);
 }
 
-const articleSources: ArticleSource[] = [
+const articleSources = ([
   new AlphapolisArticleSource(),
   new KakyomuArticleSource(),
   new SyosetuArticleSource(),
   new Syosetu18ArticleSource(),
   new hamelnArticleSource(),
-];
+] as ArticleSource[]).filter((source) => !source.disable);
 
 export function getArticle(
   metadata: ArticleMetaData,

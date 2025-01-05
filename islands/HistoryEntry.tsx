@@ -4,8 +4,7 @@ import { Novel } from "../entity/novel.ts";
 export default function HistoryEntry(props: { novel: Novel }) {
   const [hidden, setHidden] = useState(false);
   const novel = props.novel;
-  const nameAvailable = novel.state == "translated" ||
-    novel.name == "translating";
+  const nameAvailable = novel.name != "";
 
   return hidden
     ? null
