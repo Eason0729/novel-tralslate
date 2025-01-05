@@ -14,9 +14,9 @@ export type State =
   | "error";
 
 export class Article extends Model {
-  static table = "article";
-  static timestamps = true;
-  static fields = {
+  static override table = "article";
+  static override timestamps = true;
+  static override fields = {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -28,7 +28,7 @@ export class Article extends Model {
     content: DataTypes.string(64 * 1024),
     index: DataTypes.INTEGER,
   };
-  static defaults = {
+  static override defaults = {
     url: "",
     state: "unfetch",
     untranslatedContent: "",

@@ -30,6 +30,5 @@
     "opencc": "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/esm/cn2t.js",
     "sqlite": "jsr:@db/sqlite@^0.12.0"
   },
-  "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
-  "nodeModulesDir": true
+  "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" }
 }

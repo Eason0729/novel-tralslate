@@ -6,9 +6,6 @@ import History from "../components/novels/History.tsx";
 import Search from "../components/novels/Search.tsx";
 
 export const handler: Handlers = {
-  GET(_, ctx) {
-    return ctx.render();
-  },
   async POST(req, ctx) {
     const form = await req.formData();
 

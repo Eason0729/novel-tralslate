@@ -10,7 +10,6 @@ export default function NovelLoad({ page, novelId }: {
         <noscript>
           <a
             href={`/novel/${novelId}/${page + 1}`}
-            f-partial={`/partial/novel/${novelId}/${page + 1}`}
             class="text-xl px-12 py-3 bg-blue-500 hover:bg-blue-600 dark:bg-slate-200 disabled:hidden text-white dark:text-black font-semibold rounded-lg shadow transition duration-300"
           >
             Load More

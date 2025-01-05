@@ -13,9 +13,9 @@ type state =
   | "error";
 
 export class Novel extends Model {
-  static table = "novel";
-  static timestamps = true;
-  static fields = {
+  static override table = "novel";
+  static override timestamps = true;
+  static override fields = {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -28,7 +28,7 @@ export class Novel extends Model {
     untranslatedDescription: DataTypes.string(4 * 1024),
     hidden: DataTypes.BINARY,
   };
-  static defaults = {
+  static overridedefaults = {
     name: "",
     description: "",
     author: "",
