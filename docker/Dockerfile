@@ -10,6 +10,6 @@ RUN rm -fr node_modules _fresh
 
 RUN deno task build
 
-RUN deno cache --reload main.ts
+RUN deno cache --reload --allow-import main.ts
 
 CMD ["run", "-A", "--unstable-ffi", "main.ts"]
