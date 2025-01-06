@@ -1,4 +1,3 @@
-import { Partial } from "$fresh/runtime.ts";
 import { RouteContext } from "$fresh/server.ts";
 import { Article } from "../../entity/article.ts";
 import { Novel } from "../../entity/novel.ts";
@@ -49,15 +48,13 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
   return (
     <div>
       <div class="flex flex-col h-screen w-full sm:max-w-2xl mx-auto">
-        <Partial name="article-reader">
-          <TitleBar title={novel.name as string} href={"/novel/" + novelId} />
-          <TextView content={content}>
-            {(article.title as string).trim()}
-          </TextView>
-          <Footer nextUrl={nextUrl} previousUrl={previousUrl} />
-        </Partial>
+        <TitleBar title={novel.name as string} />
+        <TextView content={content}>
+          {(article.title as string).trim()}
+        </TextView>
+        <Footer nextUrl={nextUrl} previousUrl={previousUrl} />
       </div>
-      <HomeButton />
+      <HomeButton href={"/novel/" + novelId} />
     </div>
   );
 }

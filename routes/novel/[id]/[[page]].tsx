@@ -7,6 +7,8 @@ import NovelList from "../../../components/novel/NovelList.tsx";
 import NovelInfo from "../../../components/novel/NovelInfo.tsx";
 import NovelLoad from "../../../components/novel/NovelLoad.tsx";
 import Alert from "../../../components/Alert.tsx";
+import HomeButton from "../../../components/HomeButton.tsx";
+import RandomBar from "../../../components/RandomBar.tsx";
 
 export const initialSize = 50;
 export const pageSize = 40;
@@ -48,9 +50,10 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
       <NovelInfo novel={novel} />
       <Paragraph content={description} />
       <NovelList articles={articles} />
-      {articles.length >= (initialSize + pageNumber * pageSize) && (
-        <NovelLoad novelId={novelId} page={pageNumber} />
-      )}
+      {articles.length >= (initialSize + pageNumber * pageSize)
+        ? <NovelLoad novelId={novelId} page={pageNumber} />
+        : <RandomBar />}
+      <HomeButton href="/" />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import NovelList from "../../../../components/novel/NovelList.tsx";
 import NovelLoad from "../../../../components/novel/NovelLoad.tsx";
 import { Partial } from "$fresh/runtime.ts";
 import { initialSize, pageSize } from "../../../novel/[id]/[[page]].tsx";
+import RandomBar from "../../../../components/RandomBar.tsx";
 
 export default async function NovelPage(_: Request, ctx: RouteContext) {
   const { id, page } = ctx.params as { id: string; page: string };
@@ -26,7 +27,11 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
     <>
       <NovelList articles={articles} />
       {(articles.length < pageSize)
-        ? <Partial name="novel-load" />
+        ? (
+          <Partial name="novel-load">
+            <RandomBar />
+          </Partial>
+        )
         : <NovelLoad novelId={novelId} page={pageNumber} />}
     </>
   );
