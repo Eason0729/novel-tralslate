@@ -20,6 +20,7 @@
     "@denodb/types": "https://raw.githubusercontent.com/Eason0729/denodb/master/lib/data-types.ts",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
+    "@tabler/icons-preact": "npm:@tabler/icons-preact@^3.26.0",
     "ollama": "https://raw.githubusercontent.com/Eason0729/ollama-jsr/main/mod.ts",
     "preact": "https://esm.sh/preact@10.22.0",
     "preact/": "https://esm.sh/preact@10.22.0/",

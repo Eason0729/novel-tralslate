@@ -44,10 +44,7 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
     return <Alert msg="This novel is being fetched, please wait" />;
   }
   return (
-    <div
-      class="container mx-auto m-2 p-6 max-w-4xl w-full dark:bg-slate-800 rounded-lg shadow-md"
-      f-client-nav
-    >
+    <div class="container mx-auto m-2 p-6 max-w-4xl w-full dark:bg-slate-800 rounded-lg shadow-md">
       <NovelInfo novel={novel} />
       <Paragraph content={description} />
       <NovelList articles={articles} />

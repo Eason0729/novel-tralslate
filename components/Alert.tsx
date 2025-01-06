@@ -4,7 +4,7 @@ export default function Alert({ msg }: { msg: string }) {
       <div class="w-full max-w-md bg-blue-100 dark:bg-gray-800 border-l-4 border-blue-500 dark:border-yellow-500 text-blue-700 dark:text-yellow-300 p-4 rounded shadow-md">
         <h2 class="font-bold text-lg">Warning!</h2>
         <p class="mt-2">{msg}</p>
-        <div class="mt-4" f-client-nav={false}>
+        <div class="mt-4">
           <a
             href=""
             class="inline-flex items-center px-4 py-2 bg-blue-500 dark:bg-yellow-600 text-white font-semibold rounded hover:bg-blue-600 dark:hover:bg-yellow-700"

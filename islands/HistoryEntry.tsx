@@ -1,5 +1,6 @@
 import { useState } from "preact/hooks";
 import { Novel } from "../entity/novel.ts";
+import { IconX } from "@tabler/icons-preact";
 
 export default function HistoryEntry(props: { novel: Novel }) {
   const [hidden, setHidden] = useState(false);
@@ -10,58 +11,28 @@ export default function HistoryEntry(props: { novel: Novel }) {
     ? null
     : (
       <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
-        <a href={"/novel/" + novel.id}>
-          <span>
-            {nameAvailable ? novel.name : `${novel.state}: ${novel.url}`}
-          </span>
+        <a href={"/novel/" + novel.id} class="flex-1 overflow-ellipsis">
+          {nameAvailable ? novel.name : `${novel.state}: ${novel.url}`}
         </a>
         <noscript>
           <form action={"/api/novel/" + novel.id} method="POST">
             <button
               type="submit"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium h-10 w-10"
+              class="inline-flex items-center justify-between whitespace-nowrap rounded-md font-medium h-10 !w-7"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-x h-4 w-4"
-              >
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
+              <IconX class="h-5 w-5" />
               <span class="sr-only">Remove</span>
             </button>
           </form>
         </noscript>
         <button
-          class="jsonly inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium h-10 w-10"
+          class="jsonly inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium h-10 !w-7"
           onClick={() => {
             setHidden(true);
             fetch("/api/novel/" + novel.id, { method: "POST" });
           }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-x h-4 w-4"
-          >
-            <path d="M18 6 6 18"></path>
-            <path d="m6 6 12 12"></path>
-          </svg>
+          <IconX class="h-5 w-5" />
           <span class="sr-only">Remove</span>
         </button>
       </li>

@@ -1,24 +1,17 @@
-import ArrowButton from "./ArrowButton.tsx";
+import ArrowButton from "../../islands/ArrowButton.tsx";
 
 export default function Footer(
   { previousUrl, nextUrl }: { previousUrl?: string; nextUrl?: string },
 ) {
   return (
     <footer class="flex justify-between p-4 border-t">
-      <a href={previousUrl || "#"}>
-        <ArrowButton
-          disabled={!previousUrl}
-          direction="left"
-        />
-      </a>
+      <ArrowButton
+        disabled={!previousUrl}
+        direction="left"
+        href={previousUrl}
+      />
 
-      {nextUrl
-        ? (
-          <a href={nextUrl}>
-            <ArrowButton direction="right" />
-          </a>
-        )
-        : null}
+      {nextUrl ? <ArrowButton direction="right" href={nextUrl} /> : null}
     </footer>
   );
 }

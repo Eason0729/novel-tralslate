@@ -10,26 +10,19 @@ function extractNumber(str: string): number[] {
   const numbers = numberStrings.map((numStr) => {
     return parseInt(
       numStr.split("").map((char) => {
-        switch (char) {
-          case "〇":
-            return "0";
-          case "一":
-            return "1";
-          case "二":
-            return "2";
-          case "三":
-            return "3";
-          case "四":
-            return "4";
-          case "五":
-            return "5";
-          case "七":
-            return "7";
-          case "八":
-            return "8";
-          case "九":
-            return "9";
-        }
+        const charsMap = {
+          "〇": 0,
+          "一": 1,
+          "二": 2,
+          "三": 3,
+          "四": 4,
+          "五": 5,
+          "六": 6,
+          "七": 7,
+          "八": 8,
+          "九": 9,
+        };
+        if (char in charsMap) return charsMap[char as keyof typeof charsMap];
 
         if (char >= "０" && char <= "９") {
           return (char.charCodeAt(0) - 0xFF10).toString();
@@ -107,11 +100,10 @@ export default function NovelList(
         key={`frag-novel-list-${index}`}
         class="block p-3 rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black shadow transition duration-300"
       >
-        <div class="flex justify-between items-center tracking-tight text-2xl px-2 overflow-hidden">
+        <div class="flex justify-between items-center tracking-tight text-2xl px-2">
           <a
             href={"/article/" + article.id}
-            class="whitespace-nowrap overflow-x-hidden mr-3"
-            f-client-nav={false}
+            class="mr-3 line-clamp-2"
           >
             {addIndex ? `第${index + 1}話 ${title.trim()}` : title.trim()}
           </a>

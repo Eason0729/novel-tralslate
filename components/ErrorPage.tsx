@@ -2,16 +2,13 @@ import { Head } from "$fresh/runtime.ts";
 import { ComponentChildren } from "preact";
 
 function getErrorTitle(code: number) {
-  switch (code) {
-    case 400:
-      return "Bad Request";
-    case 401:
-      return "Unauthorized";
-    case 403:
-      return "Forbidden";
-    case 404:
-      return "Page Not Found";
-  }
+  const codesMap = {
+    400: "Bad Request",
+    401: "Unauthorized",
+    403: "Forbidden",
+    404: "Page Not Found",
+  };
+  if (code in codesMap) return codesMap[code as keyof typeof codesMap];
   return `Unknown`;
 }
 
