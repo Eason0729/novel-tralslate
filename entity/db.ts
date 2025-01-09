@@ -16,8 +16,6 @@ Relationships.belongsTo(Article, Novel);
 db.link([Article, Novel]);
 await db.sync({});
 
-let isSetup = false;
-
 async function recoverTable() {
   const ops = await Promise.all([
     Article.where("state", "fetching").update({
@@ -58,11 +56,18 @@ function createIndex() {
   db.run(`CREATE INDEX IF NOT EXISTS novel_index ON novel("url");`);
 }
 
-export default function SetupDatabase() {
-  if (isSetup) return db;
-  isSetup = true;
+/**
+ * @warn Don't call this function more than once
+ * @returns {Database}
+ */
+export default function SetupDatabase(): Database {
+  if (Deno.env.get("BYPASS_DATABASE_MIGRATION") == "1") {
+    console.warn("Bypassing database migration");
+  } else {
+    console.info("Detecting database migration");
+    createIndex();
+  }
 
-  createIndex();
   recoverTable();
 
   return db;

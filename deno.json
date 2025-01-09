@@ -4,7 +4,7 @@
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
     "manifest": "deno task cli manifest $(pwd)",
-    "start": "deno run -A --unstable-ffi --watch=static/,routes/ dev.ts",
+    "start": "BYPASS_DATABASE_MIGRATION=1 deno run -A --unstable-ffi --watch=static/,routes/ dev.ts",
     "build": "deno run -A --unstable-ffi dev.ts build",
     "preview": "deno run -A main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
