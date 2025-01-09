@@ -18,6 +18,7 @@ export default function Alert({ msg }: { msg: string }) {
             Back to home
           </a>
         </div>
+        <meta http-equiv="refresh" content="10" />
       </div>
     </div>
   );

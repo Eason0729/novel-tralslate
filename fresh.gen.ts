@@ -14,6 +14,7 @@ import * as $partial_novel_id_page_ from "./routes/partial/novel/[id]/[page].tsx
 import * as $unsupported from "./routes/unsupported.tsx";
 import * as $ArrowButton from "./islands/ArrowButton.tsx";
 import * as $HistoryEntry from "./islands/HistoryEntry.tsx";
+import * as $LoadButton from "./islands/LoadButton.tsx";
 import * as $StartButton from "./islands/StartButton.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
@@ -33,6 +34,7 @@ const manifest = {
   islands: {
     "./islands/ArrowButton.tsx": $ArrowButton,
     "./islands/HistoryEntry.tsx": $HistoryEntry,
+    "./islands/LoadButton.tsx": $LoadButton,
     "./islands/StartButton.tsx": $StartButton,
   },
   baseUrl: import.meta.url,
