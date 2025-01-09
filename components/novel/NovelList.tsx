@@ -2,6 +2,7 @@ import { Partial } from "$fresh/runtime.ts";
 import { Article, State as ArticleState } from "../../entity/article.ts";
 import StartButton from "../../islands/StartButton.tsx";
 
+// FIXME: maybe we need some transformation module instead of coupling with display logic?
 function extractNumber(str: string): number[] {
   const digitPattern = /[０-９0-9〇一二三四五六七八九]+/g;
 
@@ -34,24 +35,24 @@ function extractNumber(str: string): number[] {
 
   return numbers;
 }
+
 function longestIncreasingSubsequence(sec: number[]): number[] {
   if (sec.length === 0) return [];
 
-  const dp: number[] = new Array(sec.length).fill(1); // dp[i] will store the length of LIS ending at index i
-  const previousIndex: number[] = new Array(sec.length).fill(-1); // to reconstruct the subsequence
+  const dp: number[] = new Array(sec.length).fill(1);
+  const previousIndex: number[] = new Array(sec.length).fill(-1);
 
-  let maxLength = 1; // Tracks the overall maximum length of subsequence found
-  let maxIndex = 0; // Tracks the index of the last element in the longest subsequence
+  let maxLength = 1;
+  let maxIndex = 0;
 
-  // Fill dp array with lengths of increasing subsequences
   for (let i = 1; i < sec.length; i++) {
     for (let j = 0; j < i; j++) {
       if (sec[i] > sec[j] && dp[i] < dp[j] + 1) {
         dp[i] = dp[j] + 1;
-        previousIndex[i] = j; // update previous index for reconstruction
+        previousIndex[i] = j;
       }
     }
-    // Update maxLength and maxIndex
+
     if (dp[i] > maxLength) {
       maxLength = dp[i];
       maxIndex = i;
@@ -74,11 +75,9 @@ export default function NovelList(
 ) {
   articles.sort((a, b) => (a.index as number) - (b.index as number));
 
-  const numberSeq = articles.flatMap((article) =>
-    extractNumber(article.title as string)
-  );
-  const addIndex = longestIncreasingSubsequence(numberSeq).length * 1.5 <
-    Math.max(numberSeq.length, articles.length);
+  const addIndex = longestIncreasingSubsequence(
+    articles.flatMap((article) => extractNumber(article.title as string)),
+  ).length < articles.length * 0.8;
 
   const list = articles.map((article) => {
     let state;
