@@ -80,16 +80,17 @@ export interface ArticleMetaData {
   index: number;
 }
 
-const sources = ([
+const sources: NovelSource[] = [
   new AlphapolisNovelSource(),
   new KakyomuNovelSource(),
   new SyosetuNovelSource(),
   new Syosetu18NovelSource(),
   new hamelnNovelSource(),
-] as NovelSource[]).filter((source) => !source.disable);
+];
 
 export function getNovel(url: string): Promise<Novel | undefined> {
   for (const source of sources) {
+    if (source.disable) continue;
     if (url.startsWith(source.baseUrl)) {
       return source.get_novel(url);
     }
@@ -97,18 +98,19 @@ export function getNovel(url: string): Promise<Novel | undefined> {
   return Promise.resolve(undefined);
 }
 
-const articleSources = ([
+const articleSources: ArticleSource[] = [
   new AlphapolisArticleSource(),
   new KakyomuArticleSource(),
   new SyosetuArticleSource(),
   new Syosetu18ArticleSource(),
   new hamelnArticleSource(),
-] as ArticleSource[]).filter((source) => !source.disable);
+];
 
 export function getArticle(
   metadata: ArticleMetaData,
 ): Promise<Article | undefined> {
   for (const source of articleSources) {
+    if (source.disable) continue;
     if (metadata.url.startsWith(source.baseUrl)) {
       return source.get_article(metadata);
     }
@@ -117,12 +119,14 @@ export function getArticle(
 }
 
 export function getSupportedSources(): { name: string; baseUrl: string }[] {
-  return sources.map((source) => ({
+  return sources.filter((source) => !source.disable).map((source) => ({
     name: source.name,
     baseUrl: source.baseUrl,
   }));
 }
 
 export function isUrlSupported(url: string): boolean {
-  return sources.some((source) => url.startsWith(source.baseUrl));
+  return sources.filter((source) => !source.disable).some((source) =>
+    url.startsWith(source.baseUrl)
+  );
 }

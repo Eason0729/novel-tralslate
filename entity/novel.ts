@@ -1,8 +1,8 @@
 import { DataTypes, Model } from "@denodb";
 import { getNovel, isUrlSupported } from "./crawler/mod.ts";
 import { FieldValue, Values } from "@denodb/types";
-import translate from "./translate.ts";
 import { Article } from "./article.ts";
+import { getTranslator } from "./translater/mod.ts";
 
 type state =
   | "unfetch"
@@ -82,7 +82,13 @@ export class Novel extends Model {
   }
   async translate() {
     this.changeState("fetched", "translating");
-    const translated = await translate(this.untranslatedDescription as string);
+
+    const translater = getTranslator(this.url as string);
+    if (!translater) throw new Error("no translater found");
+
+    const translated = await translater.translate(
+      this.untranslatedDescription as string,
+    );
     await this.changeState("translating", "translated", {
       description: translated,
     });

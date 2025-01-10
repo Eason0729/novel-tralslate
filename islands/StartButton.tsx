@@ -2,17 +2,20 @@ import { useSignal } from "@preact/signals";
 import { IconLoader2, IconPlayerPlay, IconRefresh } from "@tabler/icons-preact";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 
-type buttonState = "start" | "running" | "retry";
+export type buttonState = "start" | "running" | "retry";
+
 export default function StartButton(
-  { articleId, current }: { articleId: number; current: string },
+  props: { articleId: number; state: buttonState },
 ) {
-  const state = useSignal(current as buttonState);
+  const state = useSignal(props.state as buttonState);
 
   const iconMap = {
     "start": <IconPlayerPlay />,
     "running": <IconLoader2 class="animate-spin" />,
     "retry": <IconRefresh />,
   };
+
+  const articleId = props.articleId;
 
   if (!IS_BROWSER) {
     return (

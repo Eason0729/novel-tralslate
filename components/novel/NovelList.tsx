@@ -1,8 +1,7 @@
 import { Partial } from "$fresh/runtime.ts";
-import { Article, State as ArticleState } from "../../entity/article.ts";
-import StartButton from "../../islands/StartButton.tsx";
+import { Article } from "../../entity/article.ts";
+import ArticleEntry from "./ArticleEntry.tsx";
 
-// FIXME: maybe we need some transformation module instead of coupling with display logic?
 function extractNumber(str: string): number[] {
   const digitPattern = /[０-９0-9〇一二三四五六七八九]+/g;
 
@@ -79,57 +78,12 @@ export default function NovelList(
     articles.flatMap((article) => extractNumber(article.title as string)),
   ).length < articles.length * 0.8;
 
-  const list = articles.map((article) => {
-    let state;
-    switch (article.state as ArticleState) {
-      case "unfetch":
-        state = "start";
-        break;
-      case "translating":
-      case "fetching":
-        state = "running";
-        break;
-      default:
-        state = "retry";
-    }
-    const title = article.title as string;
-    const index = article.index as number;
-    return (
-      <li
-        key={`frag-novel-list-${index}`}
-        class="block p-3 rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black shadow transition duration-300"
-      >
-        <div class="flex justify-between items-center tracking-tight text-2xl px-2">
-          <a
-            href={"/article/" + article.id}
-            class="flex mr-3 line-clamp-2"
-          >
-            {addIndex ? `第${index + 1}話 ${title.trim()}` : title.trim()}
-          </a>
-          <div class="flex items-center">
-            <a
-              href={"/article/" + article.id}
-              class="border-l-[3px] border-blue-400 dark:border-slate-300 visited:border-white dark:visited:border-blue-600 h-full pl-1"
-              disabled
-              tabIndex={-1}
-              aria-label="translated"
-            >
-              {"\u200B"}
-            </a>
-            <StartButton
-              articleId={article.id as number}
-              current={state}
-            />
-          </div>
-        </div>
-      </li>
-    );
-  });
-
   return (
     <ul class="mt-4 space-y-3">
       <Partial name="novel-list" mode="append">
-        {list}
+        {articles.map((article) => (
+          <ArticleEntry article={article} addIndex={addIndex} />
+        ))}
       </Partial>
     </ul>
   );
