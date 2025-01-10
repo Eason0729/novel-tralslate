@@ -106,14 +106,16 @@ export default function NovelList(
           >
             {addIndex ? `第${index + 1}話 ${title.trim()}` : title.trim()}
           </a>
-          <div>
+          <div class="flex items-center">
             <a
               href={"/article/" + article.id}
               class="border-l-[3px] border-blue-400 dark:border-slate-300 visited:border-white dark:visited:border-blue-600 h-full pl-1"
               disabled
               tabIndex={-1}
               aria-label="translated"
-            />
+            >
+              {"\u200B"}
+            </a>
             <StartButton
               articleId={article.id as number}
               current={state}
