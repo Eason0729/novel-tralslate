@@ -102,14 +102,23 @@ export default function NovelList(
         <div class="flex justify-between items-center tracking-tight text-2xl px-2">
           <a
             href={"/article/" + article.id}
-            class="mr-3 line-clamp-2"
+            class="flex mr-3 line-clamp-2"
           >
             {addIndex ? `第${index + 1}話 ${title.trim()}` : title.trim()}
           </a>
-          <StartButton
-            articleId={article.id as number}
-            current={state}
-          />
+          <div>
+            <a
+              href={"/article/" + article.id}
+              class="border-l-[3px] border-blue-400 dark:border-slate-300 visited:border-white dark:visited:border-blue-600 h-full pl-1"
+              disabled
+              tabIndex={-1}
+              aria-label="translated"
+            />
+            <StartButton
+              articleId={article.id as number}
+              current={state}
+            />
+          </div>
         </div>
       </li>
     );
