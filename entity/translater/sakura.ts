@@ -23,16 +23,21 @@ function chunking(text: string): string[] {
 
 export class Translater implements def.Translator {
   maxParallel = 1;
-  disable = false;
-  apiURL = Deno.env.get("OLLAMA_URL");
+  disable;
+  apiURL?: string;
   constructor() {
+    const apiURL = Deno.env.get("OLLAMA_URL");
+    this.apiURL = apiURL;
+
+    this.disable = apiURL ? false : true;
+
     if (this.apiURL) {
       setInterval(async () => {
         this.disable = await fetch(this.apiURL + "/status").then((res) =>
           res.ok
         );
-      }, 1000);
-    } else this.disable = true;
+      }, 10000);
+    }
   }
 
   getAffinity(url: string): def.Affinity | undefined {

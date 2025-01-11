@@ -41,6 +41,7 @@ export function getTranslator(url: string): Translator | undefined {
   let maxAffinity = 0;
   let translator: Translator | undefined;
   for (const t of translators) {
+    if (t.disable) continue;
     const affinity = t.getAffinity(url);
     if (affinity && affinity > maxAffinity) {
       maxAffinity = affinity;
