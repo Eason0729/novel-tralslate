@@ -2,19 +2,14 @@ import { Database, Model, SQLite3Connector } from "@denodb";
 import { Relationships } from "@denodb";
 import { Novel } from "./novel.ts";
 import { Article } from "./article.ts";
-import { Database as NativeDatabase } from "sqlite";
+import { runMigrations } from "./migration/mod.ts";
 
 const FILEPATH = Deno.env.get("SQLITE_PATH") || "./database.sqlite3";
 const connector = new SQLite3Connector({
   filepath: FILEPATH,
 });
 
-export const db = new Database(connector);
-
-Relationships.belongsTo(Article, Novel);
-
-db.link([Article, Novel]);
-await db.sync({});
+export let db: Database;
 
 async function recoverTable() {
   const ops = await Promise.all([
@@ -47,26 +42,24 @@ async function recoverTable() {
   }
 }
 
-// FIXME: this block thread
-function createIndex() {
-  const db = new NativeDatabase(FILEPATH);
-  db.run(
-    `CREATE INDEX IF NOT EXISTS article_index ON article("index", "novel_id");`,
-  );
-  db.run(`CREATE INDEX IF NOT EXISTS novel_index ON novel("url");`);
-}
-
 /**
  * @warn Don't call this function more than once
  * @returns {Database}
  */
-export default function SetupDatabase(): Database {
+export default async function SetupDatabase(): Promise<Database> {
   if (Deno.env.get("BYPASS_DATABASE_MIGRATION") == "1") {
     console.warn("Bypassing database migration");
   } else {
     console.info("Detecting database migration");
-    createIndex();
+    await runMigrations(FILEPATH);
   }
+
+  db = new Database(connector);
+
+  Relationships.belongsTo(Article, Novel);
+
+  db.link([Article, Novel]);
+  await db.sync({});
 
   recoverTable();
 

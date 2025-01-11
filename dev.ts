@@ -7,7 +7,7 @@ import "$std/dotenv/load.ts";
 
 import SetupDatabase from "./entity/db.ts";
 
-SetupDatabase();
+await SetupDatabase();
 
 await dev(import.meta.url, "./main.ts", config);
 

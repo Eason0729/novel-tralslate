@@ -11,6 +11,6 @@ import manifest from "./fresh.gen.ts";
 import config from "./fresh.config.ts";
 import SetupDatabase from "./entity/db.ts";
 
-SetupDatabase();
+await SetupDatabase();
 
 await start(manifest, config);
