@@ -15,7 +15,8 @@ export default function ArticleEntry(
   };
   const state = stateMap[article.state as ArticleState];
 
-  const title = article.title as string;
+  const title = (article.title as string) ||
+    (article.untranslatedTitle as string);
   const index = article.index as number;
   return (
     <li
@@ -27,7 +28,8 @@ export default function ArticleEntry(
           href={"/article/" + article.id}
           class="flex mr-3 line-clamp-2"
         >
-          {addIndex ? `第${index + 1}話 ${title.trim()}` : title.trim()}
+          {addIndex ? `第${index + 1}話 ` : null}
+          {title.trim()}
         </a>
         <div class="flex items-center">
           <a

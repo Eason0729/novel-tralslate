@@ -6,12 +6,15 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
 import * as $api_article_id_ from "./routes/api/article/[id].ts";
-import * as $api_novel_id_ from "./routes/api/novel/[id].ts";
+import * as $api_novel_delete_id_ from "./routes/api/novel/delete/[id].ts";
+import * as $api_novel_reload_id_ from "./routes/api/novel/reload/[id].ts";
+import * as $api_novel_translate_id_ from "./routes/api/novel/translate/[id].ts";
 import * as $article_id_ from "./routes/article/[id].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $novel_id_page_ from "./routes/novel/[id]/[[page]].tsx";
 import * as $partial_novel_id_page_ from "./routes/partial/novel/[id]/[page].tsx";
 import * as $unsupported from "./routes/unsupported.tsx";
+import * as $ActionButton from "./islands/ActionButton.tsx";
 import * as $ArrowButton from "./islands/ArrowButton.tsx";
 import * as $HistoryEntry from "./islands/HistoryEntry.tsx";
 import * as $LoadButton from "./islands/LoadButton.tsx";
@@ -24,7 +27,9 @@ const manifest = {
     "./routes/_app.tsx": $_app,
     "./routes/_middleware.ts": $_middleware,
     "./routes/api/article/[id].ts": $api_article_id_,
-    "./routes/api/novel/[id].ts": $api_novel_id_,
+    "./routes/api/novel/delete/[id].ts": $api_novel_delete_id_,
+    "./routes/api/novel/reload/[id].ts": $api_novel_reload_id_,
+    "./routes/api/novel/translate/[id].ts": $api_novel_translate_id_,
     "./routes/article/[id].tsx": $article_id_,
     "./routes/index.tsx": $index,
     "./routes/novel/[id]/[[page]].tsx": $novel_id_page_,
@@ -32,6 +37,7 @@ const manifest = {
     "./routes/unsupported.tsx": $unsupported,
   },
   islands: {
+    "./islands/ActionButton.tsx": $ActionButton,
     "./islands/ArrowButton.tsx": $ArrowButton,
     "./islands/HistoryEntry.tsx": $HistoryEntry,
     "./islands/LoadButton.tsx": $LoadButton,

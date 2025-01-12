@@ -1,10 +1,7 @@
 import { Handlers, RouteContext } from "$fresh/server.ts";
-import { Novel } from "../../../entity/novel.ts";
+import { Novel } from "../../../../entity/novel.ts";
 
 export const handler: Handlers = {
-  /**
-   * Delete a novel from the database.
-   */
   async POST(_, ctx: RouteContext) {
     const { id } = ctx.params as { id: string };
     const novel = await Novel.getById(parseInt(id));
@@ -13,13 +10,14 @@ export const handler: Handlers = {
         status: 404,
       });
     }
-    await novel.hide();
+
+    await novel.reset();
     await novel.oneShot();
 
     return new Response(null, {
       status: 303,
       headers: {
-        "location": "/",
+        "location": "/novel/" + id,
       },
     });
   },

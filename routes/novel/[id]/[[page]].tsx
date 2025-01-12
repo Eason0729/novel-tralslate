@@ -3,7 +3,7 @@ import { Novel } from "../../../entity/novel.ts";
 import { Article } from "../../../entity/article.ts";
 import Error404 from "../../_404.tsx";
 import Paragraph from "../../../components/Paragraph.tsx";
-import NovelList from "../../../components/novel/NovelList.tsx";
+import ArticleList from "../../../components/novel/ArticleList.tsx";
 import NovelInfo from "../../../components/novel/NovelInfo.tsx";
 import NovelLoad from "../../../components/novel/NovelLoad.tsx";
 import Alert from "../../../components/Alert.tsx";
@@ -34,11 +34,6 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
     ).orderBy("index").limit(initialSize + pageNumber * pageSize)
     .all() as Article[];
 
-  const description =
-    (novel.state == "translated"
-      ? novel.description
-      : novel.untranslatedDescription) as string;
-
   if (novel.state == "error") {
     return <Alert msg="This novel is in error state, please check the logs" />;
   }
@@ -48,8 +43,7 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
   return (
     <div class="container mx-auto m-2 p-6 max-w-4xl w-full dark:bg-slate-800 rounded-lg shadow-md">
       <NovelInfo novel={novel} />
-      <Paragraph content={description} />
-      <NovelList articles={articles} />
+      <ArticleList articles={articles} />
       {articles.length >= (initialSize + pageNumber * pageSize)
         ? <NovelLoad novelId={novelId} page={pageNumber} />
         : <RandomBar />}

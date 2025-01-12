@@ -47,19 +47,19 @@ async function recoverTable() {
  * @returns {Database}
  */
 export default async function SetupDatabase(): Promise<Database> {
+  db = new Database(connector);
+
+  Relationships.belongsTo(Article, Novel);
+
+  db.link([Article, Novel]);
+  await db.sync({ drop: false });
+
   if (Deno.env.get("BYPASS_DATABASE_MIGRATION") == "1") {
     console.warn("Bypassing database migration");
   } else {
     console.info("Detecting database migration");
     await runMigrations(FILEPATH);
   }
-
-  db = new Database(connector);
-
-  Relationships.belongsTo(Article, Novel);
-
-  db.link([Article, Novel]);
-  await db.sync({});
 
   recoverTable();
 

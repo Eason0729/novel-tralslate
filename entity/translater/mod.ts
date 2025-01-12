@@ -11,7 +11,7 @@ export interface Translator {
   translate(content: string): Promise<string>;
 }
 
-export class LimitTranslater implements Translator {
+export class TranslaterHandle implements Translator {
   inner: Translator;
   semaphore: Semaphore;
   constructor(inner: Translator) {
@@ -30,16 +30,28 @@ export class LimitTranslater implements Translator {
     release();
     return res;
   }
+  async translateMultiple(contents: string[]): Promise<string[]> {
+    const release = await this.semaphore.acquire();
+
+    const res = [];
+    for (const content of contents) {
+      res.push(await this.inner.translate(content));
+    }
+
+    release();
+
+    return res;
+  }
 }
 
-const translators: Translator[] = [
+const translators: TranslaterHandle[] = [
   new SakuraTranslater(),
   new GeminiTranslater(),
-].map((x) => new LimitTranslater(x));
+].map((x) => new TranslaterHandle(x));
 
-export function getTranslator(url: string): Translator | undefined {
+export function getTranslatorHandle(url: string): TranslaterHandle | undefined {
   let maxAffinity = 0;
-  let translator: Translator | undefined;
+  let translator: TranslaterHandle | undefined;
   for (const t of translators) {
     if (t.disable) continue;
     const affinity = t.getAffinity(url);

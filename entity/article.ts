@@ -3,7 +3,7 @@ import { FieldValue, Values } from "@denodb/types";
 
 import { ArticleMetaData, getArticle } from "./crawler/mod.ts";
 import { Novel } from "./novel.ts";
-import { getTranslator } from "./translater/mod.ts";
+import { getTranslatorHandle } from "./translater/mod.ts";
 
 export type State =
   | "unfetch"
@@ -22,6 +22,7 @@ export class Article extends Model {
       primaryKey: true,
     },
     title: DataTypes.string(128),
+    untranslatedTitle: DataTypes.string(128),
     url: DataTypes.string(256),
     state: DataTypes.STRING,
     untranslatedContent: DataTypes.string(64 * 1024),
@@ -32,6 +33,7 @@ export class Article extends Model {
     url: "",
     state: "unfetch",
     untranslatedContent: "",
+    untranslatedTitle: "",
     content: "",
   };
   private metadata(): ArticleMetaData {
@@ -48,6 +50,12 @@ export class Article extends Model {
     metadata: ArticleMetaData,
     novelId: number,
   ): Promise<Article> {
+    const articles = await Article.where("novelId", novelId).where(
+      "index",
+      metadata.index,
+    ).all();
+    if (articles.length > 0) return articles[0] as Article;
+
     return await Article.create({
       url: metadata.url,
       title: metadata.title,
@@ -67,14 +75,15 @@ export class Article extends Model {
   async translate() {
     this.changeState("fetched", "translating");
 
-    const translater = getTranslator(this.url as string);
+    const translater = getTranslatorHandle(this.url as string);
     if (!translater) throw new Error("no translater found");
 
-    const translated = await translater?.translate(
-      this.untranslatedContent as string,
+    const [content, title] = await translater?.translateMultiple(
+      [this.untranslatedContent, this.untransaltedTitle] as string[],
     );
     await this.changeState("translating", "translated", {
-      content: translated,
+      content,
+      title,
     });
   }
   static novel() {

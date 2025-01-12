@@ -21,6 +21,8 @@ export const handler: Handlers = {
 
     if (!redirectUrl) return ctx.renderNotFound();
 
+    novel?.oneShot();
+
     const headers = new Headers();
     headers.set("location", redirectUrl);
     return new Response(null, {

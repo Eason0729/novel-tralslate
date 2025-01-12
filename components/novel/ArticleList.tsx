@@ -69,7 +69,7 @@ function longestIncreasingSubsequence(sec: number[]): number[] {
   return lis;
 }
 
-export default function NovelList(
+export default function ArticleList(
   { articles }: { articles: Article[] },
 ) {
   articles.sort((a, b) => (a.index as number) - (b.index as number));

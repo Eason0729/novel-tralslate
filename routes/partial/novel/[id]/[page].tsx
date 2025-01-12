@@ -1,7 +1,7 @@
 import { RouteContext } from "$fresh/server.ts";
 import { Article } from "../../../../entity/article.ts";
 import Error404 from "../../../_404.tsx";
-import NovelList from "../../../../components/novel/NovelList.tsx";
+import ArticleList from "../../../../components/novel/ArticleList.tsx";
 import NovelLoad from "../../../../components/novel/NovelLoad.tsx";
 import { Partial } from "$fresh/runtime.ts";
 import { initialSize, pageSize } from "../../../novel/[id]/[[page]].tsx";
@@ -25,7 +25,7 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
 
   return (
     <>
-      <NovelList articles={articles} />
+      <ArticleList articles={articles} />
       {(articles.length < pageSize)
         ? (
           <Partial name="novel-load">

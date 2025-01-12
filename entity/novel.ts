@@ -2,7 +2,7 @@ import { DataTypes, Model } from "@denodb";
 import { getNovel, isUrlSupported } from "./crawler/mod.ts";
 import { FieldValue, Values } from "@denodb/types";
 import { Article } from "./article.ts";
-import { getTranslator } from "./translater/mod.ts";
+import { getTranslatorHandle } from "./translater/mod.ts";
 
 type state =
   | "unfetch"
@@ -22,6 +22,7 @@ export class Novel extends Model {
     },
     url: DataTypes.string(256),
     name: DataTypes.string(64),
+    untranslatedName: DataTypes.string(64),
     state: DataTypes.STRING,
     description: DataTypes.string(4 * 1024),
     author: DataTypes.string(256),
@@ -33,6 +34,7 @@ export class Novel extends Model {
     description: "",
     author: "",
     untranslatedDescription: "",
+    untranslatedName: "",
     state: "unfetch",
     hidden: false,
   };
@@ -83,14 +85,16 @@ export class Novel extends Model {
   async translate() {
     this.changeState("fetched", "translating");
 
-    const translater = getTranslator(this.url as string);
+    const translater = getTranslatorHandle(this.url as string);
     if (!translater) throw new Error("no translater found");
 
-    const translated = await translater.translate(
-      this.untranslatedDescription as string,
+    const [description, name] = await translater.translateMultiple(
+      [this.untranslatedDescription, this.untranslatedName] as string[],
     );
+
     await this.changeState("translating", "translated", {
-      description: translated,
+      description,
+      name,
     });
   }
   static articles() {
@@ -101,6 +105,11 @@ export class Novel extends Model {
   }
   public async hide() {
     await Novel.where("id", this.id as FieldValue).update({ hidden: true });
+  }
+  public async reset() {
+    if (this.state == "fetched" || this.state == "translated") {
+      await this.changeState(this.state, "unfetch");
+    }
   }
   public async oneShot() {
     if (this.state == "unfetch") {

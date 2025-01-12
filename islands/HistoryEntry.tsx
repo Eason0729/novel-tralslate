@@ -12,9 +12,11 @@ export default function HistoryEntry(props: { novel: Novel }) {
     return (
       <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
         <a href={"/novel/" + novel.id} class="flex-1 overflow-ellipsis">
-          {nameAvailable ? novel.name : `${novel.state}: ${novel.url}`}
+          {nameAvailable
+            ? (novel.name || novel.untranslatedName)
+            : `${novel.state}: ${novel.url}`}
         </a>
-        <form action={"/api/novel/" + novel.id} method="POST">
+        <form action={"/api/novel/delete/" + novel.id} method="POST">
           <button
             type="submit"
             class="inline-flex items-center justify-between whitespace-nowrap rounded-md font-medium h-10 !w-7"
@@ -30,8 +32,10 @@ export default function HistoryEntry(props: { novel: Novel }) {
     ? null
     : (
       <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
-        <a href={"/novel/" + novel.id} class="flex-1 overflow-ellipsis">
-          {nameAvailable ? novel.name : `${novel.state}: ${novel.url}`}
+        <a href={"/novel/delete/" + novel.id} class="flex-1 overflow-ellipsis">
+          {nameAvailable
+            ? (novel.name || novel.untranslatedName)
+            : `${novel.state}: ${novel.url}`}
         </a>
         <button
           class="jsonly inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium h-10 !w-7"

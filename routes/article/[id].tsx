@@ -48,7 +48,9 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
   return (
     <div>
       <div class="flex flex-col h-screen w-full sm:max-w-2xl mx-auto">
-        <TitleBar title={novel.name as string} />
+        <TitleBar
+          title={novel.name as string || novel.untranslatedName as string}
+        />
         <TextView content={content}>
           {(article.title as string).trim()}
         </TextView>
