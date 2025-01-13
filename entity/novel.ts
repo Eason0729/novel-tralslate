@@ -77,7 +77,7 @@ export class Novel extends Model {
     );
 
     await this.changeState("fetching", "fetched", {
-      name: result.name,
+      untranslatedName: result.name,
       untranslatedDescription: result.description,
       author: result.author,
     });

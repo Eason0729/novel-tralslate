@@ -20,6 +20,7 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
       "state",
       "index",
       "title",
+      "untranslatedTitle",
     ).orderBy("index").offset(initialSize + pageNumber * pageSize - pageSize)
     .limit(pageSize).all() as Article[];
 

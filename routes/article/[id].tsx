@@ -22,7 +22,7 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
   const novelId = article.novelId as number;
 
   const [novel, previousArticle, nextArticle] = await Promise.all([
-    Novel.select("name").getById(novelId) as Promise<Novel>,
+    Novel.select("name", "untranslatedName").getById(novelId) as Promise<Novel>,
     Article.select("id").where("novelId", novelId).where(
       "index",
       index - 1,
@@ -36,6 +36,11 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
   const nextUrl = nextArticle.length == 0
     ? undefined
     : "/article/" + nextArticle[0].id;
+  if (nextArticle.length > 0) {
+    const article = nextArticle[0] as Article;
+    article.upgrade().then(() => article.oneShot());
+  }
+
   const previousUrl = previousArticle.length == 0
     ? undefined
     : "/article/" + previousArticle[0].id;

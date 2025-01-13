@@ -1,3 +1,4 @@
+import { Semaphore } from "semaphore";
 import {
   ArticleSource as AlphapolisArticleSource,
   NovelSource as AlphapolisNovelSource,
@@ -98,13 +99,39 @@ export function getNovel(url: string): Promise<Novel | undefined> {
   return Promise.resolve(undefined);
 }
 
+class ArticleLimiter implements ArticleSource {
+  inner: ArticleSource;
+  semphore = new Semaphore(2);
+  constructor(inner: ArticleSource) {
+    this.inner = inner;
+  }
+  get baseUrl(): string {
+    return this.inner.baseUrl;
+  }
+  get disable(): boolean | undefined {
+    return this.inner.disable;
+  }
+  async get_article(url: ArticleMetaData): Promise<Article | undefined> {
+    const release = await this.semphore.acquire();
+    let result;
+    try {
+      result = this.inner.get_article(url);
+    } catch (err) {
+      throw err;
+    } finally {
+      setTimeout(release, 2000 + Math.random() * 6000);
+    }
+    return result;
+  }
+}
+
 const articleSources: ArticleSource[] = [
   new AlphapolisArticleSource(),
   new KakyomuArticleSource(),
   new SyosetuArticleSource(),
   new Syosetu18ArticleSource(),
   new hamelnArticleSource(),
-];
+].map((inner) => new ArticleLimiter(inner));
 
 export function getArticle(
   metadata: ArticleMetaData,

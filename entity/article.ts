@@ -34,6 +34,7 @@ export class Article extends Model {
     state: "unfetch",
     untranslatedContent: "",
     untranslatedTitle: "",
+    title: "",
     content: "",
   };
   private metadata(): ArticleMetaData {
@@ -58,10 +59,19 @@ export class Article extends Model {
 
     return await Article.create({
       url: metadata.url,
-      title: metadata.title,
+      untranslatedTitle: metadata.title,
       index: metadata.index,
       novelId,
     }) as Article;
+  }
+  async upgrade() {
+    const articles = await Article.where("id", this.id as number).all();
+    if (articles.length != 1) {
+      throw new Error(
+        "row is delete in database before upgrading parital model",
+      );
+    }
+    Object.assign(this, articles[0] as Article);
   }
   async fetch(): Promise<Article | undefined> {
     this.changeState("unfetch", "fetching");
@@ -79,7 +89,7 @@ export class Article extends Model {
     if (!translater) throw new Error("no translater found");
 
     const [content, title] = await translater?.translateMultiple(
-      [this.untranslatedContent, this.untransaltedTitle] as string[],
+      [this.untranslatedContent, this.untranslatedTitle] as string[],
     );
     await this.changeState("translating", "translated", {
       content,

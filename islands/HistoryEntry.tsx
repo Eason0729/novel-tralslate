@@ -6,15 +6,15 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 export default function HistoryEntry(props: { novel: Novel }) {
   const [hidden, setHidden] = useState(false);
   const novel = props.novel;
-  const nameAvailable = novel.name != "";
+
+  const displayName = novel.name || novel.untranslatedName;
+  const nameAvailable = displayName != "";
 
   if (!IS_BROWSER) {
     return (
       <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
         <a href={"/novel/" + novel.id} class="flex-1 overflow-ellipsis">
-          {nameAvailable
-            ? (novel.name || novel.untranslatedName)
-            : `${novel.state}: ${novel.url}`}
+          {nameAvailable ? displayName : `${novel.state}: ${novel.url}`}
         </a>
         <form action={"/api/novel/delete/" + novel.id} method="POST">
           <button
@@ -32,16 +32,14 @@ export default function HistoryEntry(props: { novel: Novel }) {
     ? null
     : (
       <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
-        <a href={"/novel/delete/" + novel.id} class="flex-1 overflow-ellipsis">
-          {nameAvailable
-            ? (novel.name || novel.untranslatedName)
-            : `${novel.state}: ${novel.url}`}
+        <a href={"/novel/" + novel.id} class="flex-1 overflow-ellipsis">
+          {nameAvailable ? displayName : `${novel.state}: ${novel.url}`}
         </a>
         <button
           class="jsonly inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium h-10 !w-7"
           onClick={() => {
             setHidden(true);
-            fetch("/api/novel/" + novel.id, { method: "POST" });
+            fetch("/api/novel/delete/" + novel.id, { method: "POST" });
           }}
         >
           <IconX class="h-5 w-5" />

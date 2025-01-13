@@ -13,8 +13,9 @@ export const handler: Handlers = {
     }
 
     const articles = await Article.where("novelId", id).all();
+    console.log(articles);
     await Promise.all(
-      articles.map((artcle) => (artcle as Article).translate()),
+      articles.map((artcle) => (artcle as Article).oneShot()),
     );
 
     return new Response(null, {

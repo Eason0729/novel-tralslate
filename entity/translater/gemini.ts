@@ -3,8 +3,12 @@ import * as def from "./mod.ts";
 
 const MODEL = "gemini-1.5-flash";
 
-const systemPrompt =
-  "你是一個小說翻譯模型，可以流暢通順地以小說的風格將外文翻譯成繁體中文，並聯系上下文正確使用人稱代詞，不擅自添加原文中沒有的代詞，不要新增或擅自移除換行。";
+const systemPrompt = [
+  "請將以下外文小說翻譯成繁體中文。務必保留原文的意境和情感，同時確保譯文流暢自然。在翻譯過程中，請遵守以下要求：",
+  "1. 尊重換行和特殊字元，確保格式不變。",
+  "2. 維持人稱代名詞的使用，確保角色的聲音和特徵不被改變。",
+].join("\n");
+
 const userPrefix = "將下面的外文文本翻譯成中文：";
 
 export class Translater implements def.Translator {
