@@ -4,6 +4,8 @@ import { Novel } from "../entity/novel.ts";
 
 import History from "../components/novels/History.tsx";
 import Search from "../components/novels/Search.tsx";
+import Footer from "../components/Footer.tsx";
+import SetupInstruction from "../components/novels/SetupInstruction.tsx";
 
 export const handler: Handlers = {
   async POST(req, ctx) {
@@ -35,9 +37,14 @@ export const handler: Handlers = {
 export default async function Home() {
   const novels = await Novel.where("hidden", false).all();
   return (
-    <div class="w-full max-w-4xl mx-auto rounded-lg py-10 px-4">
+    <div class="w-full max-w-4xl mx-auto rounded-lg py-10 px-4 min-h-[100vh] flex flex-col">
       <Search />
-      <History novels={novels as Novel[]} />
+      <div class="flex-grow">
+        {novels.length > 0
+          ? <History novels={novels as Novel[]} />
+          : <SetupInstruction />}
+      </div>
+      <Footer />
     </div>
   );
 }

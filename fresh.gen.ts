@@ -11,6 +11,7 @@ import * as $api_novel_reload_id_ from "./routes/api/novel/reload/[id].ts";
 import * as $api_novel_translate_id_ from "./routes/api/novel/translate/[id].ts";
 import * as $article_id_ from "./routes/article/[id].tsx";
 import * as $index from "./routes/index.tsx";
+import * as $load from "./routes/load.tsx";
 import * as $novel_id_page_ from "./routes/novel/[id]/[[page]].tsx";
 import * as $partial_novel_id_page_ from "./routes/partial/novel/[id]/[page].tsx";
 import * as $unsupported from "./routes/unsupported.tsx";
@@ -32,6 +33,7 @@ const manifest = {
     "./routes/api/novel/translate/[id].ts": $api_novel_translate_id_,
     "./routes/article/[id].tsx": $article_id_,
     "./routes/index.tsx": $index,
+    "./routes/load.tsx": $load,
     "./routes/novel/[id]/[[page]].tsx": $novel_id_page_,
     "./routes/partial/novel/[id]/[page].tsx": $partial_novel_id_page_,
     "./routes/unsupported.tsx": $unsupported,

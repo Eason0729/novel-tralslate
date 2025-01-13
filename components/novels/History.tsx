@@ -1,12 +1,10 @@
 import { Novel } from "../../entity/novel.ts";
 import HistoryEntry from "../../islands/HistoryEntry.tsx";
-import SetupInstruction from "./SetupInstruction.tsx";
 import { IconTrash } from "@tabler/icons-preact";
 
-export interface HistoryProps {
+export default function History(props: {
   novels?: Novel[];
-}
-export default function History(props: HistoryProps) {
+}) {
   const novels = props.novels || [];
 
   return (
@@ -22,11 +20,9 @@ export default function History(props: HistoryProps) {
         </button>
       </div>
       <ul class="space-y-2">
-        {novels.length === 0
-          ? <SetupInstruction />
-          : novels.map((novel) => (
-            <HistoryEntry novel={novel} key={`novel-${novel.id}`} />
-          ))}
+        {novels.map((novel) => (
+          <HistoryEntry novel={novel} key={`novel-${novel.id}`} />
+        ))}
       </ul>
     </>
   );

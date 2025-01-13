@@ -27,9 +27,10 @@ export default function ArrowButton(
     );
 
   const keyEvent = (event: KeyboardEvent) => {
-    if (direction == "left" && event.key == "ArrowLeft" && !disabled) {
+    if (disabled) return;
+    if (direction == "left" && event.key == "a") {
       ref.current?.click();
-    } else if (direction == "right" && event.key == "ArrowRight" && !disabled) {
+    } else if (direction == "right" && event.key == "d") {
       ref.current?.click();
     }
   };

@@ -5,9 +5,11 @@ import Error404 from "../../_404.tsx";
 import ArticleList from "../../../components/novel/ArticleList.tsx";
 import NovelInfo from "../../../components/novel/NovelInfo.tsx";
 import NovelLoad from "../../../components/novel/NovelLoad.tsx";
-import Alert from "../../../components/Alert.tsx";
 import HomeButton from "../../../components/HomeButton.tsx";
 import RandomBar from "../../../components/RandomBar.tsx";
+import Footer from "../../../components/Footer.tsx";
+import ErrorPage from "../../../components/ErrorPage.tsx";
+import Load from "../../load.tsx";
 
 export const initialSize = 60;
 export const pageSize = 45;
@@ -35,11 +37,16 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
     .all() as Article[];
 
   if (novel.state == "error") {
-    return <Alert msg="This novel is in error state, please check the logs" />;
+    return (
+      <ErrorPage
+        code="500"
+        message="Oops! It seems like we are unable to translate novel. Check log."
+        redirectUrl={"/novel/" + novelId}
+      />
+    );
   }
-  if (novel.state == "fetching") {
-    return <Alert msg="This novel is being fetched, please wait" />;
-  }
+  if (novel.state == "fetching") return <Load />;
+
   return (
     <div class="container mx-auto m-2 p-6 max-w-4xl w-full dark:bg-slate-800 rounded-lg shadow-md">
       <NovelInfo novel={novel} />
@@ -48,6 +55,7 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
         ? <NovelLoad novelId={novelId} page={pageNumber} />
         : <RandomBar />}
       <HomeButton href="/" />
+      <Footer />
     </div>
   );
 }

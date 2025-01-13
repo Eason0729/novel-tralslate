@@ -3,7 +3,7 @@ import { getSupportedSources } from "../entity/crawler/mod.ts";
 
 export default function Unsupported() {
   return (
-    <ErrorPage code="400">
+    <ErrorPage code="400" redirectUrl="/">
       <div class="min-w-fit text-left mb-4 mx-6 text-lg">
         <p>
           url entered is not supported.
@@ -17,7 +17,12 @@ export default function Unsupported() {
         <ul class="list-disc ml-5">
           {getSupportedSources().map((source) => (
             <li class="my-2">
-              <a href={source.baseUrl} class="text-blue-700 dark:text-blue-300">
+              <a
+                href={source.baseUrl}
+                class="text-blue-700 dark:text-blue-300"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {source.name}
               </a>
             </li>

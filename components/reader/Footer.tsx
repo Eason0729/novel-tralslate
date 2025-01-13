@@ -13,6 +13,7 @@ export default function Footer(
           name="footer-panel"
           value="value"
           class="peer/footer-panel h-0 w-0 absolute"
+          checked
         />
         <div class="justify-center pt-1 cursor-pointer flex peer-checked/footer-panel:hidden">
           <IconArrowBarUp class="h-9 w-9 p-1 bg-slate-600 text-white rounded-full animate-bounce peer-checked/footer-panel" />

@@ -6,6 +6,7 @@ import Error404 from "../_404.tsx";
 import TitleBar from "../../components/reader/TitleBar.tsx";
 import TextView from "../../components/reader/TextView.tsx";
 import Footer from "../../components/reader/Footer.tsx";
+import Loading from "../../components/Loading.tsx";
 
 export default async function ArticlePage(_: Request, ctx: RouteContext) {
   const { id } = ctx.params as { id: string };
@@ -49,6 +50,8 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
     (article.content == ""
       ? article.untranslatedContent
       : article.content) as string;
+
+  if (content == "") return <Loading />;
 
   return (
     <div>
