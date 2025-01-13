@@ -33,9 +33,7 @@ export class Translater implements def.Translator {
 
     if (this.apiURL) {
       setInterval(async () => {
-        this.disable = await fetch(this.apiURL + "/status").then((res) =>
-          res.ok
-        );
+        this.disable = await fetch(this.apiURL!).then((res) => !res.ok);
       }, 10000);
     }
   }
