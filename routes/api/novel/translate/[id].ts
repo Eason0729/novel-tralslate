@@ -13,9 +13,12 @@ export const handler: Handlers = {
     }
 
     const articles = await Article.where("novelId", id).all();
-    console.log(articles);
+    articles.sort((a, b) => a.index as number - (b.index as number));
+
     await Promise.all(
-      articles.map((artcle) => (artcle as Article).oneShot()),
+      articles.filter((x) =>
+        x.state != "translated" || x.title == x.translatedTitle
+      ).map((artcle) => (artcle as Article).oneShot()),
     );
 
     return new Response(null, {
