@@ -107,8 +107,8 @@ export class Novel extends Model {
     await Novel.where("id", this.id as FieldValue).update({ hidden: true });
   }
   public async reset() {
-    if (this.state == "fetched" || this.state == "translated") {
-      await this.changeState(this.state, "unfetch");
+    if (["fetched", "translated", "error"].includes(this.state as string)) {
+      await this.changeState(this.state as state, "unfetch");
     }
   }
   public async oneShot() {

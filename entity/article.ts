@@ -73,10 +73,14 @@ export class Article extends Model {
     }
     Object.assign(this, articles[0] as Article);
   }
-  async fetch(): Promise<Article | undefined> {
+  async fetch() {
     this.changeState("unfetch", "fetching");
     const result = await getArticle(this.metadata());
-    if (!result) return;
+    if (!result) {
+      throw new Error(
+        "fetch failed, maybe fetcher is not available(but were available before)",
+      );
+    }
 
     await this.changeState("fetching", "fetched", {
       untranslatedContent: result.content,
@@ -100,8 +104,8 @@ export class Article extends Model {
     return this.hasOne(Novel);
   }
   public async reset() {
-    if (this.state == "fetched" || this.state == "translated") {
-      await this.changeState(this.state, "unfetch");
+    if (["fetched", "translated", "error"].includes(this.state as string)) {
+      await this.changeState(this.state as State, "unfetch");
     }
   }
   public async oneShot() {
@@ -118,6 +122,7 @@ export class Article extends Model {
 
     await Article.where("id", this.id as FieldValue).where("state", oldState)
       .update({ state: newState, ...values });
+    Object.assign(this, values);
     this.state = newState;
   }
   private async setErrorState(oldState: State, e: Error) {

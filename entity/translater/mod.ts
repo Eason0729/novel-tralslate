@@ -50,7 +50,7 @@ const translators: TranslaterHandle[] = [
 ].map((x) => new TranslaterHandle(x));
 
 export function getTranslatorHandle(url: string): TranslaterHandle | undefined {
-  let maxAffinity = 0;
+  let maxAffinity = -1;
   let translator: TranslaterHandle | undefined;
   for (const t of translators) {
     if (t.disable) continue;
