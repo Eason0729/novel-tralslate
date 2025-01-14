@@ -9,7 +9,7 @@ import HomeButton from "../../../components/HomeButton.tsx";
 import RandomBar from "../../../components/RandomBar.tsx";
 import Footer from "../../../components/Footer.tsx";
 import ErrorPage from "../../../components/ErrorPage.tsx";
-import Load from "../../load.tsx";
+import Loading from "../../../components/Loading.tsx";
 
 export const initialSize = 60;
 export const pageSize = 45;
@@ -45,7 +45,7 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
       />
     );
   }
-  if (novel.state == "fetching") return <Load />;
+  if (novel.state == "fetching") return <Loading />;
 
   return (
     <div class="container mx-auto m-2 p-6 max-w-4xl w-full dark:bg-slate-800 rounded-lg shadow-md">

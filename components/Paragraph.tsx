@@ -21,18 +21,13 @@ export default function Paragraph(
   props: { content: string; animation?: boolean },
 ) {
   return (
-    <>
-      <div class="timeline-view text-xl leading-relaxed">
-        {props.content.split("\n").map((x) =>
-          isRepeation(x.trim())
-            ? <hr class="mx-1 my-12" />
-            : (
-              <p class="break-words">
-                {x.trim()}
-              </p>
-            )
-        )}
-      </div>
-    </>
+    <div class="timeline-view text-xl leading-relaxed">
+      {props.content.split("\n").map((x) => {
+        const trimmed = x.trim();
+        if (isRepeation(trimmed)) return <hr class="mx-1 my-12" />;
+        if (trimmed.length == 0) return <br />;
+        return <p class="break-words">{trimmed}</p>;
+      })}
+    </div>
   );
 }
