@@ -23,11 +23,25 @@ export default function NovelInfo({ novel }: { novel: Novel }) {
             </h1>
           )}
       </div>
-      <Paragraph content={description} />
-      <div class="flex justify-between space-x-4 py-2">
-        <ActionButton type="reload" novelId={novel.id as number} />
-        <ActionButton type="translate" novelId={novel.id as number} />
-      </div>
+      <label class="text-gray-800 dark:text-gray-200">
+        <span class="sr-only">Description</span>
+        <input
+          type="checkbox"
+          name="novel-details"
+          value="value"
+          class="peer/novel-details h-0 w-0 absolute"
+        />
+        <div class="pr-12 peer-checked/novel-details:pr-0 line-clamp-4 peer-checked/novel-details:line-clamp-none cursor-pointer peer-checked/novel-details:cursor-default">
+          <Paragraph content={description} />
+          <div class="flex space-x-4 py-2">
+            <ActionButton type="reload" novelId={novel.id as number} />
+            <ActionButton type="translate" novelId={novel.id as number} />
+          </div>
+        </div>
+        <div class="hover:text-gray-600 dark:hover:text-white cursor-pointer peer-checked/novel-details:hidden">
+          Click for more
+        </div>
+      </label>
     </>
   );
 }

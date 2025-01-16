@@ -35,7 +35,8 @@ export const handler: Handlers = {
 };
 
 export default async function Home() {
-  const novels = await Novel.where("hidden", false).all();
+  const novels = await Novel.where("hidden", false).orderBy("updatedAt", "desc")
+    .all();
   return (
     <div class="w-full max-w-4xl mx-auto rounded-lg py-10 px-4 min-h-[100vh] flex flex-col">
       <Search />

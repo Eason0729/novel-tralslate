@@ -20,9 +20,17 @@ function isRepeation(line: string): boolean {
 export default function Paragraph(
   props: { content: string; animation?: boolean },
 ) {
+  const lines = props.content.split("\n");
+  while (lines.length > 0 && lines[0].trim().length == 0) lines.shift();
+  while (
+    lines.length > 0 &&
+    lines[lines.length - 1].trim().length == 0
+  ) {
+    lines.pop();
+  }
   return (
     <div class="timeline-view text-xl leading-relaxed">
-      {props.content.split("\n").map((x) => {
+      {lines.map((x) => {
         const trimmed = x.trim();
         if (isRepeation(trimmed)) return <hr class="mx-1 my-12" />;
         if (trimmed.length == 0) return <br />;

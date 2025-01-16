@@ -10,6 +10,7 @@ import RandomBar from "../../../components/RandomBar.tsx";
 import Footer from "../../../components/Footer.tsx";
 import ErrorPage from "../../../components/ErrorPage.tsx";
 import Loading from "../../../components/Loading.tsx";
+import NovelList from "../../../components/novel/NovelList.tsx";
 
 export const initialSize = 60;
 export const pageSize = 45;
@@ -26,15 +27,20 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
 
   novel.oneShot();
 
-  const articles = await Article.where("novelId", id)
-    .select(
-      "id",
-      "state",
-      "index",
-      "title",
-      "untranslatedTitle",
-    ).orderBy("index").limit(initialSize + pageNumber * pageSize)
-    .all() as Article[];
+  const [articles, novels] = await Promise.all([
+    Article.where("novelId", id)
+      .select(
+        "id",
+        "state",
+        "index",
+        "title",
+        "untranslatedTitle",
+      ).orderBy("index").limit(initialSize + pageNumber * pageSize)
+      .all() as Promise<Article[]>,
+    Novel.select("id", "name", "untranslatedName").orderBy("updatedAt", "desc")
+      .where("hidden", false)
+      .all() as Promise<Novel[]>,
+  ]);
 
   if (novel.state == "error") {
     return (
@@ -48,14 +54,21 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
   if (novel.state == "fetching") return <Loading />;
 
   return (
-    <div class="container mx-auto m-2 p-6 max-w-4xl w-full dark:bg-slate-800 rounded-lg shadow-md">
-      <NovelInfo novel={novel} />
-      <ArticleList articles={articles} />
-      {articles.length >= (initialSize + pageNumber * pageSize)
-        ? <NovelLoad novelId={novelId} page={pageNumber} />
-        : <RandomBar />}
-      <HomeButton href="/" />
-      <Footer />
+    <div class="grid grid-cols-3 xl:grid-cols-4 auto-rows-fr">
+      <div class="col-span-1 hidden lg:block border-r border-gray-200 dark:border-gray-800">
+        <NovelList novels={novels} />
+      </div>
+      <div class="col-span-3 lg:col-span-2 xl:col-span-3 flex justify-center">
+        <div class="p-8 max-w-4xl w-full">
+          <NovelInfo novel={novel} />
+          <ArticleList articles={articles} />
+          {articles.length >= (initialSize + pageNumber * pageSize)
+            ? <NovelLoad novelId={novelId} page={pageNumber} />
+            : <RandomBar />}
+          <HomeButton href="/" />
+          <Footer />
+        </div>
+      </div>
     </div>
   );
 }
