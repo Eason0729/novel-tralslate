@@ -1,17 +1,29 @@
-import ErrorPage from "../components/ErrorPage.tsx";
+import ErrorPage from "./ErrorPage.tsx";
 import { getSupportedSources } from "../entity/crawler/mod.ts";
 
-export default function Unsupported() {
+export default function Unsupported(
+  { originalUrl, suggestedUrls }: {
+    originalUrl: string;
+    suggestedUrls: string[];
+  },
+) {
   return (
     <ErrorPage code="400" redirectUrl="/">
       <div class="min-w-fit text-left mb-4 mx-6 text-lg">
         <p>
-          url entered is not supported.
+          <span class="text-blue-700 dark:text-blue-300">
+            {originalUrl}
+          </span>{" "}
+          is not supported.
         </p>
-        <p>
-          Note that not all url formated are supported (usually mobile version
-          url is not supported).
-        </p>
+        {suggestedUrls.map((suggestedUrl) => (
+          <p>
+            Maybe you mean{" "}
+            <span class="text-blue-700 dark:text-blue-300">
+              {suggestedUrl}
+            </span>?
+          </p>
+        ))}
         <hr class="mx-1 my-4" />
         Following publisher are supported:
         <ul class="list-disc ml-5">

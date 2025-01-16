@@ -42,9 +42,12 @@ export class Article implements def.Article {
 
 export class NovelSource implements def.NovelSource {
   name = "小説家になろう";
-  baseUrl = baseUrl;
+  exampleUrl = "https://ncode.syosetu.com/n0831jx/";
+  canCreateUrl(url: string): boolean {
+    return /https:\/\/ncode.syosetu.com\/n\d+\w+/.test(url);
+  }
   async get_novel(url: string): Promise<Novel | undefined> {
-    assert(url.startsWith(this.baseUrl), "Invalid url");
+    assert(this.canCreateUrl(url), "Invalid url");
     const rawHtml = await fetch(url).then((
       res,
     ) => res.text());

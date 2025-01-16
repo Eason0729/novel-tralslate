@@ -13,7 +13,7 @@ import * as $article_id_ from "./routes/article/[id].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $novel_id_page_ from "./routes/novel/[id]/[[page]].tsx";
 import * as $partial_novel_id_page_ from "./routes/partial/novel/[id]/[page].tsx";
-import * as $unsupported from "./routes/unsupported.tsx";
+import * as $unsupported_url_ from "./routes/unsupported/[url].tsx";
 import * as $ActionButton from "./islands/ActionButton.tsx";
 import * as $ArrowButton from "./islands/ArrowButton.tsx";
 import * as $HistoryEntry from "./islands/HistoryEntry.tsx";
@@ -34,7 +34,7 @@ const manifest = {
     "./routes/index.tsx": $index,
     "./routes/novel/[id]/[[page]].tsx": $novel_id_page_,
     "./routes/partial/novel/[id]/[page].tsx": $partial_novel_id_page_,
-    "./routes/unsupported.tsx": $unsupported,
+    "./routes/unsupported/[url].tsx": $unsupported_url_,
   },
   islands: {
     "./islands/ActionButton.tsx": $ActionButton,

@@ -59,12 +59,15 @@ export class Article implements def.Article {
 
 export class NovelSource implements def.NovelSource {
   name = "アルファポリス";
-  baseUrl = "https://www.alphapolis.co.jp";
+  exampleUrl = "https://www.alphapolis.co.jp/novel/168318559/527932657";
   get disable() {
     return Deno.env.get("WAF_COOKIES") === undefined;
   }
+  canCreateUrl(url: string): boolean {
+    return /https:\/\/www.alphapolis.co.jp\/novel\/\d+\/\d+/.test(url);
+  }
   async get_novel(url: string): Promise<Novel | undefined> {
-    assert(url.startsWith(this.baseUrl), "Invalid url");
+    assert(this.canCreateUrl(url), "Invalid url");
     const rawHtml = await fetchWAF(url).then((
       res,
     ) => res.text());

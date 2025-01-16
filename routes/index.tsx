@@ -17,7 +17,7 @@ export const handler: Handlers = {
       novel = await Novel.fromUrl(url);
     } catch (e) {
       console.warn(e);
-      redirectUrl = "/unsupported";
+      redirectUrl = "/unsupported/" + encodeURIComponent(url);
     }
     if (!redirectUrl && novel) redirectUrl = "/novel/" + novel.id;
 

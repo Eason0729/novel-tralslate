@@ -29,13 +29,17 @@ export interface NovelSource {
    */
   name: string;
   /**
-   * Base url of the source
+   * example url of the source
    */
-  baseUrl: string;
+  exampleUrl: string;
   /**
    * Disable the source
    */
   disable?: boolean;
+  /**
+   * whether the source can handle this url
+   */
+  canCreateUrl(url: string): boolean;
   /**
    * Get novel info
    * @param url Novel url
@@ -92,7 +96,7 @@ const sources: NovelSource[] = [
 export function getNovel(url: string): Promise<Novel | undefined> {
   for (const source of sources) {
     if (source.disable) continue;
-    if (url.startsWith(source.baseUrl)) {
+    if (source.canCreateUrl(url)) {
       return source.get_novel(url);
     }
   }
@@ -146,14 +150,26 @@ export function getArticle(
 }
 
 export function getSupportedSources(): { name: string; baseUrl: string }[] {
+  function removePathFromUrl(url: string) {
+    const parsedUrl = new URL(url);
+    parsedUrl.pathname = "";
+    return parsedUrl.href;
+  }
+
   return sources.filter((source) => !source.disable).map((source) => ({
     name: source.name,
-    baseUrl: source.baseUrl,
+    baseUrl: removePathFromUrl(source.exampleUrl),
   }));
 }
 
 export function isUrlSupported(url: string): boolean {
   return sources.filter((source) => !source.disable).some((source) =>
-    url.startsWith(source.baseUrl)
+    url.startsWith(source.exampleUrl)
+  );
+}
+
+export function getExampleUrls(): string[] {
+  return sources.filter((source) => !source.disable).map((source) =>
+    source.exampleUrl
   );
 }

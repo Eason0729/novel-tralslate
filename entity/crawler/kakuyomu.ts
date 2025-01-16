@@ -67,9 +67,13 @@ export class Article implements def.Article {
 
 export class NovelSource implements def.NovelSource {
   name = "カクヨム";
-  baseUrl = "https://kakuyomu.jp/works";
+  exampleUrl = "https://kakuyomu.jp/works/16818093090046740401";
+
+  canCreateUrl(url: string): boolean {
+    return /https:\/\/kakuyomu.jp\/works\/\d+/.test(url);
+  }
   async get_novel(url: string): Promise<Novel | undefined> {
-    assert(url.startsWith(this.baseUrl), "Invalid url");
+    assert(this.canCreateUrl(url), "Invalid url");
     const rawHtml = await fetch(url).then((
       res,
     ) => res.text());
