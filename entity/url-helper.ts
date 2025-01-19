@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { getExampleUrls } from "./crawler/mod.ts";
+import { getExampleUrls, isUrlSupported } from "./crawler/mod.ts";
 
 function getSystemPrompt() {
   const exampleUrls = getExampleUrls();
@@ -39,7 +39,5 @@ export async function fixUrl(url: string): Promise<string[]> {
     ],
   });
 
-  return res.response.text().split("\n").filter((line) =>
-    line.startsWith("https://")
-  );
+  return res.response.text().split("\n").filter((line) => isUrlSupported(line));
 }
