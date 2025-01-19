@@ -164,7 +164,7 @@ export function getSupportedSources(): { name: string; baseUrl: string }[] {
 
 export function isUrlSupported(url: string): boolean {
   return sources.filter((source) => !source.disable).some((source) =>
-    url.startsWith(source.exampleUrl)
+    source.canCreateUrl(url)
   );
 }
 

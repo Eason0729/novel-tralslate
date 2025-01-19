@@ -39,11 +39,13 @@ export default function ErrorPage(
         <h1 class="text-6xl font-bold mb-4">{code}</h1>
         <h2 class="text-2xl mb-4" data-id="3">{getErrorTitle(+code)}</h2>
 
-        {children ? children : (
-          <p class="text-muted-foreground mb-8">
-            {message || "An error occurred on the server."}
-          </p>
-        )}
+        <div class="mb-8 px-2 break-words">
+          {children ? children : (
+            <p>
+              {message || "An error occurred on the server."}
+            </p>
+          )}
+        </div>
         <a
           class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-white dark:text-black text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-black dark:bg-slate-100 hover:bg-slate-400 text-cyan-600-foreground h-10 px-4 py-2"
           href="/"
