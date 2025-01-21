@@ -55,11 +55,13 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
 
   return (
     <div class="grid grid-cols-3 xl:grid-cols-4 auto-rows-fr">
-      <div class="col-span-1 hidden lg:block border-r border-gray-200 dark:border-gray-800">
-        <NovelList novels={novels} />
+      <div class="col-span-1 hidden h-screen overflow-y-scroll rtl lg:block border-r border-gray-200 dark:border-gray-800">
+        <div class="ltr">
+          <NovelList novels={novels} />
+        </div>
       </div>
-      <div class="col-span-3 lg:col-span-2 xl:col-span-3 flex justify-center">
-        <div class="p-8 max-w-4xl w-full">
+      <div class="col-span-3 lg:col-span-2 xl:col-span-3 h-screen overflow-y-scroll flex justify-center gutter">
+        <div class="p-8 max-w-4xl">
           <NovelInfo novel={novel} />
           <ArticleList articles={articles} />
           {articles.length >= (initialSize + pageNumber * pageSize)

@@ -25,3 +25,14 @@ body {
     color: rgb(255 255 255 / var(--tw-text-opacity));
   }
 }
+
+.rtl {
+  direction: rtl;
+}
+.ltr {
+  direction: ltr;
+}
+
+.gutter {
+  scrollbar-gutter: stable both-edges;
+}

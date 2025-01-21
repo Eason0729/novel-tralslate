@@ -31,7 +31,7 @@ export default function NovelInfo({ novel }: { novel: Novel }) {
           value="value"
           class="peer/novel-details h-0 w-0 absolute"
         />
-        <div class="pr-12 peer-checked/novel-details:pr-0 line-clamp-4 peer-checked/novel-details:line-clamp-none cursor-pointer peer-checked/novel-details:cursor-default">
+        <div class="line-clamp-4 peer-checked/novel-details:line-clamp-none cursor-pointer peer-checked/novel-details:cursor-default">
           <Paragraph content={description} />
           <div class="flex space-x-4 py-2">
             <ActionButton type="reload" novelId={novel.id as number} />
