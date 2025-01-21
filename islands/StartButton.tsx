@@ -23,6 +23,7 @@ export default function StartButton(
         method="post"
         action={`/api/article/${articleId}`}
         class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium disabled:opacity-50 h-10 !w-7"
+        tabIndex={4}
       >
         <button type="submit">{iconMap[state.value]}</button>
       </form>
@@ -40,6 +41,7 @@ export default function StartButton(
       }}
       disabled={state.value == "running"}
       aria-label="start translation"
+      tabIndex={4}
     >
       {iconMap[state.value]}
     </button>

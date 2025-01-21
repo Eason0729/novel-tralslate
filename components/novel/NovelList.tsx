@@ -9,12 +9,15 @@ export default function NovelList({ novels }: { novels: Novel[] }) {
       <ul class="text-gray-800 dark:text-gray-200">
         {novels.map((novel) => (
           <li class="mb-2 line-clamp-3">
-            <a
-              href={"/novel/" + novel.id}
-              class="hover:text-gray-600 dark:hover:text-white"
-            >
-              {novel.name || novel.untranslatedName}
-            </a>
+            <nav>
+              <a
+                href={"/novel/" + novel.id}
+                class="hover:text-gray-600 dark:hover:text-white"
+                tabIndex={2}
+              >
+                {novel.name || novel.untranslatedName}
+              </a>
+            </nav>
           </li>
         ))}
       </ul>

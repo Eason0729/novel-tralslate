@@ -38,15 +38,18 @@ export default function ArrowButton(
     globalThis.addEventListener("keydown", keyEvent);
   });
   return (
-    <a href={href} f-client-nav>
-      <button
-        class="min-w-36 inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium disabled:text-slate-400 h-10 px-4 py-2"
-        disabled={disabled || false}
-        ref={ref}
-        onKeyDown={keyEvent}
-      >
-        {inner}
-      </button>
-    </a>
+    <nav>
+      <a href={href} f-client-nav>
+        <button
+          class="min-w-36 inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium disabled:text-slate-400 h-10 px-4 py-2"
+          disabled={disabled || false}
+          ref={ref}
+          onKeyDown={keyEvent}
+          tabIndex={-1}
+        >
+          {inner}
+        </button>
+      </a>
+    </nav>
   );
 }

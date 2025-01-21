@@ -54,7 +54,7 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
   if (content == "") return <Loading />;
 
   return (
-    <div>
+    <main>
       <div class="flex flex-col h-screen w-full sm:max-w-2xl xl:max-w-[60vw] mx-auto">
         <TitleBar
           title={novel.name as string || novel.untranslatedName as string}
@@ -65,6 +65,6 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
         <Footer nextUrl={nextUrl} previousUrl={previousUrl} />
       </div>
       <HomeButton href={"/novel/" + novelId} />
-    </div>
+    </main>
   );
 }

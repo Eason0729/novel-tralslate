@@ -23,10 +23,11 @@ export default function ArticleEntry(
       key={`frag-novel-list-${index}`}
       class="block p-3 rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black shadow transition duration-300"
     >
-      <div class="flex justify-between items-center tracking-tight text-2xl px-2">
+      <nav class="flex justify-between items-center tracking-tight text-2xl px-2">
         <a
           href={"/article/" + article.id}
           class="flex mr-3 line-clamp-2"
+          tabIndex={4}
         >
           {addIndex ? `第${index + 1}話 ` : null}
           {title.trim()}
@@ -46,7 +47,7 @@ export default function ArticleEntry(
             state={state}
           />
         </div>
-      </div>
+      </nav>
     </li>
   );
 }
