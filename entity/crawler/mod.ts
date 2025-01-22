@@ -149,7 +149,11 @@ export function getArticle(
   return Promise.resolve(undefined);
 }
 
-export function getSupportedSources(): { name: string; baseUrl: string }[] {
+export function getSupportedSourceInfos(): {
+  name: string;
+  baseUrl: string;
+  exampleUrl: string;
+}[] {
   function removePathFromUrl(url: string) {
     const parsedUrl = new URL(url);
     parsedUrl.pathname = "";
@@ -159,17 +163,12 @@ export function getSupportedSources(): { name: string; baseUrl: string }[] {
   return sources.filter((source) => !source.disable).map((source) => ({
     name: source.name,
     baseUrl: removePathFromUrl(source.exampleUrl),
+    exampleUrl: source.exampleUrl,
   }));
 }
 
 export function isUrlSupported(url: string): boolean {
   return sources.filter((source) => !source.disable).some((source) =>
     source.canCreateUrl(url)
-  );
-}
-
-export function getExampleUrls(): string[] {
-  return sources.filter((source) => !source.disable).map((source) =>
-    source.exampleUrl
   );
 }

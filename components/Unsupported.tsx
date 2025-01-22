@@ -1,5 +1,5 @@
 import ErrorPage from "./ErrorPage.tsx";
-import { getSupportedSources } from "../entity/crawler/mod.ts";
+import { getSupportedSourceInfos } from "../entity/crawler/mod.ts";
 
 export default function Unsupported(
   { originalUrl, suggestedUrls }: {
@@ -27,7 +27,7 @@ export default function Unsupported(
         <hr class="mx-1 my-4" />
         Following publisher are supported:
         <ul class="list-disc ml-5">
-          {getSupportedSources().map((source) => (
+          {getSupportedSourceInfos().map((source) => (
             <li class="my-2">
               <a
                 href={source.baseUrl}

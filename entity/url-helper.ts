@@ -1,8 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { getExampleUrls, isUrlSupported } from "./crawler/mod.ts";
+import { getSupportedSourceInfos, isUrlSupported } from "./crawler/mod.ts";
 
 function getSystemPrompt() {
-  const exampleUrls = getExampleUrls();
+  const exampleUrls = getSupportedSourceInfos().map((source) =>
+    source.exampleUrl
+  );
   return `
 You are a query tool assistant designed to help users with incorrectly formatted URLs. When users provide a URL that is not in the correct format, your task is to suggest properly formatted alternatives. Please follow these guidelines:
 

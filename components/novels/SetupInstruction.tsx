@@ -1,4 +1,4 @@
-import { getSupportedSources } from "../../entity/crawler/mod.ts";
+import { getSupportedSourceInfos } from "../../entity/crawler/mod.ts";
 
 export default function SetupInstruction() {
   return (
@@ -14,7 +14,7 @@ export default function SetupInstruction() {
       <p>
         Following publisher are supported:
         <ul class="list-disc ml-5">
-          {getSupportedSources().map((source) => (
+          {getSupportedSourceInfos().map((source) => (
             <li class="my-2">
               <a
                 href={source.baseUrl}

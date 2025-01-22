@@ -6,6 +6,8 @@ import History from "../components/novels/History.tsx";
 import Search from "../components/novels/Search.tsx";
 import Footer from "../components/Footer.tsx";
 import SetupInstruction from "../components/novels/SetupInstruction.tsx";
+import PrefixComplete from "../islands/PrefixComplete.tsx";
+import { getSupportedSourceInfos } from "../entity/crawler/mod.ts";
 
 export const handler: Handlers = {
   async POST(req, ctx) {
@@ -39,7 +41,10 @@ export default async function Home() {
     .all();
   return (
     <div class="w-full max-w-4xl mx-auto rounded-lg py-10 px-4 min-h-[100vh] flex flex-col">
-      <Search />
+      <PrefixComplete
+        prefixs={getSupportedSourceInfos().map((x) => x.baseUrl)}
+        placeholder="https://auto-complete-is-enable-island.vercel.app"
+      />
       <div class="flex-grow">
         {novels.length > 0
           ? <History novels={novels as Novel[]} />
