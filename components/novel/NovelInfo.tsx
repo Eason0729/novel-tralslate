@@ -1,3 +1,4 @@
+import { Head } from "$fresh/runtime.ts";
 import { Novel } from "../../entity/novel.ts";
 import ActionButton from "../../islands/ActionButton.tsx";
 import Paragraph from "../Paragraph.tsx";
@@ -7,9 +8,13 @@ export default function NovelInfo({ novel }: { novel: Novel }) {
     (novel.state == "translated"
       ? novel.description
       : novel.untranslatedDescription) as string;
+  const name = novel.name || novel.untranslatedName;
 
   return (
     <>
+      <Head>
+        <title>{name}</title>
+      </Head>
       <div class="text-center">
         {novel.state == "unfetch" || novel.state == "fetching"
           ? (
@@ -19,7 +24,7 @@ export default function NovelInfo({ novel }: { novel: Novel }) {
           )
           : (
             <h1 class="text-4xl font-bold mb-4">
-              {novel.name || novel.untranslatedName}
+              {name}
             </h1>
           )}
       </div>
@@ -40,7 +45,9 @@ export default function NovelInfo({ novel }: { novel: Novel }) {
           </div>
         </div>
         <div class="hover:text-gray-600 dark:hover:text-white cursor-pointer peer-checked/novel-details:hidden">
-          Click for more
+          <div class="flex justify-end">
+            Click for more
+          </div>
         </div>
       </label>
     </>

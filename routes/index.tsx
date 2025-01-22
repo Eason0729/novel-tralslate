@@ -3,7 +3,6 @@ import { Handlers } from "$fresh/server.ts";
 import { Novel } from "../entity/novel.ts";
 
 import History from "../components/novels/History.tsx";
-import Search from "../components/novels/Search.tsx";
 import Footer from "../components/Footer.tsx";
 import SetupInstruction from "../components/novels/SetupInstruction.tsx";
 import PrefixComplete from "../islands/PrefixComplete.tsx";

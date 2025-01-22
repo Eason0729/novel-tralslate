@@ -75,8 +75,10 @@ export default function ArticleList(
   articles.sort((a, b) => (a.index as number) - (b.index as number));
 
   const addIndex = longestIncreasingSubsequence(
-    articles.flatMap((article) => extractNumber(article.title as string)),
-  ).length < articles.length * 0.8;
+    articles.flatMap((article) =>
+      extractNumber(article.untranslatedTitle as string)
+    ),
+  ).length < articles.length * 0.75;
 
   return (
     <ul class="mt-4 space-y-3">

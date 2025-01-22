@@ -12,7 +12,7 @@ export default function HistoryEntry(props: { novel: Novel }) {
 
   if (!IS_BROWSER) {
     return (
-      <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
+      <li class="flex items-center justify-between bg-blue-500 dark:hover:bg-slate-300 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black p-3 rounded text-lg">
         <a href={"/novel/" + novel.id} class="flex-1 overflow-ellipsis">
           {nameAvailable ? displayName : `${novel.state}: ${novel.url}`}
         </a>
@@ -31,7 +31,7 @@ export default function HistoryEntry(props: { novel: Novel }) {
   return hidden
     ? null
     : (
-      <li class="flex items-center justify-between bg-slate-100 dark:text-black p-3 rounded text-lg">
+      <li class="flex items-center justify-between bg-blue-500 dark:hover:bg-slate-300 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black p-3 rounded text-lg">
         <a href={"/novel/" + novel.id} class="flex-1 overflow-ellipsis">
           {nameAvailable ? displayName : `${novel.state}: ${novel.url}`}
         </a>

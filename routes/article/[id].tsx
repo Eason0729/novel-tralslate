@@ -7,6 +7,7 @@ import TitleBar from "../../components/reader/TitleBar.tsx";
 import TextView from "../../components/reader/TextView.tsx";
 import Footer from "../../components/reader/Footer.tsx";
 import Loading from "../../components/Loading.tsx";
+import { Head } from "$fresh/runtime.ts";
 
 export default async function ArticlePage(_: Request, ctx: RouteContext) {
   const { id } = ctx.params as { id: string };
@@ -55,6 +56,9 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
 
   return (
     <main>
+      <Head>
+        <title>{(article.title as string).trim()}</title>
+      </Head>
       <div class="flex flex-col h-screen w-full sm:max-w-2xl xl:max-w-[60vw] mx-auto">
         <TitleBar
           title={novel.name as string || novel.untranslatedName as string}

@@ -21,7 +21,7 @@ export default function ArticleEntry(
   return (
     <li
       key={`frag-novel-list-${index}`}
-      class="block p-3 rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black shadow transition duration-300"
+      class="block p-3 rounded-lg bg-blue-500 dark:hover:bg-slate-300 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black shadow transition duration-300"
     >
       <nav class="flex justify-between items-center tracking-tight text-2xl px-2">
         <a

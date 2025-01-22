@@ -98,18 +98,18 @@ export default class PrefixComplete extends Component<Props, State> {
           onInput={this.onInput.bind(this)}
         />
         <button
-          class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium bg-slate-800 text-white dark:bg-slate-300 dark:text-blackz h-12 w-12"
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium bg-slate-800 text-white dark:bg-slate-100 dark:text-black h-12 w-12"
           type="submit"
         >
           <IconSearch class="h-5 w-5" />
           <span class="sr-only">Search</span>
         </button>
         {matchPrefixs.length != 0 && (
-          <ul class="hidden peer-focus-within/prefix-complete:block origin-top-right absolute z-10 border bg-slate-100 dark:text-black rounded-md shadow-lg mt-14 right-0 left-0 overflow-y-hidden">
+          <ul class="hidden peer-focus-within/prefix-complete:block focus:block hover:block origin-top-right absolute z-10 border bg-slate-100 dark:text-black rounded-md shadow-lg mt-14 right-1 left-1 overflow-hidden max-h-[45vh]">
             {matchPrefixs.map((suggestion, i) => (
               <li
                 key={suggestion}
-                class={"px-4 py-2 cursor-pointer hover:bg-slate-200" +
+                class={"px-4 py-2 cursor-pointer hover:bg-slate-300 border-y" +
                   (highlightIndex === i ? " bg-slate-200" : "")}
                 onClick={() => this.onSuggestionsClick(i)}
               >
