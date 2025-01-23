@@ -38,10 +38,15 @@ export const handler: Handlers = {
 export default async function Home() {
   const novels = await Novel.where("hidden", false).orderBy("updatedAt", "desc")
     .all();
+  const prefixs = [
+    ...getSupportedSourceInfos().map((x) => x.baseUrl),
+    ...novels.map((novel) => novel.url as string),
+  ];
+
   return (
     <div class="w-full max-w-4xl mx-auto rounded-lg py-10 px-4 min-h-[100vh] flex flex-col">
       <PrefixComplete
-        prefixs={getSupportedSourceInfos().map((x) => x.baseUrl)}
+        prefixs={prefixs}
         placeholder="https://auto-complete-is-enable-island.vercel.app"
       />
       <div class="flex-grow">

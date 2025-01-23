@@ -9,10 +9,12 @@ export async function handler(
   ctx: FreshContext<State>,
 ) {
   const resp = await ctx.next();
-  const url = req.url;
+
+  if (Deno.env.get("PRODUCTION") === "0") return resp;
+
   const cacheExtensions = [".css", ".js", ".svg", ".ico"];
   for (const ext of cacheExtensions) {
-    if (url.endsWith(ext)) {
+    if (req.url.endsWith(ext)) {
       resp.headers.set("Cache-Control", "max-age=3600");
     }
   }

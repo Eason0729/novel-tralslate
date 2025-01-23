@@ -1,14 +1,13 @@
-import { useRef } from "preact/hooks";
+import { Ref, useRef } from "preact/hooks";
 import { IconSearch } from "@tabler/icons-preact";
-import { IS_BROWSER } from "$fresh/runtime.ts";
 import { Component } from "preact";
-import { o } from "https://deno.land/x/dex@1.0.2/lib/deps/@jspm/core@1.1.0/nodelibs/chunk-0c2d1322.js";
 
 interface Props {
   prefixs: string[];
   action?: string;
   placeholder?: string;
 }
+
 interface State {
   highlightIndex: number;
   matchPrefixs: string[];
@@ -16,6 +15,7 @@ interface State {
 }
 
 export default class PrefixComplete extends Component<Props, State> {
+  inputRef?: Ref<HTMLInputElement>;
   constructor() {
     super();
     this.state = {
@@ -46,17 +46,18 @@ export default class PrefixComplete extends Component<Props, State> {
   }
   onSuggestionsClick(i: number) {
     this.setState({ value: this.state.matchPrefixs[i], matchPrefixs: [] });
+    if (this.inputRef) this.inputRef.current!.focus();
   }
   override componentDidMount() {
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    globalThis.addEventListener("keyup", this.handleKeyDown);
+    this.handleKeydown = this.handleKeydown.bind(this);
+    globalThis.addEventListener("keyup", this.handleKeydown);
   }
 
   override componentWillUnmount() {
-    globalThis.removeEventListener("keyup", this.handleKeyDown);
+    globalThis.removeEventListener("keyup", this.handleKeydown);
   }
 
-  handleKeyDown(event: KeyboardEvent) {
+  handleKeydown(event: KeyboardEvent) {
     if (this.state.matchPrefixs.length === 0) return;
 
     console.log(this.state.highlightIndex);
@@ -81,6 +82,8 @@ export default class PrefixComplete extends Component<Props, State> {
   }
   render({ action, placeholder }: Props) {
     const { matchPrefixs, highlightIndex } = this.state;
+    this.inputRef = useRef<HTMLInputElement>(null);
+
     return (
       <form
         class="flex gap-2 mb-4 text-lg relative"
@@ -96,6 +99,7 @@ export default class PrefixComplete extends Component<Props, State> {
           name="url"
           value={this.state.value}
           onInput={this.onInput.bind(this)}
+          ref={this.inputRef}
         />
         <button
           class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium bg-slate-800 text-white dark:bg-slate-100 dark:text-black h-12 w-12"
@@ -105,11 +109,11 @@ export default class PrefixComplete extends Component<Props, State> {
           <span class="sr-only">Search</span>
         </button>
         {matchPrefixs.length != 0 && (
-          <ul class="hidden peer-focus-within/prefix-complete:block focus:block hover:block origin-top-right absolute z-10 border bg-slate-100 dark:text-black rounded-md shadow-lg mt-14 right-1 left-1 overflow-hidden max-h-[45vh]">
+          <ul class="hidden peer-focus-within/prefix-complete:block focus:block hover:block origin-top-right absolute z-10 border bg-slate-100 dark:text-black rounded-md shadow-lg mt-14 right-1 left-1 overflow-x-hidden overflow-y-auto max-h-[45vh]">
             {matchPrefixs.map((suggestion, i) => (
               <li
                 key={suggestion}
-                class={"px-4 py-2 cursor-pointer hover:bg-slate-300 border-y" +
+                class={"px-4 py-2 cursor-pointer hover:bg-slate-300 border-y break-all" +
                   (highlightIndex === i ? " bg-slate-200" : "")}
                 onClick={() => this.onSuggestionsClick(i)}
               >
