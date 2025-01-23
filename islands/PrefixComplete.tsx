@@ -1,4 +1,4 @@
-import { Ref, useRef } from "preact/hooks";
+import { Ref, useEffect, useRef } from "preact/hooks";
 import { IconSearch } from "@tabler/icons-preact";
 import { Component } from "preact";
 
@@ -26,12 +26,8 @@ export default class PrefixComplete extends Component<Props, State> {
   }
   onInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    console.log(value);
     this.setState({ value });
     if (value.length > 0) {
-      console.log(
-        this.props.prefixs.filter((prefix) => prefix.startsWith(value)),
-      );
       this.setState({
         matchPrefixs: this.props.prefixs.filter((prefix) =>
           prefix.startsWith(value) && prefix.length > value.length
@@ -60,7 +56,6 @@ export default class PrefixComplete extends Component<Props, State> {
   handleKeydown(event: KeyboardEvent) {
     if (this.state.matchPrefixs.length === 0) return;
 
-    console.log(this.state.highlightIndex);
     if (event.key === "ArrowDown") {
       this.setState({
         highlightIndex: Math.min(
@@ -109,17 +104,29 @@ export default class PrefixComplete extends Component<Props, State> {
           <span class="sr-only">Search</span>
         </button>
         {matchPrefixs.length != 0 && (
-          <ul class="hidden peer-focus-within/prefix-complete:block focus:block hover:block origin-top-right absolute z-10 border bg-slate-100 dark:text-black rounded-md shadow-lg mt-14 right-1 left-1 overflow-x-hidden overflow-y-auto max-h-[45vh]">
-            {matchPrefixs.map((suggestion, i) => (
-              <li
-                key={suggestion}
-                class={"px-4 py-2 cursor-pointer hover:bg-slate-300 border-y break-all" +
-                  (highlightIndex === i ? " bg-slate-200" : "")}
-                onClick={() => this.onSuggestionsClick(i)}
-              >
-                {suggestion}
-              </li>
-            ))}
+          <ul class="hidden peer-focus-within/prefix-complete:block focus:block hover:block snap-y snap-mandatory origin-top-right absolute z-10 border bg-slate-100 dark:text-black rounded-md shadow-lg mt-14 right-1 left-1 overflow-x-hidden overflow-y-auto search-suggrestions">
+            {matchPrefixs.map((suggestion, i) => {
+              const isSelected = highlightIndex === i;
+              const ref = useRef<HTMLLIElement>(null);
+              if (isSelected) {
+                useEffect(() => {
+                  if (ref.current) {
+                    ref.current?.scrollIntoView({ block: "nearest" });
+                  }
+                }, [ref]);
+              }
+              return (
+                <li
+                  key={suggestion}
+                  class={"px-4 py-2 cursor-pointer hover:bg-slate-300 border-y break-all snap-always snap-center" +
+                    (isSelected ? " bg-slate-200" : "")}
+                  onClick={() => this.onSuggestionsClick(i)}
+                  ref={ref}
+                >
+                  {suggestion}
+                </li>
+              );
+            })}
           </ul>
         )}
       </form>

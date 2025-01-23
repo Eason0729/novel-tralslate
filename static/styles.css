@@ -36,3 +36,7 @@ body {
 .gutter {
   scrollbar-gutter: stable both-edges;
 }
+
+.search-suggrestions {
+  max-height: calc(45vh - mod(45vh, 46px));
+}
