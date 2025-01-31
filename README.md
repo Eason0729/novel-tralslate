@@ -2,6 +2,9 @@
 
 [![wakatime](https://wakatime.com/badge/user/6c7a0447-9414-43ab-a937-9081f3e9fc7d/project/30132cd0-1c6e-4914-84e4-3e8bac06ea3c.svg)](https://wakatime.com/badge/user/6c7a0447-9414-43ab-a937-9081f3e9fc7d/project/30132cd0-1c6e-4914-84e4-3e8bac06ea3c)
 
+> [!NOTE]
+> 這裡是程式碼的鏡像，開發在私人的Gitea，可以開issue尋問
+
 ## 功能
 
 - 手機最佳化：為小螢幕畫面優化UX，支持手勢翻頁
