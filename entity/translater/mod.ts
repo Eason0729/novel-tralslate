@@ -1,6 +1,9 @@
 import { Semaphore } from "semaphore";
 import { Translater as SakuraTranslater } from "./sakura.ts";
 import { Translater as GeminiTranslater } from "./gemini.ts";
+import { SpanStatusCode, trace } from "npm:@opentelemetry/api@1";
+
+const tracer = trace.getTracer("translater", "1.0.0");
 
 export type Affinity = number;
 
@@ -24,9 +27,24 @@ export class TranslaterHandle implements Translator {
   getAffinity(url: string): Affinity | undefined {
     return this.inner.getAffinity(url);
   }
+  private async innerTranslate(content: string): Promise<string> {
+    const span = tracer.startSpan("translate");
+    span.setAttribute("translator", this.inner.constructor.name);
+    try {
+      return await this.inner.translate(content);
+    } catch (e) {
+      span.setStatus({
+        code: SpanStatusCode.ERROR,
+        message: (e as Error).message,
+      });
+      throw e;
+    } finally {
+      span.end();
+    }
+  }
   async translate(content: string): Promise<string> {
     const release = await this.semaphore.acquire();
-    const res = await this.inner.translate(content);
+    const res = await this.innerTranslate(content);
     release();
     return res;
   }
@@ -35,7 +53,7 @@ export class TranslaterHandle implements Translator {
 
     const res = [];
     for (const content of contents) {
-      res.push(await this.inner.translate(content));
+      res.push(await this.innerTranslate(content));
     }
 
     release();

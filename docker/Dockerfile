@@ -12,4 +12,4 @@ RUN deno task build
 
 RUN deno cache --reload --allow-import main.ts
 
-CMD ["run", "-A", "--unstable-ffi", "main.ts"]
+CMD ["run", "-A", "--unstable-ffi", "--unstable-otel", "main.ts"]
