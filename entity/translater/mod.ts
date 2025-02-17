@@ -29,7 +29,12 @@ export class TranslaterHandle implements Translator {
   }
   private async innerTranslate(content: string): Promise<string> {
     const span = tracer.startSpan("translate");
+    const startTime = performance.now();
+
+    let error;
+
     span.setAttribute("translator", this.inner.constructor.name);
+
     try {
       return await this.inner.translate(content);
     } catch (e) {
@@ -37,8 +42,12 @@ export class TranslaterHandle implements Translator {
         code: SpanStatusCode.ERROR,
         message: (e as Error).message,
       });
+      error = e;
       throw e;
     } finally {
+      span.setAttribute("time", performance.now() - startTime);
+      if (!error) span.setStatus({ code: SpanStatusCode.OK });
+
       span.end();
     }
   }

@@ -7,7 +7,28 @@ import TitleBar from "../../components/reader/TitleBar.tsx";
 import TextView from "../../components/reader/TextView.tsx";
 import Footer from "../../components/reader/Footer.tsx";
 import Loading from "../../components/Loading.tsx";
-import { Head } from "$fresh/runtime.ts";
+import { Head, Partial } from "$fresh/runtime.ts";
+import Prefetch from "../../islands/Prefetch.tsx";
+
+async function getNearestArticle(
+  index: number,
+  novelId: number,
+): Promise<[Article | undefined, Article | undefined]> {
+  const [previousArticles, nextArticle] = await Promise.all([
+    Article.select("id", "state").where("novelId", novelId).where(
+      "index",
+      index - 1,
+    ).all(),
+    Article.select("id", "state").where("novelId", novelId).where(
+      "index",
+      index + 1,
+    ).all(),
+  ]);
+  return [
+    previousArticles[0] as Article | undefined,
+    nextArticle[0] as Article | undefined,
+  ];
+}
 
 export default async function ArticlePage(_: Request, ctx: RouteContext) {
   const { id } = ctx.params as { id: string };
@@ -23,29 +44,12 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
   const index = article.index as number;
   const novelId = article.novelId as number;
 
-  const [novel, previousArticle, nextArticle] = await Promise.all([
+  const [novel, [previousArticle, nextArticle]] = await Promise.all([
     Novel.select("name", "untranslatedName").getById(novelId) as Promise<Novel>,
-    Article.select("id").where("novelId", novelId).where(
-      "index",
-      index - 1,
-    ).all(),
-    Article.select("id").where("novelId", novelId).where(
-      "index",
-      index + 1,
-    ).all(),
+    getNearestArticle(index, novelId),
   ]);
 
-  const nextUrl = nextArticle.length == 0
-    ? undefined
-    : "/article/" + nextArticle[0].id;
-  if (nextArticle.length > 0) {
-    const article = nextArticle[0] as Article;
-    article.upgrade().then(() => article.oneShot());
-  }
-
-  const previousUrl = previousArticle.length == 0
-    ? undefined
-    : "/article/" + previousArticle[0].id;
+  if (nextArticle) nextArticle.upgrade().then(() => article.oneShot());
 
   const content =
     (article.content == ""
@@ -59,6 +63,20 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
       <Head>
         <title>{(article.title as string).trim()}</title>
       </Head>
+      <Partial name="prefetch">
+        <Prefetch
+          urls={[
+            nextArticle && nextArticle.state == "translated"
+              ? `/article/${nextArticle.id}?fresh-partial=true`
+              : undefined,
+            previousArticle && previousArticle.state == "translated"
+              ? `/article/${previousArticle.id}?fresh-partial=true`
+              : undefined,
+          ]}
+        />
+      </Partial>
+      <HomeButton href={"/novel/" + novelId} />
+
       <div class="flex flex-col h-screen w-full sm:max-w-2xl xl:max-w-[60vw] mx-auto">
         <TitleBar
           title={novel.name as string || novel.untranslatedName as string}
@@ -66,9 +84,13 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
         <TextView content={content}>
           {(article.title as string).trim()}
         </TextView>
-        <Footer nextUrl={nextUrl} previousUrl={previousUrl} />
+        <Footer
+          nextUrl={nextArticle ? "/article/" + nextArticle.id : undefined}
+          previousUrl={previousArticle
+            ? "/article/" + previousArticle.id
+            : undefined}
+        />
       </div>
-      <HomeButton href={"/novel/" + novelId} />
     </main>
   );
 }

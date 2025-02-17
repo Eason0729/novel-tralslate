@@ -4,10 +4,11 @@
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
     "manifest": "deno task cli manifest $(pwd)",
-    "start": "export $(cat .env | xargs) && deno run -A --unstable-otel --unstable-ffi --watch=static/,routes/ dev.ts",
+    "start": "export $(cat .env | xargs) && deno run -A --unstable-ffi --watch=static/,routes/ dev.ts",
     "build": "deno run -A --unstable-otel --unstable-ffi dev.ts build",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
-    "test": "deno test -A"
+    "test": "deno test -A",
+    "preview": "deno run -A main.ts"
   },
   "lint": { "rules": { "tags": ["fresh", "recommended"] } },
   "exclude": ["**/_fresh/*"],

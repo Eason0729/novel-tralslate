@@ -29,12 +29,12 @@ export default function Paragraph(
     lines.pop();
   }
   return (
-    <div class="timeline-view text-xl leading-relaxed">
+    <div class="timeline-view text-xl leading-relaxed break-words">
       {lines.map((x) => {
         const trimmed = x.trim();
         if (isRepeation(trimmed)) return <hr class="mx-1 my-12" />;
         if (trimmed.length == 0) return <br />;
-        return <p class="break-words">{trimmed}</p>;
+        return <p>{trimmed}</p>;
       })}
     </div>
   );
