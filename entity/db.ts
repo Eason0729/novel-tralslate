@@ -11,37 +11,6 @@ const connector = new SQLite3Connector({
 
 export let db: Database;
 
-async function recoverTable() {
-  const ops = await Promise.all([
-    Article.where("state", "fetching").update({
-      state: "unfetch",
-    }),
-    Article.where("state", "translating").update({
-      state: "fetched",
-    }),
-    Novel.where("state", "fetching").update({
-      state: "unfetch",
-    }),
-    Novel.where("state", "translating").update({
-      state: "fetched",
-    }),
-  ]) as Model[];
-  const changes = ops.map((x) => x.affectedRows as number).reduce(
-    (a, b) => a + b,
-    0,
-  );
-
-  Article.where("state", "fetched").orderBy("id").all().then(
-    async (articles) => {
-      for (const article of articles as Article[]) await article.oneShot();
-    },
-  );
-
-  if (changes > 0) {
-    console.info("Recovered from previous crash, reset", changes, "rows");
-  }
-}
-
 /**
  * @warn Don't call this function more than once
  * @returns {Database}
@@ -52,6 +21,7 @@ export default async function SetupDatabase(): Promise<Database> {
   Relationships.belongsTo(Article, Novel);
 
   db.link([Article, Novel]);
+
   await db.sync({ drop: false });
 
   if (Deno.env.get("BYPASS_DATABASE_MIGRATION") == "1") {
@@ -60,8 +30,6 @@ export default async function SetupDatabase(): Promise<Database> {
     console.info("Detecting database migration");
     await runMigrations(FILEPATH);
   }
-
-  recoverTable();
 
   return db;
 }

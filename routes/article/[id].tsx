@@ -67,12 +67,13 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
         <Prefetch
           urls={[
             nextArticle && nextArticle.state == "translated"
-              ? `/article/${nextArticle.id}?fresh-partial=true`
+              ? `/article/${nextArticle.id}`
               : undefined,
             previousArticle && previousArticle.state == "translated"
-              ? `/article/${previousArticle.id}?fresh-partial=true`
+              ? `/article/${previousArticle.id}`
               : undefined,
           ]}
+          partial
         />
       </Partial>
       <HomeButton href={"/novel/" + novelId} />
