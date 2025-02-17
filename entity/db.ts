@@ -27,7 +27,9 @@ export default async function SetupDatabase(): Promise<Database> {
   if (Deno.env.get("BYPASS_DATABASE_MIGRATION") == "1") {
     console.warn("Bypassing database migration");
   } else {
-    console.info("Detecting database migration");
+    console.info(
+      'Detecting database migration, setting BYPASS_DATABASE_MIGRATION to "1" to skip',
+    );
     await runMigrations(FILEPATH);
   }
 

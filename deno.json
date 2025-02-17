@@ -5,7 +5,7 @@
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
     "manifest": "deno task cli manifest $(pwd)",
     "start": "export $(cat .env | xargs) && deno run -A --unstable-ffi --watch=static/,routes/ dev.ts",
-    "build": "deno run -A --unstable-otel --unstable-ffi dev.ts build",
+    "build": "deno run -A --unstable-ffi dev.ts build",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
     "test": "deno test -A",
     "preview": "deno run -A main.ts"
@@ -19,7 +19,6 @@
     "@denodb": "https://raw.githubusercontent.com/Eason0729/denodb/master/mod.ts",
     "@denodb/types": "https://raw.githubusercontent.com/Eason0729/denodb/master/lib/data-types.ts",
     "@google/generative-ai": "npm:@google/generative-ai@^0.21.0",
-    "@opentelemetry/api": "npm:@opentelemetry/api@^1.9.0",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
     "@tabler/icons-preact": "npm:@tabler/icons-preact@^3.26.0",
@@ -31,7 +30,7 @@
     "tailwindcss/": "npm:/tailwindcss@3.4.1/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
     "opencc": "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/esm/cn2t.js",
-    "sqlite": "jsr:@db/sqlite@^0.12.0"
+    "sqlite": "https://deno.land/x/sqlite@v3.9.1/mod.ts"
   },
   "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" }
 }
