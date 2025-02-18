@@ -43,7 +43,6 @@ export default function ActionButton(
           <button
             type="submit"
             class="text-lg font-semibold items-center inline-flex p-3 rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black shadow transition duration-300"
-            tabIndex={3}
           >
             {inner}
           </button>
@@ -67,7 +66,6 @@ export default function ActionButton(
         disabled={disable}
         onClick={onClick}
         class="text-lg font-semibold items-center inline-flex p-3 rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-slate-200 text-white dark:text-black shadow transition duration-300"
-        tabIndex={3}
       >
         {inner}
       </button>

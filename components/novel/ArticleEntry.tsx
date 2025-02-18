@@ -1,20 +1,9 @@
 import { Article, State as ArticleState } from "../../entity/article.ts";
 import StartButton from "../../islands/StartButton.tsx";
-import type { buttonState } from "../../islands/StartButton.tsx";
 
 export default function ArticleEntry(
   { article, addIndex }: { article: Article; addIndex?: boolean },
 ) {
-  const stateMap: Record<ArticleState, buttonState> = {
-    unfetch: "start",
-    fetching: "running",
-    fetched: "running",
-    translating: "running",
-    translated: "retry",
-    error: "retry",
-  };
-  const state = stateMap[article.state as ArticleState];
-
   const title = (article.title as string) ||
     (article.untranslatedTitle as string);
   const index = article.index as number;
@@ -27,7 +16,6 @@ export default function ArticleEntry(
         <a
           href={"/article/" + article.id}
           class="flex mr-3 line-clamp-2"
-          tabIndex={4}
         >
           {addIndex ? `第${index + 1}話 ` : null}
           {title.trim()}
@@ -44,7 +32,7 @@ export default function ArticleEntry(
           </a>
           <StartButton
             articleId={article.id as number}
-            state={state}
+            state={article.state as string}
           />
         </div>
       </nav>

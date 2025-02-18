@@ -43,10 +43,11 @@ export default async function NovelPage(_: Request, ctx: RouteContext) {
   ]);
 
   if (novel.state == "error") {
+    novel.reset().then(() => novel.oneShot());
     return (
       <ErrorPage
         code="500"
-        message="Oops! It seems like we are unable to translate novel. Check log."
+        message="Oops! It seems like we are unable to fetch/translate novel. Check log."
         redirectUrl={"/novel/" + novelId}
       />
     );

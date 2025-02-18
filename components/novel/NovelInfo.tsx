@@ -35,7 +35,6 @@ export default function NovelInfo({ novel }: { novel: Novel }) {
           name="novel-details"
           value="value"
           class="peer/novel-details h-0 w-0 absolute"
-          tabIndex={1}
         />
         <div class="line-clamp-4 peer-checked/novel-details:line-clamp-none cursor-pointer peer-checked/novel-details:cursor-default">
           <Paragraph content={description} />

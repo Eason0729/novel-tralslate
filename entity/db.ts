@@ -24,6 +24,11 @@ export default async function SetupDatabase(): Promise<Database> {
 
   await db.sync({ drop: false });
 
+  console.info("Database synced");
+
+  await Article.resetInProgress();
+  await Novel.resetInProgress();
+
   if (Deno.env.get("BYPASS_DATABASE_MIGRATION") == "1") {
     console.warn("Bypassing database migration");
   } else {

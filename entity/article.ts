@@ -74,7 +74,7 @@ export class Article extends Model {
     Object.assign(this, articles[0] as Article);
   }
   async fetch() {
-    this.changeState("unfetch", "fetching");
+    await this.changeState("unfetch", "fetching");
     const result = await getArticle(this.metadata());
     if (!result) {
       throw new Error(
@@ -87,10 +87,11 @@ export class Article extends Model {
     });
   }
   async translate() {
-    this.changeState("fetched", "translating");
+    await this.changeState("fetched", "translating");
 
     const translater = getTranslatorHandle(this.url as string);
     if (!translater) throw new Error("no translater found");
+    console.log(translater.name);
 
     const [content, title] = await translater?.translateMultiple(
       [this.untranslatedContent, this.untranslatedTitle] as string[],
@@ -109,11 +110,11 @@ export class Article extends Model {
     }
   }
   public async oneShot() {
-    if (this.state == "unfetch") {
-      await this.fetch().catch((e) => this.setErrorState("fetching", e));
-    }
-    if (this.state == "fetched") {
-      await this.translate().catch((e) => this.setErrorState("fetching", e));
+    try {
+      if (this.state == "unfetch") await this.fetch();
+      if (this.state == "fetched") await this.translate();
+    } catch (e) {
+      this.setErrorState(this.state as State, e as Error);
     }
   }
   private async changeState(oldState: State, newState: State, values?: Values) {
@@ -132,5 +133,9 @@ export class Article extends Model {
     } catch (e) {
       console.warn("error while setting error state", e);
     }
+  }
+  public static async resetInProgress() {
+    await Article.where("state", "fetching").update({ state: "unfetch" });
+    await Article.where("state", "translating").update({ state: "fetched" });
   }
 }

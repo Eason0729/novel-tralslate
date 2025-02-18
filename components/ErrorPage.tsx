@@ -7,6 +7,7 @@ function getErrorTitle(code: number) {
     401: "Unauthorized",
     403: "Forbidden",
     404: "Page Not Found",
+    500: "Internal Server Error",
   };
   if (code in codesMap) return codesMap[code as keyof typeof codesMap];
   return `Unknown`;

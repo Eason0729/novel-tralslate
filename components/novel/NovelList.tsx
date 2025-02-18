@@ -13,7 +13,6 @@ export default function NovelList({ novels }: { novels: Novel[] }) {
               <a
                 href={"/novel/" + novel.id}
                 class="hover:text-gray-600 dark:hover:text-white"
-                tabIndex={2}
               >
                 {novel.name || novel.untranslatedName}
               </a>

@@ -66,7 +66,7 @@ export class Novel extends Model {
    * @returns might throw error if transition is invalid
    */
   async fetch(): Promise<Novel | undefined> {
-    this.changeState("unfetch", "fetching");
+    await this.changeState("unfetch", "fetching");
     const result = await getNovel(this.url as string);
     if (!result) return;
 
@@ -83,7 +83,7 @@ export class Novel extends Model {
     });
   }
   async translate() {
-    this.changeState("fetched", "translating");
+    await this.changeState("fetched", "translating");
 
     const translater = getTranslatorHandle(this.url as string);
     if (!translater) throw new Error("no translater found");
@@ -112,11 +112,11 @@ export class Novel extends Model {
     }
   }
   public async oneShot() {
-    if (this.state == "unfetch") {
-      await this.fetch().catch((e) => this.setErrorState("fetching", e));
-    }
-    if (this.state == "fetched") {
-      await this.translate().catch((e) => this.setErrorState("fetching", e));
+    try {
+      if (this.state == "unfetch") await this.fetch();
+      if (this.state == "fetched") await this.translate();
+    } catch (e) {
+      this.setErrorState(this.state as state, e as Error);
     }
   }
   private async changeState(oldState: state, newState: state, values?: Values) {
@@ -134,5 +134,9 @@ export class Novel extends Model {
     } catch (e) {
       console.warn("error while setting error state", e);
     }
+  }
+  public static async resetInProgress() {
+    await Novel.where("state", "fetching").update({ state: "unfetch" });
+    await Novel.where("state", "translating").update({ state: "fetched" });
   }
 }

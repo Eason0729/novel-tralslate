@@ -49,6 +49,9 @@ export class TranslaterHandle implements Translator {
 
     return res;
   }
+  get name(): string {
+    return this.inner.constructor.name;
+  }
 }
 
 const translators: TranslaterHandle[] = [

@@ -21,6 +21,7 @@ function chunking(text: string): string[] {
   return chunks;
 }
 
+let ollamaWarningShown = false;
 export class Translater implements def.Translator {
   maxParallel = 1;
   disable;
@@ -33,8 +34,20 @@ export class Translater implements def.Translator {
 
     if (this.apiURL) {
       setInterval(async () => {
-        this.disable = await fetch(this.apiURL!).then((res) => !res.ok);
-      }, 10000);
+        try {
+          this.disable = await fetch(this.apiURL!, {
+            signal: AbortSignal.timeout(1000),
+          }).then((res) => !res.ok);
+        } catch (_) {
+          this.disable = true;
+          if (!ollamaWarningShown) {
+            ollamaWarningShown = true;
+            console.warn(
+              "Ollama API is disabled, despite the environment variable is set.",
+            );
+          }
+        }
+      }, 30000);
     }
   }
 

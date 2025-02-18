@@ -16,10 +16,7 @@ export default function Footer(
           checked
         />
         <span class="sr-only">navigation panel</span>
-        <div
-          class="justify-center pt-1 cursor-pointer flex peer-checked/footer-panel:hidden"
-          tabIndex={0}
-        >
+        <div class="justify-center pt-1 cursor-pointer flex peer-checked/footer-panel:hidden">
           <IconArrowBarUp class="h-9 w-9 p-1 bg-slate-600 text-white rounded-full animate-bounce peer-checked/footer-panel" />
           <span class="sr-only">open panel</span>
         </div>
@@ -30,7 +27,7 @@ export default function Footer(
               direction="left"
               href={previousUrl}
             />
-            <span tabIndex={0}>
+            <span>
               <IconArrowBarDown class="pt-1 animate-bounce h-10 w-10 p-2" />
             </span>
             {nextUrl

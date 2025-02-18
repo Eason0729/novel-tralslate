@@ -18,7 +18,6 @@ import * as $ActionButton from "./islands/ActionButton.tsx";
 import * as $ArrowButton from "./islands/ArrowButton.tsx";
 import * as $HistoryEntry from "./islands/HistoryEntry.tsx";
 import * as $LoadButton from "./islands/LoadButton.tsx";
-import * as $Prefetch from "./islands/Prefetch.tsx";
 import * as $PrefixComplete from "./islands/PrefixComplete.tsx";
 import * as $StartButton from "./islands/StartButton.tsx";
 import type { Manifest } from "$fresh/server.ts";
@@ -43,7 +42,6 @@ const manifest = {
     "./islands/ArrowButton.tsx": $ArrowButton,
     "./islands/HistoryEntry.tsx": $HistoryEntry,
     "./islands/LoadButton.tsx": $LoadButton,
-    "./islands/Prefetch.tsx": $Prefetch,
     "./islands/PrefixComplete.tsx": $PrefixComplete,
     "./islands/StartButton.tsx": $StartButton,
   },
