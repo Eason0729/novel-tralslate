@@ -12,13 +12,6 @@ export async function handler(
 
   const cacheExtensions = [".css", ".js", ".svg", ".ico"];
 
-  if (
-    req.headers.get("Sec-Purpose") === "prefetch" ||
-    req.headers.get("purpose") === "prefetch"
-  ) {
-    resp.headers.set("Cache-Control", "max-age=300");
-  }
-
   if (Deno.env.get("PRODUCTION") === "0") return resp;
 
   for (const ext of cacheExtensions) {

@@ -7,8 +7,7 @@ import TitleBar from "../../components/reader/TitleBar.tsx";
 import TextView from "../../components/reader/TextView.tsx";
 import Footer from "../../components/reader/Footer.tsx";
 import Loading from "../../components/Loading.tsx";
-import { Head, Partial } from "$fresh/runtime.ts";
-import Prefetch from "../../islands/Prefetch.tsx";
+import { Head } from "$fresh/runtime.ts";
 
 async function getNearestArticle(
   index: number,
@@ -63,19 +62,6 @@ export default async function ArticlePage(_: Request, ctx: RouteContext) {
       <Head>
         <title>{(article.title as string).trim()}</title>
       </Head>
-      <Partial name="prefetch">
-        <Prefetch
-          urls={[
-            nextArticle && nextArticle.state == "translated"
-              ? `/article/${nextArticle.id}`
-              : undefined,
-            previousArticle && previousArticle.state == "translated"
-              ? `/article/${previousArticle.id}`
-              : undefined,
-          ]}
-          partial
-        />
-      </Partial>
       <HomeButton href={"/novel/" + novelId} />
 
       <div class="flex flex-col h-screen w-full sm:max-w-2xl xl:max-w-[60vw] mx-auto">
