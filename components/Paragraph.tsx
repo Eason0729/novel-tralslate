@@ -29,7 +29,7 @@ export default function Paragraph(
     lines.pop();
   }
   return (
-    <div class="timeline-view text-xl leading-relaxed break-words">
+    <div class="timeline-view text-xl leading-relaxed break-words space-y-1">
       {lines.map((x) => {
         const trimmed = x.trim();
         if (isRepeation(trimmed)) return <hr class="mx-1 my-12" />;

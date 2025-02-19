@@ -1,19 +1,24 @@
 import * as def from "./mod.ts";
 import { Chat } from "ollama";
 import * as OpenCC from "opencc";
+import { assertEquals } from "$std/assert/assert_equals.ts";
 
 const openccConverter = OpenCC.Converter({ from: "cn", to: "twp" });
 
 const MODEL = "hf.co/SakuraLLM/Sakura-1.5B-Qwen2.5-v1.0-GGUF";
-const chunk_size = 618;
 
-function chunking(text: string): string[] {
+const defaultChunkSize = 618;
+
+function chunking(
+  text: string,
+  chunkSize: number = defaultChunkSize,
+): string[] {
   const chunks = [];
-  while (text.length > chunk_size) {
-    let i = chunk_size;
+  while (text.length > chunkSize) {
+    let i = chunkSize;
     while (i > 0 && text[i] !== "\n") i--;
 
-    i = i === 0 ? chunk_size : i;
+    if (i == 0) i = chunkSize;
     chunks.push(text.substring(0, i));
     text = text.substring(i);
   }
@@ -83,13 +88,13 @@ export class Translater implements def.Translator {
         model: MODEL,
         API_URL: this.apiURL,
         options: {
-          num_ctx: chunk_size + 100,
+          num_ctx: Math.floor(defaultChunkSize * 1.1 + 100),
           num_predict: Math.ceil(chunk.length * 1.25) + 100,
           temperature: 0.1,
           top_p: 0.3,
         },
       });
-      res += chunkedRes + "\n";
+      res += chunkedRes;
     }
 
     res = openccConverter(res);
@@ -97,3 +102,18 @@ export class Translater implements def.Translator {
     return res;
   }
 }
+
+Deno.test("chunking", () => {
+  const text =
+    "This is a long string that exceeds the chunk size.\nIt has a newline within the first 50 characters.";
+  const expected: string[] = [
+    "This is a long string that exceeds the chunk size.",
+    "\nIt has a newline within the first 50 characters.",
+  ];
+  const actual = chunking(text, 50);
+  assertEquals(
+    actual,
+    expected,
+    "Test Case 3 Failed: Long string, newline within limit",
+  );
+});
