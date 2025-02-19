@@ -11,7 +11,7 @@ function chunking(text: string): string[] {
   const chunks = [];
   while (text.length > chunk_size) {
     let i = chunk_size;
-    while (text[i] !== "\n") i--;
+    while (i > 0 && text[i] !== "\n") i--;
 
     i = i === 0 ? chunk_size : i;
     chunks.push(text.substring(0, i));

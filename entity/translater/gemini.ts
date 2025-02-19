@@ -26,7 +26,6 @@ export class Translater implements def.Translator {
   }
   async translate(content: string): Promise<string> {
     const model = this.client?.getGenerativeModel({ model: MODEL })!;
-
     const res = await model.generateContent({
       systemInstruction: systemPrompt,
       contents: [

@@ -90,8 +90,8 @@ export class Article extends Model {
     await this.changeState("fetched", "translating");
 
     const translater = getTranslatorHandle(this.url as string);
+
     if (!translater) throw new Error("no translater found");
-    console.log(translater.name);
 
     const [content, title] = await translater?.translateMultiple(
       [this.untranslatedContent, this.untranslatedTitle] as string[],
