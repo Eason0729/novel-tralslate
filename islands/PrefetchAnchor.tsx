@@ -1,17 +1,16 @@
-import { Component, ComponentChildren } from "preact";
+import { Component, ComponentChildren, JSX } from "preact";
 import { PARTIAL_SEARCH_PARAM } from "$fresh/src/constants.ts";
 import { IS_BROWSER } from "$fresh/runtime.ts";
+import { Ref } from "preact";
 
 interface Props {
   href?: string;
   children?: ComponentChildren;
   priority?: RequestPriority;
-}
-
-interface State {
-  res?: Response;
-  abortController: AbortController;
-  url: URL;
+  topScroll?: boolean;
+  class?: string;
+  "f-partial"?: string;
+  "f-ref"?: Ref<HTMLAnchorElement>;
 }
 
 let index = 0;
@@ -44,34 +43,42 @@ function maybeUpdateHistory(nextUrl: URL) {
   }
 }
 
-export default class PrefetchPartial extends Component<Props, State> {
-  applyPartials?: (res: Response) => Promise<void>;
-  constructor(props: Props) {
+export default class PrefetchAnchor
+  extends Component<Props & JSX.HTMLAttributes<HTMLAnchorElement>> {
+  res?: Response;
+  abortController: AbortController = new AbortController();
+  url: URL = new URL("", "http://example.com");
+  constructor(props: Props & JSX.HTMLAttributes<HTMLAnchorElement>) {
     super(props);
 
     if (!IS_BROWSER) return;
 
     import("$fresh/src/runtime/entrypoints/main.ts");
+  }
+  override componentDidMount() {
+    if (!this.props.href) return;
+    if (!this.props["f-partial"]) this.props["f-partial"] = this.props.href;
 
-    const abortController = new AbortController();
-    if (!props.href) return;
+    this.url = new URL(
+      this.props["f-partial"] as string,
+      globalThis.location.href,
+    );
+    this.url.searchParams.set(PARTIAL_SEARCH_PARAM, "true");
 
-    const url = new URL(props.href, globalThis.location.href);
-    url.searchParams.set(PARTIAL_SEARCH_PARAM, "true");
-
-    this.state = { abortController, url };
-
-    if (props.priority == "high" || !PrefetchPartial.slowConnection()) {
-      fetch(url, {
-        signal: abortController.signal,
-        priority: props.priority,
+    if (this.props.priority == "high" || !PrefetchAnchor.slowConnection()) {
+      fetch(this.url, {
+        signal: this.abortController.signal,
+        priority: this.props.priority,
         redirect: "follow",
       }).then(
         (res) => {
-          this.setState({ res });
+          this.res = res;
         },
       );
     }
+  }
+  override componentDidUpdate() {
+    this.componentDidMount();
   }
   static slowConnection(): boolean {
     // deno-lint-ignore no-explicit-any
@@ -86,10 +93,10 @@ export default class PrefetchPartial extends Component<Props, State> {
 
     event.preventDefault();
 
-    let res = Promise.resolve(this.state.res);
-    if (!this.state.res) {
-      res = fetch(this.state.url, {
-        signal: this.state.abortController.signal,
+    let res = Promise.resolve(this.res);
+    if (!this.res) {
+      res = fetch(this.url, {
+        signal: this.abortController.signal,
         redirect: "follow",
       });
     }
@@ -98,18 +105,18 @@ export default class PrefetchPartial extends Component<Props, State> {
       const applyPartials =
         (await import("$fresh/src/runtime/entrypoints/main.ts")).applyPartials;
       await applyPartials(await res as Response);
-      globalThis.window.scrollTo(0, 0);
+      if (this.props.topScroll) scrollTo({ top: 0, behavior: "instant" });
 
       maybeUpdateHistory(new URL(this.props.href, globalThis.location.href));
     } catch (e) {
       console.warn(e);
     }
   }
-  override render(props: Props) {
-    if (!IS_BROWSER) return <a href={props.href}>{props.children}</a>;
+  override render(props: Props & JSX.HTMLAttributes<HTMLAnchorElement>) {
+    if (!IS_BROWSER) return <a {...props}>{props.children}</a>;
 
     return (
-      <a onClick={this.trigger.bind(this)} href={props.href}>
+      <a ref={props["f-ref"]} onClick={this.trigger.bind(this)} {...props}>
         {props.children}
       </a>
     );

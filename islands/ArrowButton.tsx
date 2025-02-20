@@ -1,7 +1,7 @@
 import { Ref, useRef } from "preact/hooks";
 import { IconChevronsLeft, IconChevronsRight } from "@tabler/icons-preact";
 import { Component } from "preact";
-import PrefetchPartial from "./PrefetchPartial.tsx";
+import PrefetchAnchor from "./PrefetchAnchor.tsx";
 
 type Direction = "left" | "right";
 
@@ -34,9 +34,14 @@ export default class ArrowButton extends Component<Props> {
   }
   handleKeydown(event: KeyboardEvent) {
     if (this.props.disabled) return;
-    if (this.props.direction == "left" && event.key == "a") {
+
+    if (
+      event.ctrlKey || event.metaKey || event.altKey || event.shiftKey ||
+      event.defaultPrevented
+    ) return;
+    if (this.props.direction == "left" && event.key == "ArrowLeft") {
       this.ref!.current?.click();
-    } else if (this.props.direction == "right" && event.key == "d") {
+    } else if (this.props.direction == "right" && event.key == "ArrowRight") {
       this.ref!.current?.click();
     }
   }
@@ -67,16 +72,17 @@ export default class ArrowButton extends Component<Props> {
 
     return (
       <nav>
-        <PrefetchPartial
+        <PrefetchAnchor
           href={href}
           key={href}
           priority={direction == "left" ? "low" : "high"}
+          topScroll
         >
           <button
             class="min-w-36 inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium disabled:text-slate-400 h-10 px-4 py-2"
             disabled={disabled || false}
-            ref={this.ref}
             tabIndex={-1}
+            ref={this.ref}
           >
             {direction == "left"
               ? (
@@ -92,7 +98,7 @@ export default class ArrowButton extends Component<Props> {
                 </>
               )}
           </button>
-        </PrefetchPartial>
+        </PrefetchAnchor>
       </nav>
     );
   }

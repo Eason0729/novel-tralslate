@@ -8,7 +8,7 @@ export default function NovelLoad({ page, novelId }: {
   return (
     <Partial name="novel-load">
       <LoadBotton
-        href={`/novel/${novelId}/${page + 1}`}
+        href={`/novel/${novelId}`}
         f-partial={`/partial/novel/${novelId}/${page + 1}`}
       >
         Load More
