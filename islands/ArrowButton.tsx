@@ -1,6 +1,7 @@
 import { Ref, useRef } from "preact/hooks";
 import { IconChevronsLeft, IconChevronsRight } from "@tabler/icons-preact";
 import { Component } from "preact";
+import PrefetchPartial from "./PrefetchPartial.tsx";
 
 type Direction = "left" | "right";
 
@@ -13,7 +14,7 @@ interface Props {
 export default class ArrowButton extends Component<Props> {
   ref?: Ref<HTMLButtonElement>;
   touchStart?: [number, number];
-  constructor() {
+  constructor(_: Props) {
     super();
   }
   override componentDidMount() {
@@ -66,7 +67,11 @@ export default class ArrowButton extends Component<Props> {
 
     return (
       <nav>
-        <a href={href} f-client-nav>
+        <PrefetchPartial
+          href={href}
+          key={href}
+          priority={direction == "left" ? "low" : "high"}
+        >
           <button
             class="min-w-36 inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium disabled:text-slate-400 h-10 px-4 py-2"
             disabled={disabled || false}
@@ -87,7 +92,7 @@ export default class ArrowButton extends Component<Props> {
                 </>
               )}
           </button>
-        </a>
+        </PrefetchPartial>
       </nav>
     );
   }
