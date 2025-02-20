@@ -98,6 +98,8 @@ export default class PrefetchPartial extends Component<Props, State> {
       const applyPartials =
         (await import("$fresh/src/runtime/entrypoints/main.ts")).applyPartials;
       await applyPartials(await res as Response);
+      globalThis.window.scrollTo(0, 0);
+
       maybeUpdateHistory(new URL(this.props.href, globalThis.location.href));
     } catch (e) {
       console.warn(e);
