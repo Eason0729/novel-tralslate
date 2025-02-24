@@ -2,6 +2,7 @@ import * as def from "./mod.ts";
 import { Chat } from "ollama";
 import * as OpenCC from "opencc";
 import { assertEquals } from "$std/assert/assert_equals.ts";
+import { currentLang } from "./mod.ts";
 
 const openccConverter = OpenCC.Converter({ from: "cn", to: "twp" });
 
@@ -29,31 +30,31 @@ function chunking(
 let ollamaWarningShown = false;
 export class Translater implements def.Translator {
   maxParallel = 1;
-  disable;
+  disable = true;
   apiURL?: string;
   constructor() {
     const apiURL = Deno.env.get("OLLAMA_URL");
     this.apiURL = apiURL;
 
-    this.disable = apiURL ? false : true;
+    if (!this.apiURL || ["zh-tw", "zh-cn"].includes(currentLang)) return;
 
-    if (this.apiURL) {
-      setInterval(async () => {
-        try {
-          this.disable = await fetch(this.apiURL!, {
-            signal: AbortSignal.timeout(1000),
-          }).then((res) => !res.ok);
-        } catch (_) {
-          this.disable = true;
-          if (!ollamaWarningShown) {
-            ollamaWarningShown = true;
-            console.warn(
-              "Ollama API is disabled, despite the environment variable is set.",
-            );
-          }
+    this.disable = true;
+
+    setInterval(async () => {
+      try {
+        this.disable = await fetch(this.apiURL!, {
+          signal: AbortSignal.timeout(1000),
+        }).then((res) => !res.ok);
+      } catch (_) {
+        this.disable = true;
+        if (!ollamaWarningShown) {
+          ollamaWarningShown = true;
+          console.warn(
+            "Ollama API is disabled, despite the environment variable is set.",
+          );
         }
-      }, 30000);
-    }
+      }
+    }, 30000);
   }
 
   getAffinity(url: string): def.Affinity | undefined {
@@ -97,7 +98,9 @@ export class Translater implements def.Translator {
       res += chunkedRes;
     }
 
-    res = openccConverter(res);
+    if (currentLang == "zh-tw") {
+      res = openccConverter(res);
+    }
 
     return res;
   }

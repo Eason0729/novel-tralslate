@@ -2,6 +2,23 @@ import { Semaphore } from "semaphore";
 import { Translater as SakuraTranslater } from "./sakura.ts";
 import { Translater as GeminiTranslater } from "./gemini.ts";
 
+export type Language = "zh-tw" | "zh-cn" | "en";
+const AllowLanguagesList: Language[] = ["zh-tw", "zh-cn", "en"];
+
+function getCurrentLang(): Language {
+  const lang = Deno.env.get("LANG") || "zh-tw";
+  if (AllowLanguagesList.includes(lang as Language)) {
+    return lang as Language;
+  }
+  console.warn(`Invalid language: ${lang}`);
+  console.warn(`Allow languages: ${AllowLanguagesList.join(", ")}`);
+  return "zh-tw";
+}
+export const currentLang = getCurrentLang();
+console.log(
+  `currentLang: ${currentLang}\nUse environment variable LANG to change language.`,
+);
+
 export type Affinity = number;
 
 export interface Translator {

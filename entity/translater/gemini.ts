@@ -1,13 +1,28 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as def from "./mod.ts";
+import { currentLang, Language } from "./mod.ts";
 
 const MODEL = "gemini-1.5-flash";
 
-const systemPrompt = [
-  "請將以下外文小說翻譯成繁體中文。務必保留原文的意境和情感，同時確保譯文流暢自然。在翻譯過程中，請遵守以下要求：",
-  "1. 尊重換行和特殊字元，確保格式不變。",
-  "2. 維持人稱代名詞的使用，確保角色的聲音和特徵不被改變。",
-].join("\n");
+const systemPrompts: Record<Language, string> = {
+  "zh-tw": [
+    "請將以下外文小說翻譯成繁體中文。務必保留原文的意境和情感，同時確保譯文流暢自然。在翻譯過程中，請遵守以下要求：",
+    "1. 尊重換行和特殊字元，確保格式不變。",
+    "2. 維持人稱代名詞的使用，確保角色的聲音和特徵不被改變。",
+  ].join("\n"),
+  "zh-cn": [
+    "请将以下外文小说翻译成简体中文。务必保留原文的意境和情感，同时确保译文流畅自然。在翻译过程中，请遵守以下要求：",
+    "1. 尊重换行和特殊字符，确保格式不变。",
+    "2. 维持人称代名词的使用，确保角色的声音和特征不被改变。",
+  ].join("\n"),
+  "en": [
+    "Please translate the following foreign novel into English. Be sure to retain the original mood and emotion of the text, while ensuring that the translation is smooth and natural. During the translation process, please adhere to the following requirements:",
+    "1. Respect line breaks and special characters, ensuring that the format remains unchanged.",
+    "2. Maintain the use of personal pronouns, ensuring that the voice and characteristics of the characters are not altered.",
+  ].join("\n"),
+};
+
+const systemPrompt = systemPrompts[currentLang];
 
 const userPrefix = "將下面的外文文本翻譯成中文：";
 
