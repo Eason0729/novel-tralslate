@@ -2,6 +2,7 @@ import { assert } from "$std/assert/assert.ts";
 import { Semaphore } from "semaphore";
 import * as def from "./mod.ts";
 import { DOMParser, Element, HTMLDocument } from "jsr:@b-fuze/deno-dom";
+import { Language } from "../translater/mod.ts";
 
 const parallel = new Semaphore(2);
 
@@ -31,10 +32,11 @@ class ArticleMetaData implements def.ArticleMetaData {
 
 export class ArticleSource implements def.ArticleSource {
   baseUrl = "https://www.alphapolis.co.jp";
+  language: Language = "jp";
   get disable() {
     return Deno.env.get("WAF_COOKIES") === undefined;
   }
-  async get_article(
+  async getArticle(
     metadata: def.ArticleMetaData,
   ): Promise<Article | undefined> {
     const rawHtml = await fetchWAF(metadata.url).then((res) => res.text());
@@ -60,6 +62,7 @@ export class Article implements def.Article {
 export class NovelSource implements def.NovelSource {
   name = "アルファポリス";
   exampleUrl = "https://www.alphapolis.co.jp/novel/168318559/527932657";
+  language: Language = "jp";
   get disable() {
     return Deno.env.get("WAF_COOKIES") === undefined;
   }

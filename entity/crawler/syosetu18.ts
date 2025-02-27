@@ -1,4 +1,5 @@
 import { assert } from "$std/assert/assert.ts";
+import { Language } from "../translater/mod.ts";
 import * as def from "./mod.ts";
 import { DOMParser, Element, HTMLDocument } from "jsr:@b-fuze/deno-dom";
 
@@ -26,7 +27,8 @@ class ArticleMetaData implements def.ArticleMetaData {
 
 export class ArticleSource implements def.ArticleSource {
   baseUrl = baseUrl;
-  async get_article(
+  language: Language = "jp";
+  async getArticle(
     metadata: def.ArticleMetaData,
   ): Promise<Article | undefined> {
     const rawHtml = await fetch18(metadata.url).then((res) => res.text());
@@ -52,6 +54,7 @@ export class Article implements def.Article {
 export class NovelSource implements def.NovelSource {
   name = "小説家になろう(R18)";
   exampleUrl = "https://novel18.syosetu.com/n9292ii/";
+  language: Language = "jp";
   canCreateUrl(url: string): boolean {
     return /https:\/\/novel18.syosetu.com\/n\d+\w+/.test(url);
   }

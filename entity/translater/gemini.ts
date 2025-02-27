@@ -1,10 +1,9 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import * as def from "./mod.ts";
-import { currentLang, Language } from "./mod.ts";
+import { Language, PartialRecord, Translator } from "./mod.ts";
 
 const MODEL = "gemini-1.5-flash";
 
-const systemPrompts: Record<Language, string> = {
+const systemPrompts: PartialRecord<Language, string> = {
   "zh-tw": [
     "請將以下外文小說翻譯成繁體中文。務必保留原文的意境和情感，同時確保譯文流暢自然。在翻譯過程中，請遵守以下要求：",
     "1. 尊重換行和特殊字元，確保格式不變。",
@@ -22,11 +21,9 @@ const systemPrompts: Record<Language, string> = {
   ].join("\n"),
 };
 
-const systemPrompt = systemPrompts[currentLang];
-
 const userPrefix = "將下面的外文文本翻譯成中文：";
 
-export class Translater implements def.Translator {
+export default class GeminiTranslator implements Translator {
   disable?: boolean | undefined;
   client?: GoogleGenerativeAI;
   constructor() {
@@ -36,22 +33,27 @@ export class Translater implements def.Translator {
 
     this.disable = apiKey ? false : true;
   }
-  getAffinity(_: string): def.Affinity {
-    return 1;
-  }
-  async translate(content: string): Promise<string> {
+  async translate(
+    contents: string[],
+    _: Language,
+    targetLanguage: Language,
+  ): Promise<string[]> {
     const model = this.client?.getGenerativeModel({ model: MODEL })!;
-    const res = await model.generateContent({
-      systemInstruction: systemPrompt,
-      contents: [
-        {
-          role: "user",
-          parts: [{
-            text: userPrefix + content,
-          }],
-        },
-      ],
-    });
-    return res.response.text();
+    const results = await Promise.all(
+      contents.map((content) =>
+        model.generateContent({
+          systemInstruction: systemPrompts[targetLanguage]!,
+          contents: [
+            {
+              role: "user",
+              parts: [{
+                text: userPrefix + content,
+              }],
+            },
+          ],
+        })
+      ),
+    );
+    return results.map((x) => x.response.text());
   }
 }

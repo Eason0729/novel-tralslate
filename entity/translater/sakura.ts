@@ -1,37 +1,40 @@
-import * as def from "./mod.ts";
 import { Chat } from "ollama";
 import * as OpenCC from "opencc";
-import { assertEquals } from "$std/assert/assert_equals.ts";
-import { currentLang } from "./mod.ts";
+import { currentLang, Language, Translator } from "./mod.ts";
 
 const openccConverter = OpenCC.Converter({ from: "cn", to: "twp" });
 
 const MODEL = "hf.co/SakuraLLM/Sakura-1.5B-Qwen2.5-v1.0-GGUF";
 
-const defaultChunkSize = 618;
-
-function chunking(
-  text: string,
-  chunkSize: number = defaultChunkSize,
-): string[] {
-  const chunks = [];
-  while (text.length > chunkSize) {
-    let i = chunkSize;
-    while (i > 0 && text[i] !== "\n") i--;
-
-    if (i == 0) i = chunkSize;
-    chunks.push(text.substring(0, i));
-    text = text.substring(i);
-  }
-  if (text.length != 0) chunks.push(text);
-  return chunks;
-}
-
-let ollamaWarningShown = false;
-export class Translater implements def.Translator {
-  maxParallel = 1;
+export default class SakuraTranslator implements Translator {
   disable = true;
-  apiURL?: string;
+  private apiURL?: string;
+  private static ollamaWarningShown = false;
+  private static showOllamaWarning() {
+    if (!SakuraTranslator.ollamaWarningShown) {
+      SakuraTranslator.ollamaWarningShown = true;
+      console.warn(
+        "Ollama API is disabled, despite the environment variable is set.",
+      );
+    }
+  }
+
+  private static chunkSize = 618;
+  private static chunking(
+    text: string,
+  ): string[] {
+    const chunks = [];
+    while (text.length > SakuraTranslator.chunkSize) {
+      let i = SakuraTranslator.chunkSize;
+      while (i > 0 && text[i] !== "\n") i--;
+
+      if (i == 0) i = SakuraTranslator.chunkSize;
+      chunks.push(text.substring(0, i));
+      text = text.substring(i);
+    }
+    if (text.length != 0) chunks.push(text);
+    return chunks;
+  }
   constructor() {
     const apiURL = Deno.env.get("OLLAMA_URL");
     this.apiURL = apiURL;
@@ -47,30 +50,13 @@ export class Translater implements def.Translator {
         }).then((res) => !res.ok);
       } catch (_) {
         this.disable = true;
-        if (!ollamaWarningShown) {
-          ollamaWarningShown = true;
-          console.warn(
-            "Ollama API is disabled, despite the environment variable is set.",
-          );
-        }
+        SakuraTranslator.showOllamaWarning();
       }
     }, 30000);
   }
 
-  getAffinity(url: string): def.Affinity | undefined {
-    const japaneseSource = [
-      "https://www.alphapolis.co.jp",
-      "https://kakuyomu.jp",
-      "https://ncode.syosetu.com",
-      "https://novel18.syosetu.com",
-      "https://syosetu.org",
-    ];
-    if (japaneseSource.some((source) => url.startsWith(source))) {
-      return 3;
-    }
-  }
-  async translate(content: string): Promise<string> {
-    const chunks = chunking(content);
+  async translateSingle(content: string, opencc: boolean) {
+    const chunks = SakuraTranslator.chunking(content);
 
     let res = "";
     for (const chunk of chunks) {
@@ -89,7 +75,7 @@ export class Translater implements def.Translator {
         model: MODEL,
         API_URL: this.apiURL,
         options: {
-          num_ctx: Math.floor(defaultChunkSize * 1.1 + 100),
+          num_ctx: Math.floor(SakuraTranslator.chunkSize * 1.1 + 100),
           num_predict: Math.ceil(chunk.length * 1.25) + 100,
           temperature: 0.1,
           top_p: 0.3,
@@ -98,25 +84,24 @@ export class Translater implements def.Translator {
       res += chunkedRes;
     }
 
-    if (currentLang == "zh-tw") {
+    if (opencc) {
       res = openccConverter(res);
     }
 
     return res;
   }
-}
 
-Deno.test("chunking", () => {
-  const text =
-    "This is a long string that exceeds the chunk size.\nIt has a newline within the first 50 characters.";
-  const expected: string[] = [
-    "This is a long string that exceeds the chunk size.",
-    "\nIt has a newline within the first 50 characters.",
-  ];
-  const actual = chunking(text, 50);
-  assertEquals(
-    actual,
-    expected,
-    "Test Case 3 Failed: Long string, newline within limit",
-  );
-});
+  async translate(
+    contents: string[],
+    _: Language,
+    targetLanguage: Language,
+  ): Promise<string[]> {
+    const result = [];
+    for (const content in contents) {
+      result.push(
+        await this.translateSingle(content, targetLanguage == "zh-tw"),
+      );
+    }
+    return result;
+  }
+}

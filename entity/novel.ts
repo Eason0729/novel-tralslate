@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "@denodb";
-import { getNovel, isUrlSupported } from "./crawler/mod.ts";
+import { getNovelSourceByUrl, isUrlSupported } from "./crawler/mod.ts";
 import { FieldValue, Values } from "@denodb/types";
 import { Article } from "./article.ts";
 import { getTranslatorHandle } from "./translater/mod.ts";
@@ -67,7 +67,10 @@ export class Novel extends Model {
    */
   async fetch(): Promise<Novel | undefined> {
     await this.changeState("unfetch", "fetching");
-    const result = await getNovel(this.url as string);
+    const source = getNovelSourceByUrl(this.url as string);
+    const result = source
+      ? await source.get_novel(this.url as string)
+      : undefined;
     if (!result) return;
 
     await Promise.all(
@@ -85,10 +88,14 @@ export class Novel extends Model {
   async translate() {
     await this.changeState("fetched", "translating");
 
-    const translater = getTranslatorHandle(this.url as string);
+    const source = getNovelSourceByUrl(this.url as string);
+    const lang = source?.language;
+    if (!lang) throw new Error("no language found");
+
+    const translater = getTranslatorHandle(lang);
     if (!translater) throw new Error("no translater found");
 
-    const [description, name] = await translater.translateMultiple(
+    const [description, name] = await translater.translate(
       [this.untranslatedDescription, this.untranslatedName] as string[],
     );
 

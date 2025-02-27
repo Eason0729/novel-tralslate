@@ -19,6 +19,7 @@ import {
   ArticleSource as hamelnArticleSource,
   NovelSource as hamelnNovelSource,
 } from "./hameln.ts";
+import { Language } from "../translater/mod.ts";
 
 /**
  * Source website for novel
@@ -45,6 +46,7 @@ export interface NovelSource {
    * @param url Novel url
    */
   get_novel(url: string): Promise<Novel | undefined>;
+  language: Language;
 }
 
 /**
@@ -70,7 +72,8 @@ export interface ArticleSource {
    * Get article content
    * @param url Article url
    */
-  get_article(url: ArticleMetaData): Promise<Article | undefined>;
+  getArticle(url: ArticleMetaData): Promise<Article | undefined>;
+  language: Language;
 }
 
 export interface Article {
@@ -93,14 +96,13 @@ const sources: NovelSource[] = [
   new hamelnNovelSource(),
 ];
 
-export function getNovel(url: string): Promise<Novel | undefined> {
+export function getNovelSourceByUrl(url: string): NovelSource | undefined {
   for (const source of sources) {
     if (source.disable) continue;
     if (source.canCreateUrl(url)) {
-      return source.get_novel(url);
+      return source;
     }
   }
-  return Promise.resolve(undefined);
 }
 
 class ArticleLimiter implements ArticleSource {
@@ -112,14 +114,17 @@ class ArticleLimiter implements ArticleSource {
   get baseUrl(): string {
     return this.inner.baseUrl;
   }
+  get language(): Language {
+    return this.inner.language;
+  }
   get disable(): boolean | undefined {
     return this.inner.disable;
   }
-  async get_article(url: ArticleMetaData): Promise<Article | undefined> {
+  async getArticle(url: ArticleMetaData): Promise<Article | undefined> {
     const release = await this.semphore.acquire();
     let result;
     try {
-      result = this.inner.get_article(url);
+      result = this.inner.getArticle(url);
     } catch (err) {
       throw err;
     } finally {
@@ -137,16 +142,15 @@ const articleSources: ArticleSource[] = [
   new hamelnArticleSource(),
 ].map((inner) => new ArticleLimiter(inner));
 
-export function getArticle(
+export function getArticleSourceByMetadata(
   metadata: ArticleMetaData,
-): Promise<Article | undefined> {
+): ArticleSource | undefined {
   for (const source of articleSources) {
     if (source.disable) continue;
     if (metadata.url.startsWith(source.baseUrl)) {
-      return source.get_article(metadata);
+      return source;
     }
   }
-  return Promise.resolve(undefined);
 }
 
 export function getSupportedSourceInfos(): {

@@ -1,34 +1,59 @@
 import { Semaphore } from "semaphore";
-import { Translater as SakuraTranslater } from "./sakura.ts";
-import { Translater as GeminiTranslater } from "./gemini.ts";
+import SakuraTranslator from "./sakura.ts";
+import GeminiTranslator from "./gemini.ts";
+import PlainTranslator from "./plain.ts";
 
-export type Language = "zh-tw" | "zh-cn" | "en";
-const AllowLanguagesList: Language[] = ["zh-tw", "zh-cn", "en"];
+export type Language = "zh-tw" | "zh-cn" | "en" | "jp";
+const AllowLanguagesList: string[] = ["zh-tw", "zh-cn", "en", "jp"];
+export const currentLang = (Deno.env.get("LANG") || "zh-tw") as Language;
 
-function getCurrentLang(): Language {
-  const lang = Deno.env.get("LANG") || "zh-tw";
-  if (AllowLanguagesList.includes(lang as Language)) {
-    return lang as Language;
-  }
-  console.warn(`Invalid language: ${lang}`);
+console.log("Use environment variable LANG to change language.");
+
+if (!AllowLanguagesList.includes(currentLang)) {
+  console.warn(`Invalid language: ${currentLang}`);
   console.warn(`Allow languages: ${AllowLanguagesList.join(", ")}`);
-  return "zh-tw";
+  Deno.exit(1);
 }
-export const currentLang = getCurrentLang();
-console.log(
-  `currentLang: ${currentLang}\nUse environment variable LANG to change language.`,
-);
 
-export type Affinity = number;
+// deno-lint-ignore no-explicit-any
+export type PartialRecord<K extends keyof any, T> = {
+  [P in K]?: T;
+};
+function getHandle(): PartialRecord<
+  `${Language}=>${Language}`,
+  Translator[]
+> {
+  const plain = new PlainTranslator();
+  const gemini = new RatelimitedTranslator(new GeminiTranslator());
+  const sakura = new RatelimitedTranslator(new SakuraTranslator());
+  return {
+    "en=>en": [plain],
+    "jp=>jp": [plain],
+    "zh-cn=>zh-cn": [plain],
+    "zh-tw=>zh-tw": [plain],
+    "en=>zh-cn": [gemini],
+    "en=>zh-tw": [gemini],
+    "jp=>zh-tw": [sakura, gemini],
+    "jp=>zh-cn": [sakura, gemini],
+  };
+}
+
+const Translators: PartialRecord<
+  `${Language}=>${Language}`,
+  Translator[]
+> = getHandle();
 
 export interface Translator {
   maxParallel?: number;
   disable?: boolean;
-  getAffinity(url: string): Affinity | undefined;
-  translate(content: string): Promise<string>;
+  translate(
+    content: string[],
+    originalLanguage: Language,
+    targetLanguage: Language,
+  ): Promise<string[]>;
 }
 
-export class TranslaterHandle implements Translator {
+export class RatelimitedTranslator implements Translator {
   inner: Translator;
   semaphore: Semaphore;
   constructor(inner: Translator) {
@@ -38,54 +63,61 @@ export class TranslaterHandle implements Translator {
   get disable(): boolean | undefined {
     return this.inner.disable;
   }
-  getAffinity(url: string): Affinity | undefined {
-    return this.inner.getAffinity(url);
-  }
-  private async innerTranslate(content: string): Promise<string> {
+  async translate(
+    contents: string[],
+    originalLanguage: Language,
+    targetLanguage: Language,
+  ): Promise<string[]> {
+    const release = await this.semaphore.acquire();
+
+    let translatedContents;
     try {
-      return await this.inner.translate(content);
-    } catch (e) {
-      throw e;
-    }
-  }
-  async translate(content: string): Promise<string> {
-    const release = await this.semaphore.acquire();
-    const res = await this.innerTranslate(content);
-    release();
-    return res;
-  }
-  async translateMultiple(contents: string[]): Promise<string[]> {
-    const release = await this.semaphore.acquire();
-
-    const res = [];
-    for (const content of contents) {
-      res.push(await this.innerTranslate(content));
+      translatedContents = await this.inner.translate(
+        contents,
+        originalLanguage,
+        targetLanguage,
+      );
+    } finally {
+      release();
     }
 
-    release();
-
-    return res;
+    return translatedContents;
   }
   get name(): string {
     return this.inner.constructor.name;
   }
 }
 
-const translators: TranslaterHandle[] = [
-  new SakuraTranslater(),
-  new GeminiTranslater(),
-].map((x) => new TranslaterHandle(x));
+export class TranslatorHandle {
+  inner: Translator;
+  originalLanguage: Language;
+  targetLanguage: Language;
 
-export function getTranslatorHandle(url: string): TranslaterHandle | undefined {
-  let maxAffinity = -1;
-  let translator: TranslaterHandle | undefined;
-  for (const t of translators) {
-    if (t.disable) continue;
-    const affinity = t.getAffinity(url);
-    if (affinity && affinity > maxAffinity) {
-      maxAffinity = affinity;
-      translator = t;
-    }
+  constructor(
+    inner: Translator,
+    originalLanguage: Language,
+    targetLanguage: Language,
+  ) {
+    this.inner = inner;
+    this.originalLanguage = originalLanguage;
+    this.targetLanguage = targetLanguage;
   }
-  return translator;
+  translate(contents: string[]): Promise<string[]> {
+    return this.inner.translate(
+      contents,
+      this.originalLanguage,
+      this.targetLanguage,
+    );
+  }
+}
+
+export function getTranslatorHandle(
+  originalLanguage: Language,
+): TranslatorHandle | undefined {
+  const translators = Translators[`${originalLanguage}=>${currentLang}`] || [];
+
+  const translator = translators.find((translator) => !translator.disable);
+  if (translator) {
+    return new TranslatorHandle(translator, originalLanguage, currentLang);
+  }
 }

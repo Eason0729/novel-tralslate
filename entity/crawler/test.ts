@@ -82,7 +82,7 @@ class ArticleTester {
     Deno.test(
       { name: this.option.name, ignore: this.option.ignore },
       async () => {
-        const article = await this.option.source.get_article({
+        const article = await this.option.source.getArticle({
           title: this.option.title,
           url: this.option.articleUrl,
           index: 0,

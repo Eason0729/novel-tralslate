@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "@denodb";
 import { FieldValue, Values } from "@denodb/types";
 
-import { ArticleMetaData, getArticle } from "./crawler/mod.ts";
+import { ArticleMetaData, getArticleSourceByMetadata } from "./crawler/mod.ts";
 import { Novel } from "./novel.ts";
 import { getTranslatorHandle } from "./translater/mod.ts";
 
@@ -75,7 +75,8 @@ export class Article extends Model {
   }
   async fetch() {
     await this.changeState("unfetch", "fetching");
-    const result = await getArticle(this.metadata());
+    const source = getArticleSourceByMetadata(this.metadata());
+    const result = source ? await source.getArticle(this.metadata()) : null;
     if (!result) {
       throw new Error(
         "fetch failed, maybe fetcher is not available(but were available before)",
@@ -88,12 +89,16 @@ export class Article extends Model {
   }
   async translate() {
     await this.changeState("fetched", "translating");
+    const source = getArticleSourceByMetadata(this.metadata());
 
-    const translater = getTranslatorHandle(this.url as string);
+    const lang = source?.language;
+    if (!lang) throw new Error("no language found");
+
+    const translater = getTranslatorHandle(lang);
 
     if (!translater) throw new Error("no translater found");
 
-    const [content, title] = await translater?.translateMultiple(
+    const [content, title] = await translater?.translate(
       [this.untranslatedContent, this.untranslatedTitle] as string[],
     );
     await this.changeState("translating", "translated", {
