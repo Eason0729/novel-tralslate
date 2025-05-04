@@ -3,11 +3,11 @@ import SakuraTranslator from "./sakura.ts";
 import GeminiTranslator from "./gemini.ts";
 import PlainTranslator from "./plain.ts";
 
-export type Language = "zh-tw" | "zh-cn" | "en" | "jp";
-const AllowLanguagesList: string[] = ["zh-tw", "zh-cn", "en", "jp"];
-export const currentLang = (Deno.env.get("LANG") || "zh-tw") as Language;
+export type Language = "zh-tw" | "zh-cn" | "en" | "jp" | "kr";
+const AllowLanguagesList: string[] = ["zh-tw", "zh-cn", "en", "jp", "kr"];
+export const currentLang = (Deno.env.get("TARGET_LANG") || "zh-tw") as Language;
 
-console.log("Use environment variable LANG to change language.");
+console.log("Use environment variable TARGET_LANG to change language.");
 
 if (!AllowLanguagesList.includes(currentLang)) {
   console.warn(`Invalid language: ${currentLang}`);
@@ -19,29 +19,6 @@ if (!AllowLanguagesList.includes(currentLang)) {
 export type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T;
 };
-function getHandle(): PartialRecord<
-  `${Language}=>${Language}`,
-  Translator[]
-> {
-  const plain = new PlainTranslator();
-  const gemini = new RatelimitedTranslator(new GeminiTranslator());
-  const sakura = new RatelimitedTranslator(new SakuraTranslator());
-  return {
-    "en=>en": [plain],
-    "jp=>jp": [plain],
-    "zh-cn=>zh-cn": [plain],
-    "zh-tw=>zh-tw": [plain],
-    "en=>zh-cn": [gemini],
-    "en=>zh-tw": [gemini],
-    "jp=>zh-tw": [sakura, gemini],
-    "jp=>zh-cn": [sakura, gemini],
-  };
-}
-
-const Translators: PartialRecord<
-  `${Language}=>${Language}`,
-  Translator[]
-> = getHandle();
 
 export interface Translator {
   maxParallel?: number;
@@ -121,3 +98,27 @@ export function getTranslatorHandle(
     return new TranslatorHandle(translator, originalLanguage, currentLang);
   }
 }
+
+function getHandle(): PartialRecord<
+  `${Language}=>${Language}`,
+  Translator[]
+> {
+  const plain = new PlainTranslator();
+  const gemini = new RatelimitedTranslator(new GeminiTranslator());
+  const sakura = new RatelimitedTranslator(new SakuraTranslator());
+  return {
+    "en=>en": [plain],
+    "jp=>jp": [plain],
+    "zh-cn=>zh-cn": [plain],
+    "zh-tw=>zh-tw": [plain],
+    "en=>zh-cn": [gemini],
+    "en=>zh-tw": [gemini],
+    "jp=>zh-tw": [sakura, gemini],
+    "jp=>zh-cn": [sakura, gemini],
+  };
+}
+
+const Translators: PartialRecord<
+  `${Language}=>${Language}`,
+  Translator[]
+> = getHandle();

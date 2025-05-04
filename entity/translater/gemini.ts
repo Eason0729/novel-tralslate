@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Language, PartialRecord, Translator } from "./mod.ts";
 
-const MODEL = "gemini-1.5-flash";
+const MODEL = "gemini-2.5-flash";
 
 const systemPrompts: PartialRecord<Language, string> = {
   "zh-tw": [
@@ -18,6 +18,16 @@ const systemPrompts: PartialRecord<Language, string> = {
     "Please translate the following foreign novel into English. Be sure to retain the original mood and emotion of the text, while ensuring that the translation is smooth and natural. During the translation process, please adhere to the following requirements:",
     "1. Respect line breaks and special characters, ensuring that the format remains unchanged.",
     "2. Maintain the use of personal pronouns, ensuring that the voice and characteristics of the characters are not altered.",
+  ].join("\n"),
+  "jp": [
+    "以下の外国小説を日本語に翻訳してください。原文の雰囲気と感情を保ちながら、翻訳がスムーズで自然になるようにしてください。翻訳プロセス中は、以下の要件を遵守してください：",
+    "1. 改行や特殊文字を尊重し、フォーマットが変更されないようにします。",
+    "2. 人称代名詞の使用を維持し、キャラクターの声と特徴が変更されないようにします。",
+  ].join("\n"),
+  "kr": [
+    "다음 외국 소설을 한국어로 번역하십시오. 원문의 분위기와 감정을 유지하면서 번역이 매끄럽고 자연스럽도록 하십시오. 번역 과정에서 다음 요구 사항을 준수하십시오.",
+    "1. 줄 바꿈과 특수 문자를 존중하여 형식이 변경되지 않도록 합니다.",
+    "2. 인칭 대명사의 사용을 유지하여 캐릭터의 목소리와 특성이 변경되지 않도록 합니다.",
   ].join("\n"),
 };
 
