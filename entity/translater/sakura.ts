@@ -39,9 +39,9 @@ export default class SakuraTranslator implements Translator {
     const apiURL = Deno.env.get("OLLAMA_URL");
     this.apiURL = apiURL;
 
-    if (!this.apiURL || ["zh-tw", "zh-cn"].includes(currentLang)) return;
+    if (!this.apiURL || !["zh-tw", "zh-cn"].includes(currentLang)) return;
 
-    this.disable = true;
+    this.disable = false;
 
     setInterval(async () => {
       try {
